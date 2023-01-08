@@ -8,12 +8,13 @@ class Usuarios extends Controller{
         parent::__construct();
     }
 
+    //VISTA DASHBOARD
     public function index(){
 
      $this->views->getView($this, "index");
 
     }
-  //VALDAMOS EL INICIO DE SESION
+  //VALIDAMOS EL INICIO DE SESION
     public function validar(){
 
         if(empty($_POST['usuario']) || empty($_POST['clave']) ){
@@ -34,6 +35,13 @@ class Usuarios extends Controller{
             }
         }
          echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+        die();
+    }
+    //listar los usuarios
+    public function listar(){
+
+        $data = $this->model->getUsuarios();
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
 }

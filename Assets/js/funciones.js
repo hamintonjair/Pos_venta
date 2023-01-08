@@ -1,3 +1,22 @@
+let tblUsuarios;
+
+document.addEventListener("DOMContentLoaded", function(){
+    tblUsuarios = $(document).ready(function () {
+        $('#tblUsuarios').DataTable({
+            ajax:{
+                url: base_url + "Usuarios/listar",
+                dataSrc: ''
+            },
+            columns: [
+                { data: 'id' },
+                { data: 'usuario' },
+                { data: 'nombre' },
+                { data: 'id_caja' },
+            ],
+        });
+    })
+})
+
 function frmLogin(e){
     e.preventDefault();
 

@@ -8,6 +8,7 @@ class Query extends Conexion{
     $this->con = $this->pdo->conect();
   }
 
+  //seleccionar un usuario de acuerdo a la validacion
   public function select(string $sql){
     
     $this->sql = $sql;
@@ -17,7 +18,16 @@ class Query extends Conexion{
     return $data;
 
   }
+  //selecionar todos los usurios
+  public function selectAll(string $sql){
+    
+    $this->sql = $sql;
+    $result = $this->con->prepare($this->sql);
+    $result->execute();
+    $data = $result->fetchAll(PDO::FETCH_ASSOC);
+    return $data;
 
+  }
 }
 
 ?>
