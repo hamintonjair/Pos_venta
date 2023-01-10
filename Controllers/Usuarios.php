@@ -5,6 +5,9 @@ class Usuarios extends Controller{
     public function __construct()
     {
         session_start();
+        if( empty($_SESSION['activo'] == true)){
+             header("location:".base_url);
+        }
         parent::__construct();
     }
 
@@ -23,13 +26,15 @@ class Usuarios extends Controller{
         }else{
             $usuario = $_POST['usuario'];
             $clave = $_POST['clave'];
+            $hash = hash("SHA256", $clave);
   
-            $data = $this->model->getUsuario($usuario,$clave);
+            $data = $this->model->getUsuario($usuario, $hash);
 
             if($data){
                $_SESSION['id_usuario'] = $data['id'];
                $_SESSION['usuario'] = $data['usuario'];
                $_SESSION['nombre'] = $data['nombre'];
+               $_SESSION['activo'] = true;
 
                $msg = (array('ok'=> true, 'post' => 'Logueado'));		
               
@@ -48,19 +53,25 @@ class Usuarios extends Controller{
           
             if($data[$i]['estado'] == 1){
                 $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
+                $data[$i]['acciones'] = '<div>            
+                <button type="button" class="btn btn-primary" onclick="editarUsuario('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
+                <button type="button" class="btn btn-danger" onclick="eliminarUsuario('.$data[$i]['id'].');" title="Eliminar"><i class="far   
+                fa-trash-alt"></i></button>    
+               </div>';
+                
             }else{
                 $data[$i]['estado'] = ' <span class="badge badge-danger">Inactivo</span>';
+                $data[$i]['acciones'] = '<div>                     
+                <button type="button" class="btn btn-success" onclick="reingresarUsuario('.$data[$i]['id'].');" title="Reingresar"><i class="fa fa-undo" aria-hidden="true"></i></button>      
+               </div>';
             }
-            $data[$i]['acciones'] = '<div>            
-            <button type="button" class="btn btn-primary" onclick="editarUsuario('.$data[$i]['id'].');" title="Editar"><i class="fas fa-pencil-alt"></i></button>   
-            <button type="button" class="btn btn-danger" onclick="eliminarUsuario('.$data[$i]['id'].');" title="Eliminar"><i class="far fa-trash-alt"></i></button>   
-           </div>';
+           
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
     //registrar y actualizar usuarios
-    public function registarUser(){
+    public function registrarUser(){
 
         $usuario = $_POST['usuario'];
         $nombre = $_POST['nombre'];
@@ -84,9 +95,9 @@ class Usuarios extends Controller{
                         $msg = (array('ok'=>true, 'post' => 'Usuario registrado con éxito.'));
 
                     }else if($data == "existe"){
-                        $msg = (array('ok'=>false, 'post' => 'El usuario ya existe.'));	
+                        $msg = (array('ok'=>false, 'post' => 'El Usuario ya existe.'));	
                     }else{
-                        $msg = (array('ok'=>false, 'post' => 'Error al registrar el usuario.'));
+                        $msg = (array('ok'=>false, 'post' => 'Error al registrar el Usuario.'));
                     }
                 }
             }else{
@@ -96,7 +107,7 @@ class Usuarios extends Controller{
                     $msg = (array('modificado'=>true, 'post' => 'El Usuario fue actualizado con éxito.'));
 
                 }else{
-                    $msg = (array('modificado'=>false, 'post' => 'Error al actualizar el usuario.'));
+                    $msg = (array('modificado'=>false, 'post' => 'Error al actualizar el Usuario.'));
                 }
             }
         
@@ -115,14 +126,35 @@ class Usuarios extends Controller{
     //eliminar usuario
     public function deleteUsuario(int $id){
        
-        $data = $this->model->EliminarUsuario($id);
-        if($data == 'eliminado'){
+        $data = $this->model->accionUsuario(0, $id);  
+
+        if($data == 1){
             $msg = (array('eliminado'=>true, 'post' => 'El Usuario fue eliminado con éxito.'));
         }else{
-            $msg = (array('eliminado'=>false, 'post' => 'Error al eliminar el usuario.'));
+            $msg = (array('eliminado'=>false, 'msg' => 'Error al eliminar el Usuario.'));
         }
-        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
+    }
+    //reingresar usuario
+    public function reingresarUsuario(int $id){
+
+        $data = $this->model->accionUsuario(1, $id);  
+
+        if($data == 1){
+            $msg = (array('reingresado'=>true, 'post' => 'El Usuario fue reingresado con éxito.'));
+        }else{
+            $msg = (array('reingresado'=>false, 'msg' => 'Error al reingresar el Usuario.'));
+        }
+        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+        die();
+    }
+  //cerrar sesion
+    public function logout(){
+        
+        session_destroy();
+        header("location:".base_url);
+
     }
 }
 ?>

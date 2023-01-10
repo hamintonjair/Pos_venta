@@ -1,21 +1,21 @@
-
 document.addEventListener("DOMContentLoaded", function(){  
-      $('#tableUsuarios').dataTable( {
+         $('#tableClientes').dataTable( {
             "language":{"url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"},
             dom: 'lBfrtip',  
             "columnDefs":[
-               {'className': "textcenter", "targets": [5]}, //status
-               {'className': "textcenter", "targets": [4]},  //accion            
+               {'className': "textcenter", "targets": [6]}, //accion
+               {'className': "textcenter", "targets": [5]},  //status            
          ],       
             "ajax":{
-                  "url": " "+base_url +"Usuarios/listar",        
+                  "url": " "+base_url +"Clientes/listar",        
                   "dataSrc":""
                   },
                   "columns":[
                      {"data":"id"},
-                     {"data":"usuario"},
+                     {"data":"dni"},
                      {"data":"nombre"},
-                     {"data":"caja"},
+                     {"data":"telefono"},
+                     {"data":"direccion"},
                      {"data":"estado"},
                      {"data":"acciones"},
                   
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function(){
                      "titleAttr":"Copiar",
                      "className": "btn btn-secondary",
                      "exportOptions":{
-                        "columns":[0,1,2,3,4]
+                        "columns":[0,1,2,3,4,5]
                      } 
                   },{
                      "extend": "excelHtml5",
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function(){
                      "titleAttr":"Expotar a Excel",
                      "className": "btn btn-success",
                      "exportOptions":{
-                        "columns":[0,1,2,3,4]
+                        "columns":[0,1,2,3,4,5]
                      }
                   },{
                      "extend": "pdfHtml5",
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function(){
                      "titleAttr":"Exportar a PDF",
                      "className": "btn btn-danger",
                      "exportOptions":{
-                        "columns":[0,1,2,3,4]
+                        "columns":[0,1,2,3,4,5]
                      } 
                   },{
                      "extend": "csvHtml5",
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function(){
                      "titleAttr":"Eportar",
                      "className": "btn btn-secondary",
                      "exportOptions":{
-                        "columns":[0,1,2,3,4]
+                        "columns":[0,1,2,3,4,5]
                      } 
                   },
                
@@ -65,23 +65,23 @@ document.addEventListener("DOMContentLoaded", function(){
 
 })
 
-//registrar usuario
-function registrarUsuario(e){
+//registrar cliente
+function registrarCliente(e){
    e.preventDefault();
 
-   const usuario = document.getElementById("usuario");
+   const dni = document.getElementById("dni");
    const nombre = document.getElementById("nombre");
-   const clave = document.getElementById("clave");
-   const confirmar = document.getElementById("confirmar");
-   const caja = document.getElementById("caja");
+   const telefono = document.getElementById("telefono");
+   const direccion = document.getElementById("direccion");
+ 
 
-   if(usuario.value == "" || nombre.value == "" || caja.value == ""){
+   if(dni.value == "" || nombre.value == "" || telefono.value == "" || direccion.value == ""){
 
          alert("Error","Todos los campos son obligatorios", "error"); 
 
    }else{
-       const url = base_url + "Usuarios/registrarUser";
-       const frm = document.getElementById("frmUsuarios");
+       const url = base_url + "Clientes/registrarCliente";
+       const frm = document.getElementById("frmCliente");
        const http = new XMLHttpRequest();
        http.open("POST", url, true);
        http.send(new FormData(frm));
@@ -91,12 +91,12 @@ function registrarUsuario(e){
              
              if(resp.ok == true){
                alert( "Atención",resp.post, "success"); 
-               $('#nuevo_usuario').modal('hide');  
+               $('#nuevo_cliente').modal('hide');  
                 location.reload();
               }else if(resp.modificado == true){
 
                alert( "Atención",resp.post, "success");  
-               $('#nuevo_usuario').modal('hide'); 
+               $('#nuevo_cliente').modal('hide'); 
                 location.reload();
               }else{
                alert("Error",resp.post, "error"); 
@@ -108,15 +108,15 @@ function registrarUsuario(e){
 
 }
 //editar
-function editarUsuario(id){
+function editarCliente(id){
      
       document.querySelector('.modal-header').classList.replace( "headerRegister","headerUpdate");
       document.querySelector('#btnActionForm').classList.replace("btn-primary","btn-info");
       document.querySelector('#btnText').innerHTML = "Actualizar";
-      document.querySelector('#titleModal').innerHTML = "Actualizar Usuario";
-      document.querySelector('#frmUsuarios').reset(); 
+      document.querySelector('#titleModal').innerHTML = "Actualizar Cliente";
+      document.querySelector('#frmCliente').reset(); 
 
-      const url = base_url + "Usuarios/editar/"+id;          
+      const url = base_url + "Clientes/editar/"+id;          
       const http = new XMLHttpRequest();
       http.open("GET", url, true);
       http.send();
@@ -124,19 +124,19 @@ function editarUsuario(id){
               if(this.readyState == 4 && this.status == 200){
                const resp = JSON.parse(this.responseText);                            
                
-              document.getElementById('idUsuario').value = resp.id;
-              document.getElementById("usuario").value = resp.usuario;
+              document.getElementById('idCliente').value = resp.id;
+              document.getElementById("dni").value = resp.dni;
               document.getElementById("nombre").value = resp.nombre;
-              document.getElementById("caja").value =resp.id_caja;    
-              document.getElementById("claves").classList.add("d-none");
-              $('#nuevo_usuario').modal('show');      
+              document.getElementById("telefono").value =resp.telefono;    
+              document.getElementById("direccion").value =resp.direccion;
+              $('#nuevo_cliente').modal('show');      
           }
        }
     
 }
 
 //eliminar
-function eliminarUsuario(id){
+function eliminarCliente(id){
            
          const swalWithBootstrapButtons = Swal.mixin({
              customClass: {
@@ -146,8 +146,8 @@ function eliminarUsuario(id){
             buttonsStyling: false
            })      
               swalWithBootstrapButtons.fire({
-               title: '¿Realmente quiere eliminar el Usuario?',
-               text: "El usuario no se eliminará de forma permanete, solo cambiará el estado de inactivo",
+               title: '¿Realmente quiere eliminar el Cliente?',
+               text: "El cliente no se eliminará de forma permanete, solo cambiará el estado de inactivo",
                icon: 'warning',
                showCancelButton: true,
                confirmButtonText: 'Si, Eliminar!',
@@ -155,7 +155,7 @@ function eliminarUsuario(id){
                reverseButtons: true
           }).then((result) => {
           if (result.isConfirmed){   
-            const url = base_url + "Usuarios/deleteUsuario/"+id;          
+            const url = base_url + "Clientes/deleteCliente/"+id;          
             const http = new XMLHttpRequest();
             http.open("GET", url, true);
             http.send();
@@ -187,14 +187,14 @@ function eliminarUsuario(id){
                 ){
                     swalWithBootstrapButtons.fire(
                     'Cancelado!',
-                   'El usuario no fue eliminado',
+                   'El cliente no fue eliminado',
                     'error'
                    )
                }
          })     
 }
-//reingresar usuario
-function reingresarUsuario(id){
+//reingresar cliente
+function reingresarCliente(id){
    const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
       confirmButton: 'btn btn-success',
@@ -203,7 +203,7 @@ function reingresarUsuario(id){
      buttonsStyling: false
     })      
        swalWithBootstrapButtons.fire({
-        title: '¿Realmente quiere reingresar el Usuario?',       
+        title: '¿Realmente quiere reingresar el Cliente?',       
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Si, Restaurar!',
@@ -211,7 +211,7 @@ function reingresarUsuario(id){
         reverseButtons: true
    }).then((result) => {
    if (result.isConfirmed){   
-     const url = base_url + "Usuarios/reingresarUsuario/"+id;          
+     const url = base_url + "Clientes/reingresarCliente/"+id;          
      const http = new XMLHttpRequest();
      http.open("GET", url, true);
      http.send();
@@ -243,7 +243,7 @@ function reingresarUsuario(id){
          ){
              swalWithBootstrapButtons.fire(
              'Cancelado!',
-            'El usuario no fue eliminado',
+            'El cliente no fue eliminado',
              'error'
             )
         }
@@ -260,13 +260,12 @@ function alert(title, text, icon)
          
 }
 
-function openModalUsuarios(){
+function openModalCliente(){
 
    document.querySelector('.modal-header').classList.replace( "headerUpdate","headerRegister");
    document.querySelector('#btnActionForm').classList.replace("btn-info","btn-primary");
    document.querySelector('#btnText').innerHTML = "Registrar";
-   document.querySelector('#titleModal').innerHTML = "Nuevo Usuario";   
-   document.getElementById("claves").classList.remove("d-none");
-   document.querySelector('#frmUsuarios').reset();  
-    $('#nuevo_usuario').modal('show');
+   document.querySelector('#titleModal').innerHTML = "Nuevo Cliente"; 
+   document.querySelector('#frmCliente').reset();  
+    $('#nuevo_cliente').modal('show');
 }

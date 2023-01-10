@@ -1,7 +1,7 @@
 <?php 
 
 class UsuariosModel extends Query{
-    private $usuario, $nombre, $clave , $id_caja, $id;
+    private $usuario, $nombre, $clave , $id_caja, $id, $estado;
     public function __construct()
     {
         parent::__construct();
@@ -79,17 +79,14 @@ class UsuariosModel extends Query{
         return $result;
     }
      //eliminar usuario
-     public function eliminarUsuario(int $id){
+    public function accionUsuario(int $estado, int $id){
 
-        $sql = "DELETE * FROM usuarios WHERE id = $id";
-        $data = $this->select($sql);
-        $datos = $this->delete($sql, $data);
-        if(!empty($data)){
-            $result = "eliminado";
-        }else{
-            $result = "error";
-        }
-        return $result;
+        $this->id = $id;
+        $this->estado = $estado;
+        $sql = "UPDATE usuarios SET estado = ? WHERE id = ?";
+        $datos = array($this->estado, $this->id);
+        $data = $this->save($sql, $datos);       
+        return $data;
 
     }
     

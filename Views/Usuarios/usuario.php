@@ -8,8 +8,8 @@ include 'Views/Templates/body.php';
     <div class='app-title'>
         <div>
             <h1><i class='fas fa-box'></i> Usuarios <small>Sistema de ventas</small>
-                <button class='btn btn-primary' type='button' onclick='openModalUsuarios();' data-toggle='modal'
-                    class='fa-solid fa-circle-plus'>Nuevo</button>
+                <button class="btn btn-primary" type="button" onclick="openModalUsuarios();" data-toggle="modal"
+                    class="fa-solid fa-circle-plus">Nuevo</button>
 
             </h1>
         </div>  
@@ -19,9 +19,7 @@ include 'Views/Templates/body.php';
             <small>Sistema de ventas</small></a></li>
         </ul>
     </div>
-    <!-- <ol class = 'breadcrumb mb-4'>
-<li class = 'breadcrumb-item active'>Usuarios</li>
-</ol> -->
+
     <div class='row'>
         <div class='col-md-12'>
             <div class='tile'>
