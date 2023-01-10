@@ -2,7 +2,7 @@
 class Views{
 
     //cargar las vistas
-    public function getView($controlador, $vista)
+    public function getView($controlador, $vista, $data = "")
     {
         $controlador = get_class($controlador);
         if($controlador == "Home"){
@@ -12,5 +12,6 @@ class Views{
         }
         require $vista;
     }
+   
 }
 ?>

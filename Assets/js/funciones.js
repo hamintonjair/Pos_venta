@@ -2,7 +2,7 @@ let tblUsuarios;
 
 document.addEventListener("DOMContentLoaded", function(){
     tblUsuarios = $(document).ready(function () {
-        $('#tblUsuarios').DataTable({
+        $('#tableUsuarios').DataTable({
             ajax:{
                 url: base_url + "Usuarios/listar",
                 dataSrc: ''
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function(){
         });
     })
 })
-
+//login
 function frmLogin(e){
     e.preventDefault();
 
@@ -40,8 +40,9 @@ function frmLogin(e){
             if(this.readyState == 4 && this.status == 200){
                const resp = JSON.parse(this.responseText);
 
-               if(resp == "ok"){
-               window.location = base_url + "Usuarios";
+               if(resp.ok == true){
+                alert("Atención",resp.post, "success"); 
+                window.location = base_url + "Usuarios";
                }else{
                 document.getElementById("alerta").classList.remove("d-none");
                 document.getElementById("alerta").innerHTML = resp;
@@ -51,3 +52,14 @@ function frmLogin(e){
     }
 
 }
+
+
+function alert(title, text, icon)
+ {
+           Swal.fire({
+           title,
+           text,
+           icon,    
+           })
+          
+ }

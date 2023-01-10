@@ -1,7 +1,7 @@
 <?php 
 
 class Query extends Conexion{
-  private $pdo, $con, $sql;
+  private $pdo, $con, $sql, $datos;
 
   public function __construct(){
     $this->pdo = new Conexion();
@@ -27,7 +27,38 @@ class Query extends Conexion{
     $data = $result->fetchAll(PDO::FETCH_ASSOC);
     return $data;
 
+
+ }
+ //guardar 
+  public function save(string $sql, array $data){
+
+    $this->sql = $sql;
+    $this->datos = $data;
+    $insert = $this->con->prepare($this->sql);
+    $data = $insert->execute($this->datos);
+
+      if($data){
+        $res = 1;
+      }else{
+        $res = 0 ;
+      }
+      return $res;
   }
+  // //eliminar
+  // public function delete(string $sql, array $data){
+
+  //   $this->sql = $sql;
+  //   $this->datos = $data;
+  //   $insert = $this->con->prepare($this->sql);
+  //   $data = $insert->execute($this->datos);
+
+  //     if($data){
+  //       $res = 1;
+  //     }else{
+  //       $res = 0 ;
+  //     }
+  //     return $res;
+  // }
 }
 
 ?>

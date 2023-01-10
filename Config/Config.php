@@ -1,9 +1,9 @@
 <?php
 
-const base_url = "http://localhost/pos_venta/";
+const base_url = "http://localhost/Pos_venta/";
 const host = "localhost";
 const user = "root";
-const pass = "";
+const pass = "menaH01*";
 const db = "sistema";
 const charset = "charset=utf8";
 
