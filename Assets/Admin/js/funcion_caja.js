@@ -1,21 +1,19 @@
+
 document.addEventListener("DOMContentLoaded", function () {
-   $('#tableClientes').dataTable({
+   $('#tableCajas').dataTable({
       "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
       dom: 'lBfrtip',
       "columnDefs": [
-         { 'className': "textcenter", "targets": [6] }, //accion
-         { 'className': "textcenter", "targets": [5] },  //status            
+         { 'className': "textcenter", "targets": [3] },  //status  
+         { 'className': "textcenter", "targets": [2] },  //status           
       ],
       "ajax": {
-         "url": " " + base_url + "Clientes/listar",
+         "url": " " + base_url + "Cajas/listar",
          "dataSrc": ""
       },
       "columns": [
          { "data": "id" },
-         { "data": "dni" },
-         { "data": "nombre" },
-         { "data": "telefono" },
-         { "data": "direccion" },
+         { "data": "caja" },
          { "data": "estado" },
          { "data": "acciones" },
 
@@ -27,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Copiar",
             "className": "btn btn-secondary",
             "exportOptions": {
-               "columns": [0, 1, 2, 3, 4, 5]
+               "columns": [0, 1, 2, 3]
             }
          }, {
             "extend": "excelHtml5",
@@ -35,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Expotar a Excel",
             "className": "btn btn-success",
             "exportOptions": {
-               "columns": [0, 1, 2, 3, 4, 5]
+               "columns": [0, 1, 2, 3]
             }
          }, {
             "extend": "pdfHtml5",
@@ -43,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Exportar a PDF",
             "className": "btn btn-danger",
             "exportOptions": {
-               "columns": [0, 1, 2, 3, 4, 5]
+               "columns": [0, 1, 2, 3]
             }
          }, {
             "extend": "csvHtml5",
@@ -51,37 +49,33 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Eportar",
             "className": "btn btn-secondary",
             "exportOptions": {
-               "columns": [0, 1, 2, 3, 4, 5]
+               "columns": [0, 1, 2, 3]
             }
          },
 
       ],
       "resonsieve": "true",
       "bDestroy": true,
-      "iDisplayLength": 10,
+      "iDisplayLength": 5,
       "order": [[0, "desc"]]
    });
 
 
 })
 
-//registrar cliente
-function registrarCliente(e) {
+//registrar caja
+function registrarCaja(e) {
    e.preventDefault();
 
-   const dni = document.getElementById("dni");
-   const nombre = document.getElementById("nombre");
-   const telefono = document.getElementById("telefono");
-   const direccion = document.getElementById("direccion");
+   const caja = document.getElementById("caja");
 
-
-   if (dni.value == "" || nombre.value == "" || telefono.value == "" || direccion.value == "") {
+   if (caja.value == "") {
 
       alert("Error", "Todos los campos son obligatorios", "error");
 
    } else {
-      const url = base_url + "Clientes/registrarCliente";
-      const frm = document.getElementById("frmCliente");
+      const url = base_url + "Cajas/registrarCaja";
+      const frm = document.getElementById("frmCaja");
       const http = new XMLHttpRequest();
       http.open("POST", url, true);
       http.send(new FormData(frm));
@@ -97,7 +91,7 @@ function registrarCliente(e) {
                   showConfirmButton: false,
                   timer: 1500
                 })       
-               $('#nuevo_cliente').modal('hide');
+               $('#nueva_caja').modal('hide');
                location.reload();
             } else if (resp.modificado == true) {
 
@@ -108,7 +102,7 @@ function registrarCliente(e) {
                   showConfirmButton: false,
                   timer: 1500
                 })       
-               $('#nuevo_cliente').modal('hide');
+               $('#nueva_caja').modal('hide');
                location.reload();
             } else {
                alert("Error", resp.post, "error");
@@ -120,15 +114,15 @@ function registrarCliente(e) {
 
 }
 //editar
-function editarCliente(id) {
+function editarCaja(id) {
 
    document.querySelector('.modal-header').classList.replace("headerRegister", "headerUpdate");
    document.querySelector('#btnActionForm').classList.replace("btn-primary", "btn-info");
    document.querySelector('#btnText').innerHTML = "Actualizar";
-   document.querySelector('#titleModal').innerHTML = "Actualizar Cliente";
-   document.querySelector('#frmCliente').reset();
+   document.querySelector('#titleModal').innerHTML = "Actualizar Caja";
+   document.querySelector('#frmCaja').reset();
 
-   const url = base_url + "Clientes/editar/" + id;
+   const url = base_url + "Cajas/editar/" + id;
    const http = new XMLHttpRequest();
    http.open("GET", url, true);
    http.send();
@@ -136,19 +130,16 @@ function editarCliente(id) {
       if (this.readyState == 4 && this.status == 200) {
          const resp = JSON.parse(this.responseText);
 
-         document.getElementById('idCliente').value = resp.id;
-         document.getElementById("dni").value = resp.dni;
-         document.getElementById("nombre").value = resp.nombre;
-         document.getElementById("telefono").value = resp.telefono;
-         document.getElementById("direccion").value = resp.direccion;
-         $('#nuevo_cliente').modal('show');
+         document.getElementById('idCaja').value = resp.id;
+         document.getElementById("caja").value = resp.caja;
+         $('#nueva_caja').modal('show');
       }
    }
 
 }
 
 //eliminar
-function eliminarCliente(id) {
+function eliminarCaja(id) {
 
    const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -158,8 +149,8 @@ function eliminarCliente(id) {
       buttonsStyling: false
    })
    swalWithBootstrapButtons.fire({
-      title: '¿Realmente quiere eliminar el Cliente?',
-      text: "El cliente no se eliminará de forma permanete, solo cambiará el estado de inactivo",
+      title: '¿Realmente quiere eliminar el Caja?',
+      text: "El caja no se eliminará de forma permanete, solo cambiará el estado de inactivo",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Si, Eliminar!',
@@ -167,7 +158,7 @@ function eliminarCliente(id) {
       reverseButtons: true
    }).then((result) => {
       if (result.isConfirmed) {
-         const url = base_url + "Clientes/deleteCliente/" + id;
+         const url = base_url + "Cajas/deleteCaja/" + id;
          const http = new XMLHttpRequest();
          http.open("GET", url, true);
          http.send();
@@ -199,14 +190,14 @@ function eliminarCliente(id) {
       ) {
          swalWithBootstrapButtons.fire(
             'Cancelado!',
-            'El cliente no fue eliminado',
+            'El caja no fue eliminado',
             'error'
          )
       }
    })
 }
-//reingresar cliente
-function reingresarCliente(id) {
+//reingresar caja
+function reingresarCaja(id) {
    const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
          confirmButton: 'btn btn-success',
@@ -215,7 +206,7 @@ function reingresarCliente(id) {
       buttonsStyling: false
    })
    swalWithBootstrapButtons.fire({
-      title: '¿Realmente quiere reingresar el Cliente?',
+      title: '¿Realmente quiere reingresar el Caja?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Si, Restaurar!',
@@ -223,7 +214,7 @@ function reingresarCliente(id) {
       reverseButtons: true
    }).then((result) => {
       if (result.isConfirmed) {
-         const url = base_url + "Clientes/reingresarCliente/" + id;
+         const url = base_url + "Cajas/reingresarCaja/" + id;
          const http = new XMLHttpRequest();
          http.open("GET", url, true);
          http.send();
@@ -255,19 +246,20 @@ function reingresarCliente(id) {
       ) {
          swalWithBootstrapButtons.fire(
             'Cancelado!',
-            'El cliente no fue restaurado',
+            'El caja no fue restaurada',
             'error'
          )
       }
    })
 }
 
-function openModalCliente() {
+
+function openModalCaja() {
 
    document.querySelector('.modal-header').classList.replace("headerUpdate", "headerRegister");
    document.querySelector('#btnActionForm').classList.replace("btn-info", "btn-primary");
    document.querySelector('#btnText').innerHTML = "Registrar";
-   document.querySelector('#titleModal').innerHTML = "Nuevo Cliente";
-   document.querySelector('#frmCliente').reset();
-   $('#nuevo_cliente').modal('show');
+   document.querySelector('#titleModal').innerHTML = "Nuevo Caja";
+   document.querySelector('#frmCaja').reset();
+   $('#nueva_caja').modal('show');
 }

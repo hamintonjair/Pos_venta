@@ -25,30 +25,32 @@
           <ul class="treeview-menu">
             <li><a class="treeview-item" href="<?php echo base_url; ?>Usuarios">
             <i class="icon fa fa-users" aria-hidden="true"></i> Usuarios</a></li>
-            <li><a class="treeview-item" href="<?php echo base_url; ?>Cajas" >
+            <li><a class="treeview-item" href="<?php echo base_url; ?>Configuracion" >
             <i class="icon fa fa-cogs" aria-hidden="true"></i> Configuración</a></li>
-            <li><a class="treeview-item" href="<?php echo base_url; ?>Usuarios">
-            <i class="icon fa fa-archive"></i>Caja</a></li>
-            <li><a class="treeview-item" href="<?php echo base_url; ?>Cajas" >
+            <li><a class="treeview-item" href="<?php echo base_url; ?>Cajas">
+            <i class="icon fa fa-archive"></i>Cajas</a></li>
+            <li><a class="treeview-item" href="<?php echo base_url; ?>Roles" >
             <i class="icon fa fa-user" aria-hidden="true"></i>Roles</a></li>
-            <li><a class="treeview-item" href="<?php echo base_url; ?>Usuarios">
+            <li><a class="treeview-item" href="<?php echo base_url; ?>Proveedores" >
+            <i class="icon fa fa-user" aria-hidden="true"></i>Proveedores</a></li>
+            <li><a class="treeview-item" href="<?php echo base_url; ?>Sesion">
             <i class="icon fa fa-arrow-circle-o-down"></i> Sesiones</a></li>
         
           </ul>
         </li>    
         <li>
-            <a class="app-menu__item"href="#/clientes"> 
+            <a class="app-menu__item"href="<?php echo base_url; ?>Productos"> 
             <i class="app-menu__icon fa fa-product-hunt" aria-hidden="true"></i>   
             <span class="app-menu__label"> Productos</span></a>
         </li>    
         <li>
-            <a class="app-menu__item"href="#/clientes"> 
+            <a class="app-menu__item"href="<?php echo base_url; ?>Categorias"> 
             <i class="app-menu__icon fa fa-arrow-circle-o-down" aria-hidden="true"></i>     
             <span class="app-menu__label"> Categorias</span></a>
         </li>    
         <li>
-            <a class="app-menu__item"href="#/clientes"> 
-            <i class="app-menu__icon fa fa-balance-scale" aria-hidden="true"></i>     
+            <a class="app-menu__item"href="<?php echo base_url; ?>Medidas"> 
+            <i class="app-menu__icon fa fa-balance-scale-left" aria-hidden="true"></i>     
             <span class="app-menu__label"> Medidas</span></a>
         </li>  
         <li>

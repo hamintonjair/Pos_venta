@@ -7,20 +7,13 @@ class ClientesModel extends Query{
     {
         parent::__construct();
     }
-   // validar cliente
-    public function getCliente(string $usuario, string $clave){
-
-        $sql = "SELECT * FROM clientes WHERE dni = '$dni'";
-        $data = $this->select($sql);
-        return $data;
-    }
     //listar cliente
     public function getClientes(){
 
-        $sql = "SELECT  *  FROM clientes";
+        $sql = "SELECT * FROM clientes";
         $data = $this->selectAll($sql);
         return $data;
-    }
+    } 
     //registrar cliente
     public function registrarCliente(string $dni, string $nombre, string $telefono, string $direccion){
         $this->dni = $dni;

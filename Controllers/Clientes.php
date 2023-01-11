@@ -12,7 +12,7 @@ class Clientes extends Controller{
     }
     //VISTA DASHBOARD
     public function index(){
-        // $data['cajas'] =  $this->model->getCajas();
+       
         $this->views->getView($this, "cliente");
 
     }

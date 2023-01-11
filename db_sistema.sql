@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-01-2023 a las 01:57:00
+-- Tiempo de generación: 11-01-2023 a las 03:45:34
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.0.23
 
@@ -39,7 +39,112 @@ CREATE TABLE `caja` (
 
 INSERT INTO `caja` (`id`, `caja`, `estado`) VALUES
 (1, 'Genaral', 1),
-(2, 'Secundario', 1);
+(2, 'Secundario', 1),
+(3, 'Basica', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `categorias`
+--
+
+CREATE TABLE `categorias` (
+  `id` int NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `estado` int NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `categorias`
+--
+
+INSERT INTO `categorias` (`id`, `nombre`, `estado`) VALUES
+(1, 'Lapiceros', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `clientes`
+--
+
+CREATE TABLE `clientes` (
+  `id` int NOT NULL,
+  `dni` varchar(10) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `telefono` varchar(15) NOT NULL,
+  `direccion` text NOT NULL,
+  `estado` int NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `clientes`
+--
+
+INSERT INTO `clientes` (`id`, `dni`, `nombre`, `telefono`, `direccion`, `estado`) VALUES
+(1, '80772379', 'Haminton Jair Mena', '3124943527', 'Carrera 12 #46-136 barrio Buenos Aires', 1),
+(2, '123456', 'Jair Mena', '3157589658', 'Barrio Buenos Aires', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `medidas`
+--
+
+CREATE TABLE `medidas` (
+  `id` int NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `nombre_corto` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `estado` int NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `medidas`
+--
+
+INSERT INTO `medidas` (`id`, `nombre`, `nombre_corto`, `estado`) VALUES
+(1, 'corto', 'largo', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `productos`
+--
+
+CREATE TABLE `productos` (
+  `id` int NOT NULL,
+  `codigo` varchar(20) NOT NULL,
+  `descripcion` varchar(255) NOT NULL,
+  `precio_compra` decimal(10,2) NOT NULL,
+  `precio_venta` decimal(10,2) NOT NULL,
+  `cantidad` int NOT NULL,
+  `id_medida` int NOT NULL,
+  `id_categoria` int NOT NULL,
+  `id_proveedor` int NOT NULL,
+  `estado` int NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `proveedor`
+--
+
+CREATE TABLE `proveedor` (
+  `id` int NOT NULL,
+  `nit` varchar(15) NOT NULL,
+  `razon_social` varchar(100) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `telefono` varchar(15) NOT NULL,
+  `direccion` varchar(100) NOT NULL,
+  `estado` int NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `proveedor`
+--
+
+INSERT INTO `proveedor` (`id`, `nit`, `razon_social`, `nombre`, `telefono`, `direccion`, `estado`) VALUES
+(1, '80772379', 'Jojama', 'Haminton Mena Mena', '3124943527', 'Carrera 12 #46-136 barrio Buenos Aires', 1);
 
 -- --------------------------------------------------------
 
@@ -61,16 +166,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `usuario`, `nombre`, `clave`, `id_caja`, `estado`) VALUES
-(1, 'admin', 'Haminton Mena', 'admin', 1, 1),
-(2, 'jair', 'Jair Mena', 'jair', 2, 0),
-(3, 'Mateo', 'Duvan Mateo', '123456', 1, 1),
-(4, 'Jerry', 'Jerry Mina', '123456', 2, 1),
-(5, 'Haminton', 'Mena', '123', 1, 1),
-(6, 'yiber', 'Johan yiber', '123', 2, 1),
-(7, 'Luz', 'Luz leiby Asprilla', '12345', 1, 1),
-(8, 'Jerry', 'Jerry Mina', '', 1, 1),
-(9, 'prueba', 'prueba', '1234', 2, 1),
-(10, 'keyra', 'keyra', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 1, 1);
+(1, 'Admin', 'Haminton Mena m', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 1, 1);
 
 --
 -- Índices para tablas volcadas
@@ -80,6 +176,39 @@ INSERT INTO `usuarios` (`id`, `usuario`, `nombre`, `clave`, `id_caja`, `estado`)
 -- Indices de la tabla `caja`
 --
 ALTER TABLE `caja`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `categorias`
+--
+ALTER TABLE `categorias`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `clientes`
+--
+ALTER TABLE `clientes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `medidas`
+--
+ALTER TABLE `medidas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `productos`
+--
+ALTER TABLE `productos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_medida` (`id_medida`),
+  ADD KEY `id_categoria` (`id_categoria`),
+  ADD KEY `id_proveedor` (`id_proveedor`);
+
+--
+-- Indices de la tabla `proveedor`
+--
+ALTER TABLE `proveedor`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -97,17 +226,55 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `caja`
 --
 ALTER TABLE `caja`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `categorias`
+--
+ALTER TABLE `categorias`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `clientes`
+--
+ALTER TABLE `clientes`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `medidas`
+--
+ALTER TABLE `medidas`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `productos`
+--
+ALTER TABLE `productos`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `proveedor`
+--
+ALTER TABLE `proveedor`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `productos`
+--
+ALTER TABLE `productos`
+  ADD CONSTRAINT `productos_ibfk_1` FOREIGN KEY (`id_medida`) REFERENCES `medidas` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `productos_ibfk_2` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `productos_ibfk_3` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Filtros para la tabla `usuarios`
