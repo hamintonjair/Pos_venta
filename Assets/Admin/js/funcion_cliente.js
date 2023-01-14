@@ -111,7 +111,13 @@ function registrarCliente(e) {
                $('#nuevo_cliente').modal('hide');
                location.reload();
             } else {
-               alert("Error", resp.post, "error");
+               Swal.fire({
+                  position: 'top-end',
+                  icon: 'error',
+                  title: resp.post,
+                  showConfirmButton: false,
+                  timer: 1500
+                })      
             }
 
          }

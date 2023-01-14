@@ -6,13 +6,6 @@ class ProveedoresModel extends Query{
     {
         parent::__construct();
     }  
-    //listar proveedor 
-    public function getProveedor(){
-
-        $sql = "SELECT * FROM proveedor  WHERE estado = 1";
-        $data = $this->selectAll($sql);
-        return $data;
-    }
     //listar proveedor
     public function getProveedores(){
 

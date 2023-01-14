@@ -4,17 +4,17 @@ class Proveedores extends Controller{
 
     public function __construct()
     {
-        session_start();
-        if( empty($_SESSION['activo'] == true)){
-             header("location:".base_url);
-        }
+        session_start();       
         parent::__construct();
     }
 
     //VISTA DASHBOARD
     public function index(){
+        
+        if( empty($_SESSION['activo'])){
+             header("location:".base_url);
+        }
         $this->views->getView($this, "proveedor");
-
     }
     //listar los proveedores
     public function listar(){
@@ -115,12 +115,6 @@ class Proveedores extends Controller{
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
     }
-  //cerrar sesion
-    public function logout(){
-        
-        session_destroy();
-        header("location:".base_url);
 
-    }
 }
 ?>

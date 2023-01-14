@@ -25,9 +25,9 @@ include 'Views/Templates/body.php';
             <div class='tile'>
                 <div class='tile-body'>
                     <div class='table-responsive'>
-                        <table class='table table-hover table-bordered' id='tableMedidas'>
-                            <thead>
-                                <tr>
+                        <table class='table table-light table-hover table-bordered' id='tableMedidas'>
+                            <thead class="thead-dark">
+                                <tr class="thead-dark">
                                     <th>#</th>
                                     <th>Nombre</th>                                
                                     <th>Corto</th>

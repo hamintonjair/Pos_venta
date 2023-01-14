@@ -44,21 +44,9 @@ class Query extends Conexion{
       }
       return $res;
   }
-  // //eliminar
-  // public function delete(string $sql, array $data){
 
-  //   $this->sql = $sql;
-  //   $this->datos = $data;
-  //   $insert = $this->con->prepare($this->sql);
-  //   $data = $insert->execute($this->datos);
 
-  //     if($data){
-  //       $res = 1;
-  //     }else{
-  //       $res = 0 ;
-  //     }
-  //     return $res;
-  // }
+
 }
 
 ?>

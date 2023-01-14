@@ -99,7 +99,9 @@ function registrarUsuario(e) {
                 })             
                $('#nuevo_usuario').modal('hide');
                location.reload();
+               
             } else if (resp.modificado == true) {
+               
                Swal.fire({
                   position: 'top-end',
                   icon: 'success',
@@ -110,7 +112,15 @@ function registrarUsuario(e) {
                $('#nuevo_usuario').modal('hide');
                location.reload();
             } else {
-               alert("Error", resp.post, "error");
+
+               Swal.fire({
+                  position: 'top-end',
+                  icon: 'error',
+                  title: resp.post,
+                  showConfirmButton: false,
+                  timer: 1500
+                })      
+             
             }
 
          }

@@ -35,6 +35,8 @@
     <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funcion_categoria.js"></script>
     <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funcion_medida.js"></script>
     <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funcion_proveedor.js"></script>
+    <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funcion_producto.js"></script>
+    <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funciones_compra.js"></script>
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -46,70 +48,6 @@
     </script>
 
 
-
-
-     <script type="text/javascript">
-      
-         $('#tablePaginas').dataTable({
-            "language":{"url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"},
-         dom: 'lBfrtip', 
-         "ajax":{
-         "url": " "+base_url+"Paginas/getPaginas",        
-         "dataSrc":""
-         },
-         "columns":[
-            {"data":"idpost"},
-            {"data":"titulo"},
-            {"data":"fecha"},
-            {"data":"status"},
-            {"data":"options"}
-         ],
-         "columnDefs": [
-                    { 'className': "textcenter", "targets": [ 2 ] },
-                    { 'className': "textright", "targets": [ 3 ] },              
-                  ],           
-        buttons: [
-          {
-               "extend": "copyHtml5",
-               "text": "<i class='far fa-copy'></i> Copiar",
-               "titleAttr":"Copiar",
-               "className": "btn btn-secondary",
-               "exportOptions":{
-                  "columns":[0,1,2]
-               }
-            },{
-               "extend": "excelHtml5",
-               "text": "<i class='fas fa-file-excel'></i> Excel",
-               "titleAttr":"Expotar a Excel",
-               "className": "btn btn-success",
-               "exportOptions":{
-                  "columns":[0,1,2]
-               }
-            },{
-               "extend": "pdfHtml5",
-               "text": "<i class='fas fa-file-pdf'></i> PDF",
-               "titleAttr":"Exportar a PDF",
-               "className": "btn btn-danger",
-               "exportOptions":{
-                  "columns":[0,1,2]
-               }
-            },{
-               "extend": "csvHtml5",
-               "text": "<i class='faa fa-file-csv'></i> CSV",
-               "titleAttr":"Eportar",
-               "className": "btn btn-secondary",
-               "exportOptions":{
-                  "columns":[0,1,2]
-               } 
-            }
-           
-          ],
-        "resonsieve":"true",
-        "bDestroy": true,
-        "iDisplayLength": 10,
-        "order":[[0,"desc"]]
-        });
-      </script>
    <!-- usuarios -->
      <script>
 		

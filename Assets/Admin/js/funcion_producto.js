@@ -1,20 +1,25 @@
 
 document.addEventListener("DOMContentLoaded", function () {
-    $('#tableMedidas').dataTable({
+    $('#tableProductos').dataTable({
        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
        dom: 'lBfrtip',
        "columnDefs": [
-          { 'className': "textcenter", "targets": [3] },  //status  
-          { 'className': "textcenter", "targets": [4] },  //status           
+          { 'className': "textcenter", "targets": [7] }, //accion
+          { 'className': "textcenter", "targets": [6] }, //accion
+          { 'className': "textcenter", "targets": [5] }, //status
+          { 'className': "textleft", "targets": [4] },  //stock            
        ],
        "ajax": {
-          "url": " " + base_url + "Medidas/listar",
+          "url": " " + base_url + "Productos/listar",
           "dataSrc": ""
        },
        "columns": [
           { "data": "id" },
-          { "data": "nombre" },
-          { "data": "nombre_corto" },
+          { "data": "imagen" },
+          { "data": "codigo" },
+          { "data": "descripcion" },
+          { "data": "precio_venta" },
+          { "data": "cantidad" },
           { "data": "estado" },
           { "data": "acciones" },
  
@@ -26,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
              "titleAttr": "Copiar",
              "className": "btn btn-secondary",
              "exportOptions": {
-                "columns": [0, 1, 2, 3]
+                "columns": [0, 1, 2, 3, 4, 5]
              }
           }, {
              "extend": "excelHtml5",
@@ -34,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
              "titleAttr": "Expotar a Excel",
              "className": "btn btn-success",
              "exportOptions": {
-                "columns": [0, 1, 2, 3]
+                "columns": [0, 1, 2, 3, 4, 5]
              }
           }, {
              "extend": "pdfHtml5",
@@ -42,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
              "titleAttr": "Exportar a PDF",
              "className": "btn btn-danger",
              "exportOptions": {
-                "columns": [0, 1, 2, 3]
+                "columns": [0, 1, 2, 3, 4, 5]
              }
           }, {
              "extend": "csvHtml5",
@@ -50,34 +55,39 @@ document.addEventListener("DOMContentLoaded", function () {
              "titleAttr": "Eportar",
              "className": "btn btn-secondary",
              "exportOptions": {
-                "columns": [0, 1, 2, 3]
+                "columns": [0, 1, 2, 3, 4, 5]
              }
           },
  
        ],
        "resonsieve": "true",
        "bDestroy": true,
-       "iDisplayLength": 5,
+       "iDisplayLength": 10,
        "order": [[0, "desc"]]
     });
  
  
  })
  
- //registrar caja
- function registrarMedida(e) {
+ //registrar producto
+ function registrarProducto(e) {
     e.preventDefault();
  
-    const nombre = document.getElementById("nombre");
-    const nombre_corto = document.getElementById("nombre_corto");
+    const codigo = document.getElementById("codigo");
+    const descripcion = document.getElementById("descripcion");
+    const precio_venta = document.getElementById("precio_venta");
+    const precio_compra = document.getElementById("precio_compra");
+    const medida = document.getElementById("id_medida");
+    const categoria = document.getElementById("id_categoria");
+    const proveedor = document.getElementById("id_proveedor");
  
-    if (nombre.value == "" || nombre_corto.value == "") {
+    if (codigo.value == "" || descripcion.value == "" || precio_venta.value == "" || precio_compra.value == "" || medida.value == "" || categoria.value == "" || proveedor.value == "") {
  
        alert("Error", "Todos los campos son obligatorios", "error");
  
     } else {
-       const url = base_url + "Medidas/registrarMedida";
-       const frm = document.getElementById("frmMedida");
+       const url = base_url + "Productos/registrarProductos";
+       const frm = document.getElementById("frmProductos");
        const http = new XMLHttpRequest();
        http.open("POST", url, true);
        http.send(new FormData(frm));
@@ -86,27 +96,27 @@ document.addEventListener("DOMContentLoaded", function () {
              const resp = JSON.parse(this.responseText);
  
              if (resp.ok == true) {
-               Swal.fire({
-                  position: 'top-end',
-                  icon: 'success',
-                  title: resp.post,
-                  showConfirmButton: false,
-                  timer: 1500
-                })       
-                $('#nueva_medida').modal('hide');
+                Swal.fire({
+                   position: 'top-end',
+                   icon: 'success',
+                   title: resp.post,
+                   showConfirmButton: false,
+                   timer: 1500
+                 })             
+                $('#nuevo_producto').modal('hide');
                 location.reload();
              } else if (resp.modificado == true) {
-               Swal.fire({
-                  position: 'top-end',
-                  icon: 'success',
-                  title: resp.post,
-                  showConfirmButton: false,
-                  timer: 1500
-                })    
-                $('#nueva_medida').modal('hide');
+                Swal.fire({
+                   position: 'top-end',
+                   icon: 'success',
+                   title: resp.post,
+                   showConfirmButton: false,
+                   timer: 1500
+                 })                 
+                $('#nuevo_producto').modal('hide');
                 location.reload();
              } else {
-               Swal.fire({
+                Swal.fire({
                   position: 'top-end',
                   icon: 'error',
                   title: resp.post,
@@ -121,33 +131,42 @@ document.addEventListener("DOMContentLoaded", function () {
  
  }
  //editar
- function editarMedida(id) {
+ function editarProducto(id) {
  
     document.querySelector('.modal-header').classList.replace("headerRegister", "headerUpdate");
     document.querySelector('#btnActionForm').classList.replace("btn-primary", "btn-info");
     document.querySelector('#btnText').innerHTML = "Actualizar";
-    document.querySelector('#titleModal').innerHTML = "Actualizar Medida";
-    document.querySelector('#frmMedida').reset();
+    document.querySelector('#titleModal').innerHTML = "Actualizar Producto";
+    document.querySelector('#frmProductos').reset();
  
-    const url = base_url + "Medidas/editar/" + id;
+    const url = base_url + "Productos/editar/" + id;
     const http = new XMLHttpRequest();
     http.open("GET", url, true);
     http.send();
     http.onreadystatechange = function () {
        if (this.readyState == 4 && this.status == 200) {
           const resp = JSON.parse(this.responseText);
- 
-          document.getElementById('idMedida').value = resp.id;
-          document.getElementById("nombre").value = resp.nombre;
-          document.getElementById("nombre_corto").value = resp.nombre_corto;
-          $('#nueva_medida').modal('show');
+
+         document.getElementById('idProducto').value = resp.id;
+          document.getElementById("codigo").value = resp.codigo;;    
+          document.getElementById("descripcion").value = resp.descripcion;
+          document.getElementById("precio_venta").value = resp.precio_venta;
+          document.getElementById("precio_compra").value = resp.precio_compra;
+           document.getElementById("id_medida").value = resp.id_medida;
+          document.getElementById("id_categoria").value = resp.id_categoria;
+          document.getElementById("id_proveedor").value = resp.id_proveedor;
+          document.getElementById("img-preview").src = base_url + "Assets/img/" + resp.foto;
+          document.getElementById("icon-cerrar").innerHTML = `<button class="btn btn-danger" 
+          onclick="deletImg()"><i class="fas fa-times"></i></button>`;
+          document.getElementById("icon-image").classList.add("d-none");
+          document.getElementById("foto_actual").value = resp.foto;      
+          $('#nuevo_producto').modal('show');
        }
     }
- 
  }
  
  //eliminar
- function eliminarMedida(id) {
+ function eliminarProducto(id) {
  
     const swalWithBootstrapButtons = Swal.mixin({
        customClass: {
@@ -157,8 +176,8 @@ document.addEventListener("DOMContentLoaded", function () {
        buttonsStyling: false
     })
     swalWithBootstrapButtons.fire({
-       title: '¿Realmente quiere eliminar el Medida?',
-       text: "La medida no se eliminará de forma permanete, solo cambiará el estado de inactivo",
+       title: '¿Realmente quiere eliminar el Producto?',
+       text: "El producto no se eliminará de forma permanete, solo cambiará el estado de inactivo",
        icon: 'warning',
        showCancelButton: true,
        confirmButtonText: 'Si, Eliminar!',
@@ -166,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
        reverseButtons: true
     }).then((result) => {
        if (result.isConfirmed) {
-          const url = base_url + "Medidas/deleteMedida/" + id;
+          const url = base_url + "Productos/deleteProducto/" + id;
           const http = new XMLHttpRequest();
           http.open("GET", url, true);
           http.send();
@@ -198,14 +217,14 @@ document.addEventListener("DOMContentLoaded", function () {
        ) {
           swalWithBootstrapButtons.fire(
              'Cancelado!',
-             'La medida no fue eliminado',
+             'El producto no fue eliminado',
              'error'
           )
        }
     })
  }
- //reingresar caja
- function reingresarMedida(id) {
+ //reingresar producto
+ function reingresarProducto(id) {
     const swalWithBootstrapButtons = Swal.mixin({
        customClass: {
           confirmButton: 'btn btn-success',
@@ -214,7 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
        buttonsStyling: false
     })
     swalWithBootstrapButtons.fire({
-       title: '¿Realmente quiere reingresar el Medida?',
+       title: '¿Realmente quiere reingresar el Producto?',
        icon: 'warning',
        showCancelButton: true,
        confirmButtonText: 'Si, Restaurar!',
@@ -222,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
        reverseButtons: true
     }).then((result) => {
        if (result.isConfirmed) {
-          const url = base_url + "Medidas/reingresarMedida/" + id;
+          const url = base_url + "Productos/reingresarProducto/" + id;
           const http = new XMLHttpRequest();
           http.open("GET", url, true);
           http.send();
@@ -254,20 +273,40 @@ document.addEventListener("DOMContentLoaded", function () {
        ) {
           swalWithBootstrapButtons.fire(
              'Cancelado!',
-             'La medida no fue restaurada',
+             'El producto no fue restaurado',
              'error'
           )
        }
     })
  }
- 
- function openModalMedida() {
+
+ //cargar imagen
+ function preview(e){
+    const url = e.target.files[0];
+    const urlTmp = URL.createObjectURL(url);
+    document.getElementById("img-preview").src = urlTmp;
+    document.getElementById("icon-image").classList.add("d-none");
+    document.getElementById("icon-cerrar").innerHTML = `<button class="btn btn-danger"
+    onclick="deletImg()"><i class="fas fa-times"></i></button>
+    ${url['name']}`;
+ } 
+ function deletImg(){
+    document.getElementById("icon-cerrar").innerHTML = '';
+    document.getElementById("icon-image").classList.remove("d-none");
+    document.getElementById("img-preview").src = '';
+    document.getElementById("imagen").value = '';
+    document.getElementById("foto_actual").value = '';
+ }
+
+
+ function openModalProductos() {
  
     document.querySelector('.modal-header').classList.replace("headerUpdate", "headerRegister");
     document.querySelector('#btnActionForm').classList.replace("btn-info", "btn-primary");
     document.querySelector('#btnText').innerHTML = "Registrar";
-    document.querySelector('#titleModal').innerHTML = "Nuevo Medida";
-    document.querySelector('#frmMedida').reset();
-    $('#nueva_medida').modal('show');
+    document.querySelector('#titleModal').innerHTML = "Nuevo Producto";
+    document.querySelector('#frmProductos').reset();
+    $('#nuevo_producto').modal('show');
+    deletImg();
  }
  

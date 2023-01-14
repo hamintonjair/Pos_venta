@@ -25,8 +25,8 @@ include 'Views/Templates/body.php';
             <div class='tile'>
                 <div class='tile-body'>
                     <div class='table-responsive'>
-                        <table class='table table-hover table-bordered' id='tableProveedores'>
-                            <thead>
+                        <table class='table table-light table-hover table-bordered' id='tableProveedores'>
+                            <thead class="thead-dark">
                                 <tr>
                                     <th>#</th>
                                     <th>Nit</th>

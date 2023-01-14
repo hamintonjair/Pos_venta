@@ -30,6 +30,7 @@ class Usuarios extends Controller{
   
             $data = $this->model->getUsuario($usuario, $hash);
 
+         
             if($data){
                $_SESSION['id_usuario'] = $data['id'];
                $_SESSION['usuario'] = $data['usuario'];
@@ -42,7 +43,7 @@ class Usuarios extends Controller{
                  $msg = "usuario o contraseña incorrecta";
             }
         }           
-         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
     }
     //listar los usuarios

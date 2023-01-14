@@ -76,8 +76,8 @@
               <i class="treeview-indicator fa fa-angle-right"></i>
           </a>  
           <ul class="treeview-menu">  
-            <li><a class="treeview-item" href="<?php echo base_url; ?>productos"><i class="icon fa fa-cart-arrow-down"></i> Nueva Compra</a></li> 
-            <li><a class="treeview-item" href="#/categorias" > <i class="icon fa fa-list"></i> Compras</a></li> 
+            <li><a class="treeview-item" href="<?php echo base_url; ?>compras"><i class="icon fa fa-cart-arrow-down"></i> Nueva Compra</a></li> 
+            <li><a class="treeview-item" href="#" > <i class="icon fa fa-list"></i> Compras</a></li> 
           </ul>
         </li>                       
       </ul>

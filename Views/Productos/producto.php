@@ -25,19 +25,16 @@ include 'Views/Templates/body.php';
             <div class='tile'>
                 <div class='tile-body'>
                     <div class='table-responsive'>
-                        <table class='table table-hover table-bordered' id='tableProductos'>
-                            <thead>
+                        <table class='table table-light table-hover table-bordered' id='tableProductos'>
+                            <thead class="thead-dark">
                                 <tr>
                                     <th>#</th>
+                                    <th>Imagen</th>
                                     <th>Código</th>
                                     <th>Descripción</th>
-                                    <th>Precio compra</th>
-                                    <th>Precio venta</th>
-                                    <th>Cantidad</th>
-                                    <th>Medida</th>
-                                    <th>Categoría</th>
-                                    <th>Proveedor</th>
-                                    <th>estado</th>
+                                    <th>Precio</th>
+                                    <th>Stock</th>                                   
+                                    <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -51,9 +48,9 @@ include 'Views/Templates/body.php';
     </div>
 
     <!-- Modal -->
-    <div class='modal fade' id='nuevo_productos' tabindex='-1' role='dialog' aria-labelledby='modelTitleId'
+    <div class='modal fade' id='nuevo_producto' tabindex='-1' role='dialog' aria-labelledby='modelTitleId'
         aria-hidden='true'>
-        <div class='modal-dialog modal-xl' role='document'>
+        <div class='modal-dialog modal-lg' role='document'>
             <div class='modal-content'>
                 <div class='modal-header headerRegister'>
                     <h5 class='modal-title' id='titleModal'>Nuevo productos</h5>
@@ -66,14 +63,14 @@ include 'Views/Templates/body.php';
                     <form method='post' id='frmProductos'>
                         <input type='hidden' id='idProducto' name='idProducto' value=''>
                         <div class='row'>
-                            <div class='col-md-4'>
+                            <div class='col-md-6'>
                                 <div class='form-group'>
-                                    <label for='codigo'>Código</label>
+                                    <label for='codigo'>Código de Barra</label>
                                     <input type='text' name='codigo' id='codigo' class='form-control valid validNumber'
-                                        placeholder='Código' aria-describedby='helpId'>
+                                        placeholder='Código de barra' aria-describedby='helpId'>
                                 </div>
                             </div>
-                            <div class='col-md-4'>
+                            <div class='col-md-6'>
                                 <div class='form-group'>
                                     <label for='descripcion'>Descripción</label>
                                     <input type='text' name='descripcion' id='descripcion'
@@ -82,11 +79,21 @@ include 'Views/Templates/body.php';
 
                                 </div>
                             </div>
-                            <div class='col-md-4'>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-6'>
                                 <div class='form-group'>
-                                    <label for='precioV'>Precio de venta</label>
-                                    <input type='text' name='precioV' id='precioV'
-                                        class='form-control valid validNumber' placeholder='Precio venta'
+                                    <label for='precio_compra'>Precio de venta</label>
+                                    <input type='text' name='precio_compra' id='precio_compra'
+                                        class='form-control valid validNumber' placeholder='Precio de venta'
+                                        aria-describedby='helpId'>
+                                </div>
+                            </div>
+                            <div class='col-md-6'>
+                                <div class='form-group'>
+                                    <label for='precio_venta'>Precio de compra</label>
+                                    <input type='text' name='precio_venta' id='precio_venta'
+                                        class='form-control valid validNumber' placeholder='Precio compra'
                                         aria-describedby='helpId'>
 
                                 </div>
@@ -95,58 +102,60 @@ include 'Views/Templates/body.php';
                         <div class='row'>
                             <div class='col-md-4'>
                                 <div class='form-group'>
-                                    <label for='precioC'>Precio de compra</label>
-                                    <input type='text' name='precioC' id='precioC'
-                                        class='form-control valid validNumber' placeholder='Precio de compra'
-                                        aria-describedby='helpId'>
+                                    <label for='medida'>Medidas</label>
+                                    <select class='form-control' name='id_medida' id='id_medida'>
+                                        <?php foreach ($data['medidas'] as $row){ ?>
+                                        <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre']; ?></option>
+                                        <?php }; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class='col-md-4'>
+                                <div class='form-group'>
+                                    <label for='categoria'>Categoría</label>
+                                    <select class='form-control' name='id_categoria' id='id_categoria'>
+                                        <?php foreach ($data['categorias'] as $row){ ?>
+                                        <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre']; ?></option>
+                                        <?php }; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class='col-md-4'>
+                                <div class='form-group'>
+                                    <label for='proveedor'>Proveedor</label>
+                                    <select class='form-control' name='id_proveedor' id='id_proveedor'>
+                                        <?php foreach ($data['proveedores'] as $row){ ?>
+                                        <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre']; ?></option>
+                                        <?php }; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class='col-md-6'>
+                                <div class='form-group'>
+                                    <label>Agregar Foto</label>
+                                    <div class="card border-primary">
+                                      
+                                        <div class="card-body">
+                                            <label for="imagen" id="icon-image" class="btn btn-primary"><i class="fas fa-image"></i></label>
+                                            <span id="icon-cerrar"></span>
+                                            <input id="imagen" class="d-none" type="file" name="imagen" onchange="preview(event)">
+                                        </div>
+                                        <input type="hidden"  id="foto_actual" name="foto_actual">                                
+                                          <img class="img-thumbnail" id="img-preview">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class='col-md-4'>
-                            <div class='form-group'>
-                                <label for='cantidad'>Cantidad</label>
-                                <input type='text' name='cantidad' id='cantidad' class='form-control valid validNumber'
-                                    placeholder='Cantidad' aria-describedby='helpId'>
-                            </div>
+                        <div class='modal-footer'>
+                            <button id='btnActionForm' type='button' class='btn btn-primary'
+                                onclick="registrarProducto(event);"><span id='btnText'>
+                                    Registrar</span></button>
+                            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
                         </div>
-                        <div class='col-md-4'>
-                            <div class='form-group'>
-                                <label for='medida'>Medida</label>
-                                <select class='form-control' name='medida' id='medida'>
-
-                                </select>
-                            </div>
-                        </div>
+                    </form>
                 </div>
-                <div class='row'>
-                    <div class='col-md-6'>
-                        <div class='form-group'>
-                            <label for='categoria'>Categoría</label>
-                            <select class='form-control' name='categoria' id='categoria'>
-
-                            </select>
-                        </div>
-                    </div>
-                    <div class='col-md-6'>
-                        <div class='form-group'>
-                            <label for='proveedor'>Proveedor</label>
-                            <select class='form-control' name='proveedor' id='proveedor'>
-
-                            </select>
-                        </div>
-                    </div>
-
-                </div>               
-                <div class='modal-footer'>
-                    <button id='btnActionForm' type='button' class='btn btn-primary'
-                        onclick="registraProducto(event);"><span id='btnText'>
-                            Registrar</span></button>
-                    <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
-                </div>
-                </form>
             </div>
         </div>
-    </div>
     </div>
 </main>
 
