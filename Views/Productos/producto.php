@@ -15,7 +15,7 @@ include 'Views/Templates/body.php';
         </div>
         <ul class='app-breadcrumb breadcrumb'>
             <li class='breadcrumb-item'><i class='fa fa-home fa-lg'></i></li>
-            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>dashboard/categorias'>Ir a Rol
+            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>proveedores'>Ir a proveedores
                     <small>Sistema de ventas</small></a></li>
         </ul>
     </div>

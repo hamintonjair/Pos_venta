@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Copiar",
             "className": "btn btn-secondary",
             "exportOptions": {
-               "columns": [0, 1, 2, 3, 4]
+               "columns": [0, 1, 2, 3]
             }
          }, {
             "extend": "excelHtml5",
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Expotar a Excel",
             "className": "btn btn-success",
             "exportOptions": {
-               "columns": [0, 1, 2, 3, 4]
+               "columns": [0, 1, 2, 3]
             }
          }, {
             "extend": "pdfHtml5",
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Exportar a PDF",
             "className": "btn btn-danger",
             "exportOptions": {
-               "columns": [0, 1, 2, 3, 4]
+               "columns": [0, 1, 2, 3]
             }
          }, {
             "extend": "csvHtml5",
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Eportar",
             "className": "btn btn-secondary",
             "exportOptions": {
-               "columns": [0, 1, 2, 3, 4]
+               "columns": [0, 1, 2, 3]
             }
          },
 
@@ -98,7 +98,7 @@ function registrarUsuario(e) {
                   timer: 1500
                 })             
                $('#nuevo_usuario').modal('hide');
-               location.reload();
+               window.location.reload();
                
             } else if (resp.modificado == true) {
                
@@ -110,7 +110,7 @@ function registrarUsuario(e) {
                   timer: 1500
                 })                 
                $('#nuevo_usuario').modal('hide');
-               location.reload();
+               window.location.reload();
             } else {
 
                Swal.fire({

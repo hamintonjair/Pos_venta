@@ -13,7 +13,7 @@ include 'Views/Templates/body.php';
         </div>
         <ul class='app-breadcrumb breadcrumb'>
             <li class='breadcrumb-item'><i class='fa fa-home fa-lg'></i></li>
-            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>Productos'>Ir a Productos
+            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>Productos'>Ir a productos
                     <small>Sistema de ventas</small></a></li>
         </ul>
     </div>
@@ -102,7 +102,7 @@ include 'Views/Templates/body.php';
                     <input type="text" name="total" id="total" class="form-control valid validNumber"
                         placeholder="total" aria-describedby="helpId" disabled>
                        
-                    <button type="button" class="btn btn-primary mt-2 btn-block">Generar Compra</button>
+                    <button type="button" class="btn btn-primary mt-2 btn-block" onclick="generarCompra()">Generar Compra</button>
                 </div>
             </div>      
         </div>

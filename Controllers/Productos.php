@@ -4,16 +4,17 @@ class Productos extends Controller{
 
     public function __construct()
     {
-        session_start();       
+        session_start();  
+        if(empty($_SESSION['activo'])){
+            header("location:".base_url);
+       }     
         parent::__construct();
     }
 
     //VISTA DASHBOARD
     public function index(){
 
-        if(empty($_SESSION['activo'])){
-             header("location:".base_url);
-        }
+      
        $data = array(
             'proveedores' =>  $this->model->getProveedores(),
             'categorias' =>  $this->model->getCategorias(),

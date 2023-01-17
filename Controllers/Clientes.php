@@ -4,14 +4,15 @@ class Clientes extends Controller{
 
     public function __construct()
     {
-        session_start();        
+        session_start();  
+        if( empty($_SESSION['activo'])){
+            header("location:".base_url);
+       }      
         parent::__construct();
     }
     //VISTA DASHBOARD
     public function index(){
-       if( empty($_SESSION['activo'])){
-             header("location:".base_url);
-        }
+      
         $this->views->getView($this, "cliente");
 
     }

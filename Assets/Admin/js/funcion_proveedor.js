@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "titleAttr": "Copiar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5, 6, 7]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             }, {
                 "extend": "excelHtml5",
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "titleAttr": "Expotar a Excel",
                 "className": "btn btn-success",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 45, 6, 7]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             }, {
                 "extend": "pdfHtml5",
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "titleAttr": "Exportar a PDF",
                 "className": "btn btn-danger",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5, 6, 7]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             }, {
                 "extend": "csvHtml5",
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "titleAttr": "Eportar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5, 6, 7]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             },
 
@@ -101,7 +101,7 @@ function registrarProveedor(e) {
                         timer: 1500
                       })       
                     $('#nuevo_proveedor').modal('hide');
-                    location.reload();
+                    window.location.reload();
                
                 } else if (resp.modificado == true) {
 
@@ -113,7 +113,7 @@ function registrarProveedor(e) {
                         timer: 1500
                       })       
                     $('#nuevo_proveedor').modal('hide');
-                    location.reload();
+                    window.location.reload();
                 
                 } else {
                     Swal.fire({

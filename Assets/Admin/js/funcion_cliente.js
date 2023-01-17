@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Copiar",
             "className": "btn btn-secondary",
             "exportOptions": {
-               "columns": [0, 1, 2, 3, 4, 5]
+               "columns": [0, 1, 2, 3, 4]
             }
          }, {
             "extend": "excelHtml5",
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Expotar a Excel",
             "className": "btn btn-success",
             "exportOptions": {
-               "columns": [0, 1, 2, 3, 4, 5]
+               "columns": [0, 1, 2, 3, 4]
             }
          }, {
             "extend": "pdfHtml5",
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Exportar a PDF",
             "className": "btn btn-danger",
             "exportOptions": {
-               "columns": [0, 1, 2, 3, 4, 5]
+               "columns": [0, 1, 2, 3, 4]
             }
          }, {
             "extend": "csvHtml5",
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Eportar",
             "className": "btn btn-secondary",
             "exportOptions": {
-               "columns": [0, 1, 2, 3, 4, 5]
+               "columns": [0, 1, 2, 3, 4]
             }
          },
 
@@ -98,7 +98,7 @@ function registrarCliente(e) {
                   timer: 1500
                 })       
                $('#nuevo_cliente').modal('hide');
-               location.reload();
+               window.location.reload();
             } else if (resp.modificado == true) {
 
                Swal.fire({
@@ -109,7 +109,7 @@ function registrarCliente(e) {
                   timer: 1500
                 })       
                $('#nuevo_cliente').modal('hide');
-               location.reload();
+               window.location.reload();
             } else {
                Swal.fire({
                   position: 'top-end',
