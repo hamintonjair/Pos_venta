@@ -82,7 +82,7 @@ class Usuarios extends Controller{
         $id = $_POST['idUsuario'];
         $hash = hash("SHA256", $clave);
 
-        if(empty($usuario) || empty($nombre ) || empty( $caja)){
+        if(empty($usuario) || empty($nombre ) || $caja == "Seleccionar.."){
             $msg = (array('ok'=>false, 'post' => 'Todos los campos son obligatorios.'));
         }else{
             

@@ -90,36 +90,18 @@ function registrarUsuario(e) {
             const resp = JSON.parse(this.responseText);
 
             if (resp.ok == true) {
-               Swal.fire({
-                  position: 'top-end',
-                  icon: 'success',
-                  title: resp.post,
-                  showConfirmButton: false,
-                  timer: 1500
-                })             
+               alert(resp.post, "success");              
                $('#nuevo_usuario').modal('hide');
                window.location.reload();
                
             } else if (resp.modificado == true) {
                
-               Swal.fire({
-                  position: 'top-end',
-                  icon: 'success',
-                  title: resp.post,
-                  showConfirmButton: false,
-                  timer: 1500
-                })                 
+               alert(resp.post, "success");                 
                $('#nuevo_usuario').modal('hide');
                window.location.reload();
             } else {
 
-               Swal.fire({
-                  position: 'top-end',
-                  icon: 'error',
-                  title: resp.post,
-                  showConfirmButton: false,
-                  timer: 1500
-                })      
+               alert(resp.post, "error");     
              
             }
 
@@ -271,6 +253,15 @@ function reingresarUsuario(id) {
    })
 }
 
+function alert(msm, icon){
+   Swal.fire({
+      position: 'top-end',
+      icon: icon,
+      title: msm,
+      showConfirmButton: false,
+      timer: 1500
+    })      
+}
 function openModalUsuarios() {
 
    document.querySelector('.modal-header').classList.replace("headerUpdate", "headerRegister");

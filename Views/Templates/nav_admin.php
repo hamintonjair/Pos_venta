@@ -65,8 +65,8 @@
               <i class="treeview-indicator fa fa-angle-right"></i>
           </a>  
           <ul class="treeview-menu">  
-            <li><a class="treeview-item" href="<?php echo base_url; ?>productos"><i class="icon fa fa-cart-plus"></i>Nueva Venta</a></li> 
-            <li><a class="treeview-item" href="#/categorias" > <i class="icon fa fa-list-alt"></i>Historial Ventas</a></li> 
+            <li><a class="treeview-item" href="<?php echo base_url; ?>ventas"><i class="icon fa fa-cart-plus"></i>Nueva Venta</a></li> 
+            <li><a class="treeview-item" href="<?php echo base_url; ?>ventas/historialVenta" > <i class="icon fa fa-list-alt"></i>Historial Ventas</a></li> 
           </ul>
         </li> 
         <li class="treeview">

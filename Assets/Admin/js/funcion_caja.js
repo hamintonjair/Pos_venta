@@ -71,7 +71,7 @@ function registrarCaja(e) {
 
    if (caja.value == "") {
 
-      alert("Error", "Todos los campos son obligatorios", "error");
+      alert("Todos los campos son obligatorios", "error");
 
    } else {
       const url = base_url + "Cajas/registrarCaja";
@@ -84,34 +84,17 @@ function registrarCaja(e) {
             const resp = JSON.parse(this.responseText);
 
             if (resp.ok == true) {
-               Swal.fire({
-                  position: 'top-end',
-                  icon: 'success',
-                  title: resp.post,
-                  showConfirmButton: false,
-                  timer: 1500
-                })       
+               alert(resp.post, "success"); 
                $('#nueva_caja').modal('hide');
                window.location.reload();
             } else if (resp.modificado == true) {
 
-               Swal.fire({
-                  position: 'top-end',
-                  icon: 'success',
-                  title: resp.post,
-                  showConfirmButton: false,
-                  timer: 1500
-                })       
+               alert(resp.post, "success");  
                $('#nueva_caja').modal('hide');
                window.location.reload();
             } else {
-               Swal.fire({
-                  position: 'top-end',
-                  icon: 'error',
-                  title: resp.post,
-                  showConfirmButton: false,
-                  timer: 1500
-                })      
+
+               alert( resp.post, "error");   
             }
 
          }
@@ -259,7 +242,15 @@ function reingresarCaja(id) {
    })
 }
 
-
+function alert(msm, icon){
+   Swal.fire({
+      position: 'top-end',
+      icon: icon,
+      title: msm,
+      showConfirmButton: false,
+      timer: 1500
+    })      
+}
 function openModalCaja() {
 
    document.querySelector('.modal-header').classList.replace("headerUpdate", "headerRegister");

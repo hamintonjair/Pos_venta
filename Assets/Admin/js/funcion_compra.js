@@ -18,6 +18,7 @@ function buscarCodigo(e) {
           document.getElementById("descripcion").value = resp.descripcion;
           document.getElementById("precio").value = resp.precio_venta;
           document.getElementById("id").value = resp.id;
+          document.getElementById("cantidad").removeAttribute('disabled');
           document.getElementById("cantidad").focus();
         } else {
           Swal.fire({
@@ -46,8 +47,7 @@ function calcularPrecio(e) {
   const cant = document.getElementById("cantidad").value;
   const precio = document.getElementById("precio").value;
   document.getElementById("sub_total").value = precio * cant;
-
-  if (e.which == 13) {
+ if (e.which == 13) {
     if (cant > 0) {
       const url = base_url + "Compras/ingresar";
       const frm = document.getElementById("frmCompra");
@@ -55,41 +55,25 @@ function calcularPrecio(e) {
       http.open("POST", url, true);
       http.send(new FormData(frm));
       http.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
+        if (this.readyState == 4 && this.status == 200) {         
           const resp = JSON.parse(this.responseText);
 
           if (resp.modificado == true) {
 
-            Swal.fire({
-              position: 'top-end',
-              icon: 'success',
-              title: resp.post,
-              showConfirmButton: false,
-              timer: 1500
-            })
+            alert(resp.post, "success"); 
             frm.reset();
             cargarDetalle();
 
           } else if (resp.actualizado == true) {
-            Swal.fire({
-              position: 'top-end',
-              icon: 'success',
-              title: resp.post,
-              showConfirmButton: false,
-              timer: 1500
-            })
+            alert(resp.post, "success"); 
             frm.reset();
             cargarDetalle();
 
           } else {
-            Swal.fire({
-              position: 'top-end',
-              icon: 'error',
-              title: resp.post,
-              showConfirmButton: false,
-              timer: 1500
-            })
+            alert(resp.post, "error"); 
           }
+          document.getElementById("cantidad").setAttribute('disabled', 'disabled');
+          document.getElementById("codigo").focus()
         }
       }
     }
@@ -283,3 +267,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 })
+function alert(msm, icon){
+  Swal.fire({
+     position: 'top-end',
+     icon: icon,
+     title: msm,
+     showConfirmButton: false,
+     timer: 1500
+   })      
+}

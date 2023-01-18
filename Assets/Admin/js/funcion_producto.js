@@ -96,33 +96,15 @@ document.addEventListener("DOMContentLoaded", function () {
              const resp = JSON.parse(this.responseText);
  
              if (resp.ok == true) {
-                Swal.fire({
-                   position: 'top-end',
-                   icon: 'success',
-                   title: resp.post,
-                   showConfirmButton: false,
-                   timer: 1500
-                 })             
+               alert(resp.post, "success");          
                 $('#nuevo_producto').modal('hide');
                 window.location.reload();
              } else if (resp.modificado == true) {
-                Swal.fire({
-                   position: 'top-end',
-                   icon: 'success',
-                   title: resp.post,
-                   showConfirmButton: false,
-                   timer: 1500
-                 })                 
+               alert(resp.post, "success");              
                 $('#nuevo_producto').modal('hide');
                 window.location.reload();
              } else {
-                Swal.fire({
-                  position: 'top-end',
-                  icon: 'error',
-                  title: resp.post,
-                  showConfirmButton: false,
-                  timer: 1500
-                })      
+               alert(resp.post, "error"); 
              }
  
           }
@@ -224,7 +206,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
  }
  //reingresar producto
- function reingresarProducto(id) {
+function reingresarProducto(id) {
     const swalWithBootstrapButtons = Swal.mixin({
        customClass: {
           confirmButton: 'btn btn-success',
@@ -278,10 +260,10 @@ document.addEventListener("DOMContentLoaded", function () {
           )
        }
     })
- }
+}
 
  //cargar imagen
- function preview(e){
+function preview(e){
     const url = e.target.files[0];
     const urlTmp = URL.createObjectURL(url);
     document.getElementById("img-preview").src = urlTmp;
@@ -298,6 +280,15 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("foto_actual").value = '';
  }
 
+ function alert(msm, icon){
+   Swal.fire({
+      position: 'top-end',
+      icon: icon,
+      title: msm,
+      showConfirmButton: false,
+      timer: 1500
+    })      
+}
 
  function openModalProductos() {
  

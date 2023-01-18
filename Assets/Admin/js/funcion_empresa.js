@@ -11,27 +11,23 @@ function actualizarEmpresa(e) {
          const resp = JSON.parse(this.responseText);
          
          if (resp.ok == true) {
-            Swal.fire({
-               position: 'top-end',
-               icon: 'success',
-               title: resp.post,
-               showConfirmButton: false,
-               timer: 1500
-             })                     
+            alert(resp.post, "success");                      
             window.location.reload();
             
          } else{
           
-            Swal.fire({
-               position: 'top-end',
-               icon: 'error',
-               title: resp.post,
-               showConfirmButton: false,
-               timer: 1500
-             })                            
+            alert(resp.post, "error");                            
          }
-
         
       }
    }
+}
+function alert(msm, icon){
+   Swal.fire({
+      position: 'top-end',
+      icon: icon,
+      title: msm,
+      showConfirmButton: false,
+      timer: 1500
+    })      
 }

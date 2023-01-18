@@ -53,6 +53,7 @@ class Productos extends Controller{
     //registrar y actualizar usuarios
     public function registrarProductos(){
 
+    
         $codigo = $_POST['codigo'];
         $descripcion = $_POST['descripcion'];
         $precio_compra = $_POST['precio_compra'];
@@ -65,11 +66,17 @@ class Productos extends Controller{
         $name = $img['name'];
         $tpmName = $img['tmp_name'];           
         $fecha = date("YmdHis");
-          
-        if(empty($codigo) || empty($descripcion ) || empty( $precio_compra) || empty($id_medida ) || empty( $precio_venta
-        || empty($id_proveedor ) || empty( $id_categoria))){
+     
+         if($id_medida == "Seleccionar.." || $id_categoria == "Seleccionar.." ||  $id_proveedor == "Seleccionar.."){
+
             $msg = (array('ok'=>false, 'post' => 'Todos los campos son obligatorios.'));
-        }else{        
+
+         }else if(empty($codigo) || empty($descripcion ) || empty( $precio_compra) || empty( $precio_venta )){
+
+            $msg = (array('ok'=>false, 'post' => 'Todos los campos son obligatorios.'));
+              
+        }else{  
+              
             //validamos la imagen para removerla   
             if(!empty($name)){
                 $imgNombre = $fecha.".jpg";
@@ -120,6 +127,7 @@ class Productos extends Controller{
             }
         
         }
+      
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die;
     }

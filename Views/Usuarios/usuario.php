@@ -12,11 +12,11 @@ include 'Views/Templates/body.php';
                     class="fa-solid fa-circle-plus">Nuevo</button>
 
             </h1>
-        </div>  
+        </div>
         <ul class='app-breadcrumb breadcrumb'>
             <li class='breadcrumb-item'><i class='fa fa-home fa-lg'></i></li>
             <li class='breadcrumb-item'><a href='<?php echo base_url; ?>rol'>Ir a rol
-            <small>Sistema de ventas</small></a></li>
+                    <small>Sistema de ventas</small></a></li>
         </ul>
     </div>
 
@@ -62,8 +62,8 @@ include 'Views/Templates/body.php';
                         <input type='hidden' id='idUsuario' name='idUsuario' value=''>
                         <div class='form-group'>
                             <label for='usuario'>Usuario</label>
-                            <input type='text' name='usuario' id='usuario' class='form-control valid validText' placeholder='Usuario'
-                                aria-describedby='helpId'>
+                            <input type='text' name='usuario' id='usuario' class='form-control valid validText'
+                                placeholder='Usuario' aria-describedby='helpId'>
                         </div>
                         <div class='form-group'>
                             <label for='usuario'>Nombre</label>
@@ -85,18 +85,21 @@ include 'Views/Templates/body.php';
                                         placeholder='Confirmar contraseña' aria-describedby='helpId'>
                                 </div>
                             </div>
-
                         </div>
                         <div class='form-group'>
                             <label for='caja'>Caja</label>
-                            <select class='form-control' name='caja' id='caja'>
-                              <?php foreach ($data['cajas'] as $row){ ?>
-                                <option value="<?php echo $row['id']; ?>"><?php echo $row['caja']; ?></option>                                
+                            <select class='form-control selectpicker' name='caja' id='caja'>
+
+                                <option selected="selected">Seleccionar..</option>
+                                <?php foreach ($data['cajas'] as $row){ ?>
+                                <option value="<?php echo $row['id']; ?>"><?php echo $row['caja']; ?>
+                                </option>
                                 <?php }; ?>
                             </select>
                         </div>
                         <div class='modal-footer'>
-                            <button id='btnActionForm' type='button' class='btn btn-primary' onclick="registrarUsuario(event);"><span id='btnText'>
+                            <button id='btnActionForm' type='button' class='btn btn-primary'
+                                onclick="registrarUsuario(event);"><span id='btnText'>
                                     Registrar</span></button>
                             <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
                         </div>

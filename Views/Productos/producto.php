@@ -33,7 +33,7 @@ include 'Views/Templates/body.php';
                                     <th>Código</th>
                                     <th>Descripción</th>
                                     <th>Precio</th>
-                                    <th>Stock</th>                                   
+                                    <th>Stock</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -103,19 +103,24 @@ include 'Views/Templates/body.php';
                             <div class='col-md-4'>
                                 <div class='form-group'>
                                     <label for='medida'>Medidas</label>
-                                    <select class='form-control' name='id_medida' id='id_medida'>
+                                    <select class="form-control selectpicker" id="id_medida" name="id_medida">
+                                        <option selected="selected">Seleccionar..</option>
                                         <?php foreach ($data['medidas'] as $row){ ?>
-                                        <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre']; ?></option>
+                                           <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre']; ?>
+                                        </option>
                                         <?php }; ?>
                                     </select>
+
                                 </div>
                             </div>
                             <div class='col-md-4'>
                                 <div class='form-group'>
                                     <label for='categoria'>Categoría</label>
-                                    <select class='form-control' name='id_categoria' id='id_categoria'>
+                                    <select class='form-control selectpicker' name='id_categoria' id='id_categoria'>
+                                        <option selected="selected">Seleccionar..</option>
                                         <?php foreach ($data['categorias'] as $row){ ?>
-                                        <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre']; ?></option>
+                                           <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre']; ?>
+                                        </option>
                                         <?php }; ?>
                                     </select>
                                 </div>
@@ -123,10 +128,12 @@ include 'Views/Templates/body.php';
                             <div class='col-md-4'>
                                 <div class='form-group'>
                                     <label for='proveedor'>Proveedor</label>
-                                    <select class='form-control' name='id_proveedor' id='id_proveedor'>
+                                    <select class='form-control selectpicker' name='id_proveedor' id='id_proveedor'>
+                                    <option selected="selected">Seleccionar..</option>
                                         <?php foreach ($data['proveedores'] as $row){ ?>
-                                        <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre']; ?></option>
-                                        <?php }; ?>
+                                           <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre']; ?>
+                                    </option>
+                                        <?php }; ?>                              
                                     </select>
                                 </div>
                             </div>
@@ -134,14 +141,16 @@ include 'Views/Templates/body.php';
                                 <div class='form-group'>
                                     <label>Agregar Foto</label>
                                     <div class="card border-primary">
-                                      
+
                                         <div class="card-body">
-                                            <label for="imagen" id="icon-image" class="btn btn-primary"><i class="fas fa-image"></i></label>
+                                            <label for="imagen" id="icon-image" class="btn btn-primary"><i
+                                                    class="fas fa-image"></i></label>
                                             <span id="icon-cerrar"></span>
-                                            <input id="imagen" class="d-none" type="file" name="imagen" onchange="preview(event)">
+                                            <input id="imagen" class="d-none" type="file" name="imagen"
+                                                onchange="preview(event)">
                                         </div>
-                                        <input type="hidden"  id="foto_actual" name="foto_actual">                                
-                                          <img class="img-thumbnail" id="img-preview">
+                                        <input type="hidden" id="foto_actual" name="foto_actual">
+                                        <img class="img-thumbnail" id="img-preview">
                                     </div>
                                 </div>
                             </div>

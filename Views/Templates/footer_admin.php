@@ -36,8 +36,9 @@
     <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funcion_medida.js"></script>
     <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funcion_proveedor.js"></script>
     <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funcion_producto.js"></script>
-    <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funciones_compra.js"></script>
-    <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funciones_empresa.js"></script>
+    <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funcion_compra.js"></script>
+    <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funcion_empresa.js"></script>funcion_venta.js
+    <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funcion_venta.js"></script>funcion_venta.js
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
