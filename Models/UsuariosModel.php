@@ -89,7 +89,24 @@ class UsuariosModel extends Query{
         return $data;
 
     }
-    
-}
+    //cambiar password
+    public function modificarPass(string $claveN, int $id){
 
+        $this->id = $id;
+        $this->claveN = $claveN;
+        $sql = "UPDATE usuarios SET clave = ? WHERE id = ?";
+        $datos = array($this->claveN, $this->id);
+  
+        $data = $this->save($sql, $datos);   
+        return $data;
+    }  
+    //validar claves
+    public function getPass(string $clave, int $id){
+
+        $sql = "SELECT * FROM usuarios WHERE clave = '$clave' AND id = $id";
+        $data = $this->select($sql);
+        return $data;
+
+    }
+}
 ?>

@@ -252,6 +252,44 @@ function reingresarUsuario(id) {
       }
    })
 }
+//cambiar password
+function frmPass(e){
+   e.preventDefault();
+   const actual = document.getElementById("clave_actual").value;
+   const nueva = document.getElementById("clave_nueva").value;
+   const confirmar = document.getElementById("confirmar_clave").value;
+
+   if(actual == "" || nueva == "" || confirmar == ""){
+          alert("Todos los campos son obligatorios", "error");
+   }else{
+       if( nueva !=confirmar){
+         alert("Las contraseñas no coinciden.", "error");
+       }else{
+         const url = base_url + "Usuarios/cambiarPass";
+         const frm = document.getElementById("frmPass");
+         const http = new XMLHttpRequest();
+         http.open("POST", url, true);
+         http.send(new FormData(frm));
+         http.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+               const resp = JSON.parse(this.responseText);          
+
+               if(resp.modificado == true) {
+                  alert(resp.post, "success");              
+                  $('#pass').modal('hide');
+                  window.location.reload(); 
+
+               }else { 
+                  alert(resp.post, "error");    
+               
+               }
+            }
+         }
+       }
+   
+   }
+}
+
 
 function alert(msm, icon){
    Swal.fire({

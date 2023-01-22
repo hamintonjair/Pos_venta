@@ -26,7 +26,8 @@ include 'Views/Templates/body.php';
                         <table class='table table-light table-hover table-bordered' id='tableHistorial'>
                             <thead class="thead-dark">
                                 <tr>
-                                    <th>#</th>                                    
+                                    <th>#</th>    
+                                    <th>Proveedor</th>                                
                                     <th>Total</th>
                                     <th>Fecha Compra</th>                                  
                                     <th>Acción </th>                                  

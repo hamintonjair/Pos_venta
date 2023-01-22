@@ -8,7 +8,7 @@ class ComprasModel extends Query{
     }
   
    //buscar producto por código
-   public function getProCod(string $cod){
+   public function getProCodi(string $cod){
 
     $sql = "SELECT * FROM productos WHERE codigo = '$cod'";
     $data = $this->select($sql);
@@ -22,7 +22,7 @@ class ComprasModel extends Query{
         return $data;
     }
     //registrar datalles
-    public function registrarDetalles(int $id_producto, int $id_usuario, string $precio, int $cantidad,string $sub_total){
+    public function registrarDetallesC(int $id_producto, int $id_usuario, string $precio, int $cantidad,string $sub_total){
 
         $sql = "INSERT INTO  detalle(id_producto, id_usuario, precio, cantidad, sub_total) VALUES(?,?,?,?,?)";
         $datos = array( $id_producto,$id_usuario, $precio, $cantidad, $sub_total);
@@ -37,7 +37,7 @@ class ComprasModel extends Query{
 
     }
     //listar detalle de compra
-    public function getDetalle(int $id){       
+    public function getDetalleC(int $id){       
        
         $sql ="SELECT d.*, p.id as id_pro, p.descripcion FROM detalle d INNER JOIN productos p ON d.id_producto = p.id WHERE d.id_usuario = $id ";
         $data = $this->selectAll($sql);        
@@ -51,7 +51,7 @@ class ComprasModel extends Query{
         return $data;
     }
     //eliminar producto de detalles
-    public function deleteDetalle(int $id){
+    public function deleteDetalleC(int $id){
         $sql ="DELETE FROM detalle WHERE id = ?";
         $datos = array($id);
         $data = $this->save($sql, $datos); 
@@ -65,14 +65,14 @@ class ComprasModel extends Query{
 
     }
     //validar prosuctos para sumar las cantidades
-    public function consultarDetalle(  int $id_producto, int $id_usuario){
+    public function consultarDetalleC(  int $id_producto, int $id_usuario){
 
         $sql ="SELECT * FROM detalle WHERE id_producto = $id_producto AND id_usuario = $id_usuario";
         $data = $this->select($sql);   
         return $data;
     }
     //actualizar detalles
-    public function actualizarDetalles(string $precio, int $cantidad, string $sub_total, int $id_producto, int $id_usuario){
+    public function actualizarDetallesC(string $precio, int $cantidad, string $sub_total, int $id_producto, int $id_usuario){
 
         $sql = "UPDATE detalle SET precio = ?, cantidad = ?, sub_total = ? WHERE id_producto = ? AND id_usuario = ?";
         $datos = array($precio, $cantidad, $sub_total, $id_producto, $id_usuario );
@@ -126,7 +126,7 @@ class ComprasModel extends Query{
         return $data;
    }
    //vaciar detalles
-   public function vaciarDetalle(int $id_usuario){
+   public function vaciarDetalleC(int $id_usuario){
 
         $sql = "DELETE FROM  detalle WHERE id_usuario = ?";
         $datos = array( $id_usuario);
@@ -142,20 +142,20 @@ class ComprasModel extends Query{
    //datos de la compra
    public function getCompra(int $id_compra){
 
-        $sql = "SELECT c.*, d.*, p.id, p.descripcion FROM compras c INNER JOIN datella_compras d ON C.id = d.id_compra INNER JOIN productos p ON
-        p.id = d.id_producto WHERE c.id = $id_compra";    
+        $sql = "SELECT c.*, d.*, p.id, p.descripcion, pro.nombre FROM compras c INNER JOIN datella_compras d ON C.id = d.id_compra INNER JOIN productos p ON
+        p.id = d.id_producto  INNER JOIN proveedor pro ON pro.id = c.id_proveedor WHERE c.id = $id_compra";    
         $data = $this->selectAll($sql);
         return $data;
    }
    //historial compras
-   public function getHiistoriaCompra(){
+   public function getHistorialCompra(){
 
-        $sql = "SELECT * FROM compras";
+        $sql = "SELECT c.*, p.nombre FROM proveedor p INNER JOIN compras c WHERE p.id = c.id_proveedor";
         $data = $this->selectAll($sql);
         return $data;
    }
    //actualizar stock
-   public function actualizarStock(int $cantidad, int $id_prod){
+   public function actualizarStockC(int $cantidad, int $id_prod){
 
     $sql = "UPDATE productos SET cantidad = ? WHERE id = ?";
     $datos = array( $cantidad, $id_prod );

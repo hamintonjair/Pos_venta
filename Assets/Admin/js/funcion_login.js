@@ -24,7 +24,7 @@ function frmLogin(e) {
 
                 if (resp.ok == true) {
                     alert("Atención", resp.post, "success");
-                    window.location = base_url + "Usuarios";
+                    window.location = base_url + "Configuracion/dashboard";
                 } else {
                     document.getElementById("alerta").classList.remove("d-none");
                     document.getElementById("alerta").innerHTML = resp;

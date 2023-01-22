@@ -2,7 +2,7 @@ function actualizarEmpresa(e) {
    e.preventDefault();
    
     const frm = document.getElementById("frmEmpresa")
-    const url = base_url + "Configuracion/ditar/" + id;
+    const url = base_url + "Configuracion/editar/" + id;
     const http = new XMLHttpRequest();
     http.open("POST", url, true);
     http.send(new FormData(frm));

@@ -11,7 +11,7 @@
       </div>
       <ul class="app-menu">     
          <li>
-          <a class="app-menu__item" href="#">
+          <a class="app-menu__item" href="<?php echo base_url; ?>configuracion/dashboard">
           <i class="app-menu__icon fa fa-dashboard"></i>
             <span class="app-menu__label">Dashboard</span>
           </a>

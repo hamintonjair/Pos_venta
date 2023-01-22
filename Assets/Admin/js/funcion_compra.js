@@ -42,7 +42,7 @@ function buscarCodigo(e) {
 
 }
 //calcular cantidad
-function calcularPrecio(e) {
+function calcularPrecioC(e) {
   e.preventDefault();
   const cant = document.getElementById("cantidad").value;
   const precio = document.getElementById("precio").value;
@@ -62,12 +62,12 @@ function calcularPrecio(e) {
 
             alert(resp.post, "success"); 
             frm.reset();
-            cargarDetalle();
+            cargarDetalleC();
 
           } else if (resp.actualizado == true) {
             alert(resp.post, "success"); 
             frm.reset();
-            cargarDetalle();
+            cargarDetalleC();
 
           } else {
             alert(resp.post, "error"); 
@@ -81,8 +81,8 @@ function calcularPrecio(e) {
 }
 
 //mostar detalles del producto de la compra
-function cargarDetalle() {
-  const url = base_url + "Compras/listar";
+function cargarDetalleC() {
+  const url = base_url + "Compras/listarC";
   const http = new XMLHttpRequest();
   http.open("GET", url, true);
   http.send();
@@ -100,18 +100,18 @@ function cargarDetalle() {
                 <td>${row['precio']}</td>
                 <td>${row['sub_total']}</td>     
                 <td>
-                   <button class="btn btn-danger" title="Eliminar" type="button" onclick="deleteDetalle(${row['id']})"><i class="fas fa-trash-alt"></i></button>
+                   <button class="btn btn-danger" title="Eliminar" type="button" onclick="deleteDetalleC(${row['id']})"><i class="fas fa-trash-alt"></i></button>
                 </td>            
                 </tr>`
       });
-      document.getElementById("tblDetalle").innerHTML = html;
+      document.getElementById("tblDetalleC").innerHTML = html;
       document.getElementById("total").value = resp.total_pagar.total;
     }
 
   }
 }
 //eliminar detalle
-function deleteDetalle(id) {
+function deleteDetalleC(id) {
   id_producto = id;
   const url = base_url + "Compras/delete/" + id;
   const http = new XMLHttpRequest();
@@ -128,7 +128,7 @@ function deleteDetalle(id) {
           showConfirmButton: false,
           timer: 1500
         })
-        cargarDetalle();
+        cargarDetalleC();
       } else {
         Swal.fire({
           position: 'top-end',
@@ -203,21 +203,21 @@ function generarCompra(){
  })
 }
 
-
 document.addEventListener("DOMContentLoaded", function () {
   $('#tableHistorial').dataTable({
      "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
      dom: 'lBfrtip',
-    //  "columnDefs": [
-    //     { 'className': "textcenter", "targets": [3] },  //status  
-    //     { 'className': "textcenter", "targets": [4] },  //status           
-    //  ],
+     "columnDefs": [
+        { 'className': "textcenter", "targets": [2] },  //status  
+           
+     ],
      "ajax": {
         "url": " " + base_url + "Compras/listar_historial",
         "dataSrc": ""
      },
      "columns": [
         { "data": "id" },
+        { "data": "nombre" },
         { "data": "total" },
         { "data": "fecha" },       
         { "data": "acciones" },

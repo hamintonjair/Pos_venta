@@ -18,7 +18,7 @@ class Compras extends Controller{
     //buscar código
     public function buscarCodigo($cod){
 
-      $data = $this->model->getProCod($cod);
+      $data = $this->model->getProCodi($cod);
       echo json_encode($data, JSON_UNESCAPED_UNICODE);
       die();
     }
@@ -32,12 +32,12 @@ class Compras extends Controller{
         $precio = $datos['precio_compra'];
         $cantidad = $_POST['cantidad'];
       
-        $comprobar = $this->model->consultarDetalle( $id_producto, $id_usuario);
+        $comprobar = $this->model->consultarDetalleC( $id_producto, $id_usuario);
 
         if(empty($comprobar)){
 
             $sub_total = $precio * $cantidad;
-             $data = $this->model->registrarDetalles($id_producto, $id_usuario, $precio, $cantidad, $sub_total);    
+             $data = $this->model->registrarDetallesC($id_producto, $id_usuario, $precio, $cantidad, $sub_total);    
 
             if($data == 'modificado'){
                 $msg = (array('modificado'=> true, 'post' => 'Producto agregado.'));
@@ -48,7 +48,7 @@ class Compras extends Controller{
         }else{
             // $total_cantidad = $comprobar['cantidad'] + $cantidad;
             $sub_total = $cantidad * $precio;
-            $data = $this->model->actualizarDetalles( $precio, $cantidad, $sub_total, $id_producto, $id_usuario);    
+            $data = $this->model->actualizarDetallesC( $precio, $cantidad, $sub_total, $id_producto, $id_usuario);    
 
            if($data == 'modificado'){
                $msg = (array('actualizado'=> true, 'post' => 'Se actualizó la cantidad.'));
@@ -61,18 +61,19 @@ class Compras extends Controller{
         die();
     }
     //listar los productos al detalle
-    public function listar(){
+    public function listarC(){
 
-        $id_usuario = $_SESSION['id_usuario'];
-        $data['detalle'] = $this->model->getDetalle( $id_usuario);   
+        $id_usuario = $_SESSION['id_usuario'];        
+        $data['detalle'] = $this->model->getDetalleC( $id_usuario);   
         $data['total_pagar'] = $this->model->calcularCompra( $id_usuario);
+      
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
     //eliminar productos del detalle
     public function delete(int $id){
 
-        $data = $this->model->deleteDetalle( $id);  
+        $data = $this->model->deleteDetalleC( $id);  
 
         if($data == 'modificado'){
             $msg = (array('modificado'=> true, 'post' => 'Producto eliminado.'));
@@ -85,15 +86,14 @@ class Compras extends Controller{
     }
     //registrar compra
     public function registrarCompra($cod){
-
-
+     
         $id_usuario = $_SESSION['id_usuario'];       
-        $datos = $this->model->getProCod($cod);  
+        $datos = $this->model->getProCodi($cod);  
         $total = $this->model->calcularCompra( $id_usuario);
         $data = $this->model->registrarCompra(  $total['total'], $datos['id_proveedor']);
 
         if($data == 'modificado'){
-            $detalle = $this->model->getDetalle( $id_usuario); 
+            $detalle = $this->model->getDetalleC( $id_usuario); 
             //traer el id compra
             $id_compra = $this->model->id_Compra();
             foreach ($detalle as $row){
@@ -104,9 +104,9 @@ class Compras extends Controller{
                 $this->model->registrarDetalleCompra($id_compra['id'], $id_prod, $cantidad, $precio, $sub_total);
                 $stock_actual = $this->model->getProductos($id_prod);
                 $stock =  $stock_actual['cantidad'] + $cantidad;
-                $this->model->actualizarStock($stock, $id_prod);
+                $this->model->actualizarStockC($stock, $id_prod);
             } 
-            $vaciar = $this->model->vaciarDetalle($id_usuario);          
+            $vaciar = $this->model->vaciarDetalleC($id_usuario);          
             if( $vaciar== 'modificado'){
                  $msg = (array('modificado'=> true, 'post' => 'Compra realizada.',  'id_compra' => $id_compra['id']));
             }
@@ -140,7 +140,17 @@ class Compras extends Controller{
         $pdf->SetFont('Arial','B',14);
         $pdf->Cell(0, 5, 'Factura de Compra ', 0, 1, 'C');
 
+        foreach ($productos as $row){
+
+            $fecha = $row['fecha'];
+            $nombre = $row['nombre'];
+        }
         $pdf->Ln(10); 
+        $pdf->SetFont('Arial','B',12);
+        $pdf->Cell(35, 5, utf8_decode('Fecha de orden: '), 0, 0, 'L');
+        $pdf->SetFont('Arial','',12);
+        $pdf->Cell(20, 5, Ymd_dmY($fecha), 0, 1, 'L');
+
         $pdf->SetFont('Arial','B',12);
         $pdf->Cell(24, 5, 'Empresa: ', 0, 0, 'L');
         $pdf->SetFont('Arial','',12);
@@ -161,22 +171,19 @@ class Compras extends Controller{
         $pdf->SetFont('Arial','',12);
         $pdf->Cell(20, 5, $empresa['direccion'], 0, 1, 'L');
 
-        foreach ($productos as $row){
-
-            $fecha = $row['fecha'];
-        }
         $pdf->SetFont('Arial','B',12);
-        $pdf->Cell(35, 5, utf8_decode('Fecha de orden: '), 0, 0, 'L');
+        $pdf->Cell(24, 5, 'Proveedor: ', 0, 0, 'L');
         $pdf->SetFont('Arial','',12);
-        $pdf->Cell(20, 5, Ymd_dmY($fecha), 0, 1, 'L');
+        $pdf->Cell(20, 5, utf8_decode($nombre), 0, 1, 'L');   
 
         $pdf->SetFont('Arial','B',12);
         $pdf->Cell(24, 5, 'Factura #: ', 0, 0, 'L');
         $pdf->SetFont('Arial','',12);
-        $pdf->Cell(20, 5, $id_compra, 0, 1, 'L');           
+        $pdf->Cell(20, 5, $id_compra, 0, 1, 'L');      
+             
         
         $pdf->SetFont('Arial','',12);    
-        $pdf->Cell(24,5, $empresa['mensaje'], 0, 1, 'L');
+        $pdf->Cell(24,5, utf8_decode($empresa['mensaje']), 0, 1, 'L');
     
         //encabezado de productos
         $pdf->Ln(10);  
@@ -191,7 +198,7 @@ class Compras extends Controller{
         $pdf->SetLineWidth(1);     
         $pdf->SetDrawColor(61, 174, 273, 1);  
         $pdf->setTextColor(0,0,0);
-        $pdf->Line(15, 96, 200, 96); 
+        $pdf->Line(15, 100, 200, 100); 
         $pdf->Ln();  
         $total = 0.00;
 
@@ -199,7 +206,6 @@ class Compras extends Controller{
         $pdf->setFillColor(240,240,240);
         $pdf->SetTextColor(40,40,40);
         $pdf->SetDrawColor(255, 255, 255); 
-
 
         foreach ($productos as $row){
             $total = $total + $row['sub_total'];
@@ -228,7 +234,7 @@ class Compras extends Controller{
     //listar historial compra
     public function listar_historial(){
 
-        $data = $this->model->getHiistoriaCompra();
+        $data = $this->model->getHistorialCompra();
 
         for($i=0; $i < count($data); $i++){
           

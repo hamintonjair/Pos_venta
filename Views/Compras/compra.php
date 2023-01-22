@@ -7,13 +7,13 @@ include 'Views/Templates/body.php';
 <main class='app-content'>
     <div class='app-title'>
         <div>
-            <h1><i class='fas fa-box'></i> Nueva compra <small>Sistema de ventas</small>              
+            <h1><i class='fas fa-box'></i> <small>Sistema de ventas</small>              
 
             </h1>
         </div>
         <ul class='app-breadcrumb breadcrumb'>
             <li class='breadcrumb-item'><i class='fa fa-home fa-lg'></i></li>
-            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>historialCompra'>Ir a historial de compras
+            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>compras/historialCompra'>Ir a historial de compras
                     <small>Sistema de ventas</small></a></li>
         </ul>
     </div>
@@ -45,7 +45,7 @@ include 'Views/Templates/body.php';
                         <div class="form-group">
                             <label for="cantidad">Cantidad</label>
                             <input type="number" name="cantidad" id="cantidad" class="form-control valid validNumber"
-                                placeholder="Cantidad" onkeyup="calcularPrecio(event)" aria-describedby="helpId" disabled>
+                                placeholder="Cantidad" onkeyup="calcularPrecioC(event)" aria-describedby="helpId" disabled>
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -85,7 +85,7 @@ include 'Views/Templates/body.php';
                                     <th>Acción </th>                                  
                                 </tr>
                             </thead>
-                            <tbody id="tblDetalle">
+                            <tbody id="tblDetalleC">
                             </tbody>
                         </table>
                     </div>
@@ -95,7 +95,6 @@ include 'Views/Templates/body.php';
     </div>
     <div class="row">
         <div class="col-md-4 ml-auto">
-
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="total"class="font-weight-bold" >Total a pagar</label>

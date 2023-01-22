@@ -16,8 +16,17 @@ class Configuracion extends Controller{
         $data = $this->model->getEmpresa();
         $this->views->getView($this, "configuracion", $data );
     }
+    public function dashboard(){  
+      
+        $data['usuarios'] = $this->model->getDatos("usuarios");
+        $data['clientes'] = $this->model->getDatos("clientes");
+        $data['productos'] = $this->model->getDatos("productos");
+        $data['ventas'] = $this->model->getVentas();
+
+        $this->views->getView($this, "dashboard", $data );
+    }
     //editar empresa
-    public function ditar(){
+    public function editar(){
 
         $nit = $_POST['nit'];
         $nombre = $_POST['nombre'];
@@ -36,6 +45,18 @@ class Configuracion extends Controller{
          }
          echo json_encode($msg, JSON_UNESCAPED_UNICODE);
          die();
+    }
+     //stock muinimo
+    public function reportStock(){
+        $data = $this->model->getStockMinimo();
+        echo json_encode($data);
+        die();
+    }
+     //productos mas vendidos
+    public function productosVendidos(){
+        $data = $this->model->getproductosMasVendidos();
+        echo json_encode($data);
+        die();
     }
   
 }
