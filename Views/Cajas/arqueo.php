@@ -7,17 +7,15 @@ include 'Views/Templates/body.php';
 <main class='app-content'>
     <div class='app-title'>
         <div>
-            <h1><i class='fas fa-box'></i> Caja <small>Sistema de ventas</small>
-                <button class="btn btn-primary" type="button" onclick="openModalCaja();" data-toggle="modal"
+            <h1><i class='fas fa-box'></i>Arqueo de Caja <small>Sistema de ventas</small>
+                <button class="btn btn-primary" type="button" onclick="arqueoCaja();" data-toggle="modal_arqueo"
                     class="fa-solid fa-circle-plus">Nuevo</button>
-                <button class="btn btn-success" type="button" onclick="openArqueo();"
-                    class="fa-solid fa-circle-plus">Arqueo caja</button>
-
+               
             </h1>
         </div>  
         <ul class='app-breadcrumb breadcrumb'>
             <li class='breadcrumb-item'><i class='fa fa-home fa-lg'></i></li>
-            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>rol'>Ir a rol
+            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>cajas'>Ir a cajas
             <small>Sistema de ventas</small></a></li>
         </ul>
     </div>

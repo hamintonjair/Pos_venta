@@ -24,7 +24,7 @@ include 'Views/Templates/body.php';
                     <p class="fas fa-users fa-2x ml-auto"></p>
                 </div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a href="<?php echo base_url; ?>cliente" class="text-white">Ver Detalle</a>
+                    <a href="<?php echo base_url; ?>clientes" class="text-white">Ver Detalle</a>
                     <span class="text-white"><?php echo $data['clientes']['total'] ?></span>
                 </div>
             </div>

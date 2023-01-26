@@ -119,10 +119,10 @@ class VentasModel extends Query{
         return $data;
     }
     //tregistrar Detalle venta
-    public function registrarDetalleVenta(int $id_venta,  int $id_prod, int $cantidad, string $precio, string $sub_total){
+    public function registrarDetalleVenta(int $id_venta,  int $id_prod, int $cantidad, string $descuento, string $precio, string $sub_total){
 
-        $sql = "INSERT INTO  detalle_ventas (id_venta, id_producto, cantidad, precio, sub_total) VALUES(?,?,?,?,?)";
-        $datos = array( $id_venta, $id_prod, $cantidad, $precio, $sub_total);
+        $sql = "INSERT INTO  detalle_ventas (id_venta, id_producto, cantidad, descuento, precio, sub_total) VALUES(?,?,?,?,?,?)";
+        $datos = array( $id_venta, $id_prod, $cantidad, $descuento, $precio, $sub_total);
         $data = $this->save($sql, $datos);
 
         if($data == 1){
@@ -174,7 +174,62 @@ class VentasModel extends Query{
     $datos = array( $cantidad, $id_prod );
     $data = $this->save($sql, $datos);   
     return $data;  
-}
+   }
+   //actualizar descuento
+   public function actualizarDescuento(string $desc, string $sub_total,  int $id){
+
+    $sql = "UPDATE detalle_temp SET descuento = ?, sub_total = ? WHERE id = ?";
+    $datos = array( $desc, $sub_total, $id);
+    $data = $this->save($sql, $datos);
+
+    if($data == 1){
+        $result = 'modificado';
+    }else{
+        $result = 'error';
+    }     
+    return $result;  
+   }
+   //verificar descuento
+   public function verificarDescuento(int $id){
+
+    $sql = "SELECT * FROM detalle_temp  WHERE id = $id";    
+    $data = $this->select($sql);
+    return $data;
+
+   }
+   //seleccionar elñ descxuento aplicado 
+   public function getDescuento(int $id_venta){
+        $sql ="SELECT descuento, SUM(descuento) AS total FROM detalle_ventas WHERE id_venta = $id_venta ";
+        $data = $this->select($sql);        
+        return $data;
+   }
+    //anulado
+    public function getAnular(int $id_venta){
+
+        $sql = "UPDATE ventas SET estado = ? WHERE id = ?";
+        $datos = array( 0, $id_venta);
+        $data = $this->save($sql, $datos);
+    
+        if($data == 1){
+            $result = 'modificado';
+        }else{
+            $result = 'error';
+        }     
+        return $result;  
+    }
+     //anular venta
+     public function getAnularVenta(int $id_venta) {
+
+        $sql = "SELECT v.*, d.* FROM ventas v INNER JOIN detalle_ventas d ON v.id = d.id_venta WHERE v.id = $id_venta";
+        $data = $this->selectAll( $sql );
+        return $data;
+    }
+      //consultar usuario
+    public function getUsuario(int $id_usuario){
+        $sql = "SELECT * FROM usuarios WHERE id = $id_usuario";
+        $data = $this->select( $sql );
+        return $data;
+    }
    
 }
 

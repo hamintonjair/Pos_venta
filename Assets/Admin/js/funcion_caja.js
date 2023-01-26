@@ -241,6 +241,9 @@ function reingresarCaja(id) {
       }
    })
 }
+function openArqueo(){
+   window.location = base_url + "cajas/arqueo";
+}
 
 function alert(msm, icon){
    Swal.fire({

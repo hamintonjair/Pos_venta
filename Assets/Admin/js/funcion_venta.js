@@ -163,7 +163,14 @@ function calcularDescuento(e, id){
             http.send();
             http.onreadystatechange = function () {
               if (this.readyState == 4 && this.status == 200) {
-
+                  const resp = JSON.parse(this.responseText);
+                  if (resp.modificado == true) {
+                    alert(resp.post, "success");
+                    cargarDetalle();
+                  } else {
+                     alert(resp.post, "error");                  
+                  
+                  } 
               }
           }
         }
@@ -263,12 +270,75 @@ function generarVenta(){
  })
 }
 
+
+//anular compra
+function btnAnularV(id){
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+       confirmButton: 'btn btn-success',
+       cancelButton: 'btn btn-danger'
+    },
+    buttonsStyling: false
+ })
+ swalWithBootstrapButtons.fire({
+    title: '¿Está seguro de anular la venta?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Si, Aceptar!',
+    cancelButtonText: 'No, cancel!',
+    reverseButtons: true
+ }).then((result) => {
+    if (result.isConfirmed) {
+       const url = base_url + "Ventas/anularVenta/" + id;
+       const http = new XMLHttpRequest();
+       http.open("GET", url, true);
+       http.send();
+       http.onreadystatechange = function () {
+
+          if (this.readyState == 4 && this.status == 200) {
+            const resp = JSON.parse(this.responseText);
+            
+            if (resp.modificado == true) {
+              swalWithBootstrapButtons.fire(
+                 'Atención!',
+                 resp.post,
+                 'success',                 
+              );                        
+              setTimeout(() =>{
+                window.location.reload();
+               },300);
+           } else {
+              swalWithBootstrapButtons.fire(
+                 'Atención!',
+                 resp.msg,
+                 'error'
+              );
+           }
+
+          }
+       }
+
+    } else if (
+       /* Read more about handling dismissals below */
+       result.dismiss === Swal.DismissReason.cancel
+    ) {
+       swalWithBootstrapButtons.fire(
+          'Cancelado!',
+          'La anulación de la venta no se realizó',
+          'error'
+       )
+    }
+ })
+}
+
 document.addEventListener("DOMContentLoaded", function () {
+   
   $('#tableHistorialVentas').dataTable({
      "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
      dom: 'lBfrtip',
      "columnDefs": [
-        { 'className': "textcenter", "targets": [4] },  //status           
+      
+    { 'className': "textcenter", "targets": [4] },  //status           
      ],
      "ajax": {
         "url": " " + base_url + "Ventas/listar_historial",
@@ -279,6 +349,7 @@ document.addEventListener("DOMContentLoaded", function () {
         { "data": "nombre" },
         { "data": "total" },
         { "data": "fecha" },       
+        { "data": "estado" },       
         { "data": "acciones" },
 
      ],

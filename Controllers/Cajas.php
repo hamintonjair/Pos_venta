@@ -15,6 +15,11 @@ class Cajas extends Controller{
       
         $this->views->getView($this, "caja");
     }
+     //Varqueo caja
+     public function arqueo(){  
+      
+        $this->views->getView($this, "arqueo");
+    }
     //registrar y actualizar caja
     public function registrarCaja(){
 

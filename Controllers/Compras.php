@@ -122,6 +122,8 @@ class Compras extends Controller{
           //traer datos d ela empresa
         $empresa = $this->model->getEmpresa();
 
+        $id_usuario = $_SESSION['id_usuario'];       
+        $usuario = $this->model->getUsuario($id_usuario);
         //traer datos de la compra
         $productos = $this->model->getCompra($id_compra); 
         require('Libraries/fpdf/fpdf.php');
@@ -144,6 +146,7 @@ class Compras extends Controller{
 
             $fecha = $row['fecha'];
             $nombre = $row['nombre'];
+            $estado = $row['estado'];
         }
         $pdf->Ln(10); 
         $pdf->SetFont('Arial','B',12);
@@ -172,21 +175,37 @@ class Compras extends Controller{
         $pdf->Cell(20, 5, $empresa['direccion'], 0, 1, 'L');
 
         $pdf->SetFont('Arial','B',12);
-        $pdf->Cell(24, 5, 'Proveedor: ', 0, 0, 'L');
+        $pdf->Cell(24, 5, 'Usuario: ', 0, 0, 'L');
         $pdf->SetFont('Arial','',12);
-        $pdf->Cell(20, 5, utf8_decode($nombre), 0, 1, 'L');   
+        $pdf->Cell(20, 5, utf8_decode($usuario['nombre']), 0, 1, 'L');  
+        
 
         $pdf->SetFont('Arial','B',12);
         $pdf->Cell(24, 5, 'Factura #: ', 0, 0, 'L');
         $pdf->SetFont('Arial','',12);
         $pdf->Cell(20, 5, $id_compra, 0, 1, 'L');      
              
-        
         $pdf->SetFont('Arial','',12);    
         $pdf->Cell(24,5, utf8_decode($empresa['mensaje']), 0, 1, 'L');
-    
+
+        $pdf->Ln(); 
+        
+        $pdf->SetFont('Arial','B',12);
+        $pdf->Cell(125, 5, 'Proveedor: ', 0, 0, 'R');
+        $pdf->SetFont('Arial','',12);
+        $pdf->Cell(42, 5, utf8_decode($nombre), 0, 1, 'R');  
+
+        $pdf->SetFont('Arial','B',12);  
+        $pdf->Cell(144, 5, 'Estado de la compra:', 0, 0, 'R'); 
+        if($estado == 0){
+            $pdf->Cell(20,5, "Anulado", 0, 0, 'R'); 
+        }else{
+            $pdf->Cell(27,5,"Completado", 0, 0, 'R'); 
+        }
+       
+
         //encabezado de productos
-        $pdf->Ln(10);  
+        $pdf->Ln(15);  
 
         $pdf->setTextColor(40,40,40);
         $pdf->setFillColor(255,255,255);      
@@ -198,7 +217,7 @@ class Compras extends Controller{
         $pdf->SetLineWidth(1);     
         $pdf->SetDrawColor(61, 174, 273, 1);  
         $pdf->setTextColor(0,0,0);
-        $pdf->Line(15, 100, 200, 100); 
+        $pdf->Line(15, 115, 200, 115); 
         $pdf->Ln();  
         $total = 0.00;
 
@@ -222,6 +241,8 @@ class Compras extends Controller{
         $pdf->SetFont('Arial','B',12);  
         $pdf->Cell(150, 5, 'Total a pagar:', 0, 0, 'R',1);
         $pdf->Cell(35, 5, formatMoney($total), 0, 1, 'R',1);
+
+              
         $pdf->Output();
     }
 
@@ -235,16 +256,40 @@ class Compras extends Controller{
     public function listar_historial(){
 
         $data = $this->model->getHistorialCompra();
-
         for($i=0; $i < count($data); $i++){
-          
-                       
-                $data[$i]['acciones'] = '<div>            
+
+            if($data[$i]['estado'] == 1){
+                $data[$i]['estado'] = '<span class="badge badge-success">Completado</span>';               
+                $data[$i]['acciones'] = '<div>  
+                <button class="btn btn-warning" title="Anular" onclick="btnAnularC('.$data[$i]['id'].')"><i class="fas fa-ban"></i></button>          
                 <a type="button" class="btn btn-danger" href="'.base_url."Compras/generarPDF/".$data[$i]['id'].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
-               </div>';                
-        
+               </div>';   
+                
+            }else{
+                $data[$i]['estado'] = ' <span class="badge badge-danger">Anulado</span>';                        
+                $data[$i]['acciones'] = '<div>                        
+                <a type="button" class="btn btn-danger" href="'.base_url."Compras/generarPDF/".$data[$i]['id'].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
+                </div>';   
+            } 
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        die();
+    }
+    public function anularCompra($id_compra){
+
+        $data = $this->model->getAnularCompra($id_compra);
+        $Anular = $this->model->getAnular($id_compra);       
+        foreach($data as $row){
+            $stock_actual = $this->model->getProductos($row['id_producto']);
+            $stock =  $stock_actual['cantidad'] - $row['cantidad'];          
+            $datos = $this->model->actualizarStockC( $stock, $row['id_producto']);
+        }
+        if( $Anular== 'modificado'){
+            $msg = (array('modificado'=> true, 'post' => 'Compra anulada.'));
+         }else{
+            $msg = (array('modificado'=> false, 'post' => 'Error al anular.'));
+         }
+        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
     }
 }

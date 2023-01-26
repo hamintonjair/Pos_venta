@@ -29,7 +29,8 @@ include 'Views/Templates/body.php';
                                     <th>#</th>                                    
                                     <th>Cliente</th>
                                     <th>Total</th>
-                                    <th>Fecha Venta</th>                                  
+                                    <th>Fecha Venta</th> 
+                                    <th>Estado </th>                                  
                                     <th>Acción </th>                                  
                                 </tr>
                             </thead>

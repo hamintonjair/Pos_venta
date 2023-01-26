@@ -65,7 +65,12 @@ document.addEventListener("DOMContentLoaded", function () {
       "iDisplayLength": 10,
       "order": [[0, "desc"]]
    });
-
+   if (document.getElementById('stockMinimo')) {
+      reportStock();
+      productosVendidos();
+      
+   }
+   
 })
 
 //registrar producto
@@ -288,11 +293,6 @@ function alert(msm, icon) {
       showConfirmButton: false,
       timer: 1500
    })
-}
-if (document.getElementById('stockMinimo')) {
-   reportStock();
-   productosVendidos();
-   
 }
 
 function reportStock() {
