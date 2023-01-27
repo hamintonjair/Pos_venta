@@ -130,7 +130,7 @@ class Ventas extends Controller {
         $total = $this->model->calcularVenta( $id_usuario );
         if(empty( $cliente)){
             $cliente = "1";
-            $data = $this->model->registrarVenta( $total[ 'total' ],$cliente  );
+            $data = $this->model->registrarVenta( $id_usuario, $total[ 'total' ],$cliente  );
         }else{
            $data = $this->model->registrarVenta( $total[ 'total' ], $cliente ); 
         }

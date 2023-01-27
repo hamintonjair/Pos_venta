@@ -84,17 +84,17 @@ function registrarCaja(e) {
             const resp = JSON.parse(this.responseText);
 
             if (resp.ok == true) {
-               alert(resp.post, "success"); 
+               alert(resp.post, "success");
                $('#nueva_caja').modal('hide');
                window.location.reload();
             } else if (resp.modificado == true) {
 
-               alert(resp.post, "success");  
+               alert(resp.post, "success");
                $('#nueva_caja').modal('hide');
                window.location.reload();
             } else {
 
-               alert( resp.post, "error");   
+               alert(resp.post, "error");
             }
 
          }
@@ -241,18 +241,195 @@ function reingresarCaja(id) {
       }
    })
 }
-function openArqueo(){
+function openArqueo() {
    window.location = base_url + "cajas/arqueo";
 }
+//abrir modal
+function arqueoCaja() {
 
-function alert(msm, icon){
+   $('#abrir_caja').modal('show');
+}
+function abrirArqueo(e) {
+   e.preventDefault();
+   const monto_inicial = document.getElementById("monto_inicial").value;
+   if (monto_inicial == "") {
+      alert("Ingrese el monto inicial", "warning");
+   } else {
+      const frmAbrirCaja = document.getElementById("frmAbrirCaja");
+      const url = base_url + "Cajas/abrirArqueo";
+      const http = new XMLHttpRequest();
+      http.open("POST", url, true);
+      http.send(new FormData(frmAbrirCaja));
+      http.onreadystatechange = function () {
+         if (this.readyState == 4 && this.status == 200) {
+            const resp = JSON.parse(this.responseText);
+
+            if (resp.ok == true) {
+               alert(resp.post, "success");             
+               $('#abrir_caja').modal('hide');
+            } else{
+               alert(resp.post, "warning");            
+            }
+          
+         }
+      }
+   }
+}
+//arqueo
+document.addEventListener("DOMContentLoaded", function () {
+   $('#tableArqueoCajas').dataTable({
+      "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+      dom: 'lBfrtip',
+      "columnDefs": [
+         { 'className': "textcenter", "targets": [8] },  //status  
+              
+      ],
+      "ajax": {
+         "url": " " + base_url + "Cajas/listarArqueo",
+         "dataSrc": ""
+      },
+      "columns": [
+         { "data": "id" },
+         { "data": "id_usuario" },
+         { "data": "monto_inicial" },
+         { "data": "monto_final" },
+         { "data": "fecha_apertura" },
+         { "data": "fecha_cierre" },
+         { "data": "total_ventas" },
+         { "data": "monto_total" },
+         { "data": "estado" },
+
+      ],
+      buttons: [
+         {
+            "extend": "copyHtml5",
+            "text": "<i class='far fa-copy'></i> Copiar",
+            "titleAttr": "Copiar",
+            "className": "btn btn-secondary",
+            "exportOptions": {
+               "columns": [0, 1, 2, 3, 4, 5, 6, 7]
+            }
+         }, {
+            "extend": "excelHtml5",
+            "text": "<i class='fas fa-file-excel'></i> Excel",
+            "titleAttr": "Expotar a Excel",
+            "className": "btn btn-success",
+            "exportOptions": {
+               "columns": [0, 1, 2, 3, 4, 5, 6, 7]
+            }
+         }, {
+            "extend": "pdfHtml5",
+            "text": "<i class='fas fa-file-pdf'></i> PDF",
+            "titleAttr": "Exportar a PDF",
+            "className": "btn btn-danger",
+            "exportOptions": {
+               "columns": [0, 1, 2, 3, 4, 5, 6, 7]
+            }
+         }, {
+            "extend": "csvHtml5",
+            "text": "<i class='faa fa-file-csv'></i> CSV",
+            "titleAttr": "Eportar",
+            "className": "btn btn-secondary",
+            "exportOptions": {
+               "columns": [0, 1, 2, 3, 4, 5, 6, 7]
+            }
+         },
+
+      ],
+      "resonsieve": "true",
+      "bDestroy": true,
+      "iDisplayLength": 5,
+      "order": [[0, "desc"]]
+   });
+
+
+})
+
+//cerrar caja
+function cerrarArqueo(){
+
+   const url = base_url + "Cajas/consultarVentas";
+   const http = new XMLHttpRequest();
+   http.open("GET", url, true);
+   http.send();
+   http.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+         const resp = JSON.parse(this.responseText);    
+          document.getElementById('monto_final').value = resp.monto_total.total;    
+          document.getElementById('total_ventas').value = resp.total_ventas.total;      
+            $('#abrir_caja').modal('show');
+        
+       
+      }
+   }
+
+   // const swalWithBootstrapButtons = Swal.mixin({
+   //    customClass: {
+   //       confirmButton: 'btn btn-success',
+   //       cancelButton: 'btn btn-danger'
+   //    },
+   //    buttonsStyling: false
+   // })
+   // swalWithBootstrapButtons.fire({
+   //    title: '¿Está seguro de cerrar la caja?',
+   //    icon: 'warning',
+   //    showCancelButton: true,
+   //    confirmButtonText: 'Si, Aceptar!',
+   //    cancelButtonText: 'No, cancel!',
+   //    reverseButtons: true
+   // }).then((result) => {
+   //    if (result.isConfirmed) {
+   //       const url = base_url + "Cajas/cerrar";
+   //       const http = new XMLHttpRequest();
+   //       http.open("GET", url, true);
+   //       http.send();
+   //       http.onreadystatechange = function () {
+  
+   //          if (this.readyState == 4 && this.status == 200) {
+   //            const resp = JSON.parse(this.responseText);
+              
+   //            if (resp.modificado == true) {
+   //              swalWithBootstrapButtons.fire(
+   //                 'Atención!',
+   //                 resp.post,
+   //                 'success',                 
+   //              );                        
+   //              setTimeout(() =>{
+   //                window.location.reload();
+   //               },300);
+   //           } else {
+   //              swalWithBootstrapButtons.fire(
+   //                 'Atención!',
+   //                 resp.msg,
+   //                 'error'
+   //              );
+   //           }
+  
+   //          }
+   //       }
+  
+   //    } else if (
+   //       /* Read more about handling dismissals below */
+   //       result.dismiss === Swal.DismissReason.cancel
+   //    ) {
+   //       swalWithBootstrapButtons.fire(
+   //          'Cancelado!',
+   //          'La caja no se cerró',
+   //          'error'
+   //       )
+   //    }
+   // })
+}
+
+
+function alert(msm, icon) {
    Swal.fire({
       position: 'top-end',
       icon: icon,
       title: msm,
       showConfirmButton: false,
       timer: 1500
-    })      
+   })
 }
 function openModalCaja() {
 

@@ -99,10 +99,10 @@ class VentasModel extends Query{
         return $result;
     }
      //registrar venta
-    public function registrarVenta(string $total, int $id_cliente){
+    public function registrarVenta(int  $id_usuario, string $total, int $id_cliente){
 
-        $sql = "INSERT INTO ventas (total, id_cliente) VALUES(?,?)"; 
-        $datos = array( $total, $id_cliente);
+        $sql = "INSERT INTO ventas (id_usuario, total, id_cliente) VALUES(?,?,?)"; 
+        $datos = array($id_usuario, $total, $id_cliente);
         $data = $this->save($sql, $datos);
 
         if($data == 1){
