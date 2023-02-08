@@ -32,8 +32,10 @@ include 'Views/Templates/body.php';
                                     <th>Imagen</th>
                                     <th>Código</th>
                                     <th>Descripción</th>
-                                    <th>Precio</th>
+                                    <th>Precio</th>                                                                     
                                     <th>Stock</th>
+                                    <th>Iva</th>
+                                    <th>Descuento</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -62,17 +64,18 @@ include 'Views/Templates/body.php';
                 <div class='modal-body'>
                     <form method='post' id='frmProductos'>
                         <input type='hidden' id='idProducto' name='idProducto' value=''>
+                        <p class="text-primary">Los campos con asterisco (<span class="required">*</span>) son obligatorios.</p>
                         <div class='row'>
                             <div class='col-md-6'>
                                 <div class='form-group'>
-                                    <label for='codigo'>Código de Barra</label>
+                                    <label for='codigo'>Código de Barra(<font color="red">*</font>)</label>
                                     <input type='text' name='codigo' id='codigo' class='form-control valid validNumber'
                                         placeholder='Código de barra' aria-describedby='helpId'>
                                 </div>
                             </div>
                             <div class='col-md-6'>
                                 <div class='form-group'>
-                                    <label for='descripcion'>Descripción</label>
+                                    <label for='descripcion'>Descripción(<font color="red">*</font>)</label>
                                     <input type='text' name='descripcion' id='descripcion'
                                         class='form-control valid validText' placeholder='Descripción'
                                         aria-describedby='helpId'>
@@ -81,15 +84,15 @@ include 'Views/Templates/body.php';
                             </div>
                         </div>
                         <div class='row'>
-                            <div class='col-md-6'>
+                            <div class='col-md-3'>
                                 <div class='form-group'>
-                                    <label for='precio_compra'>Precio de venta</label>
+                                    <label for='precio_compra'>Precio de venta(<font color="red">*</font>)</label>
                                     <input type='text' name='precio_compra' id='precio_compra'
                                         class='form-control valid validNumber' placeholder='Precio de venta'
                                         aria-describedby='helpId'>
                                 </div>
                             </div>
-                            <div class='col-md-6'>
+                            <div class='col-md-3'>
                                 <div class='form-group'>
                                     <label for='precio_venta'>Precio de compra</label>
                                     <input type='text' name='precio_venta' id='precio_venta'
@@ -98,11 +101,57 @@ include 'Views/Templates/body.php';
 
                                 </div>
                             </div>
+                            <div class='col-md-3'>
+                                <div class='form-group'>
+                                    <label for='descuento'>Descuentos(<font color="red">*</font>)</label>
+                                    <select class='form-control selectpicker' name='descuento' id='descuento'>
+                                        <option selected="selected">Seleccionar..</option> 
+                                           <option value="noAplica"><?php echo "no Aplica" ?> 
+                                           <option value="5"><?php echo 5 ?>
+                                           <option value="10"><?php echo 10 ?>
+                                           <option value="15"><?php echo 15 ?>
+                                           <option value="20"><?php echo 20 ?>
+                                           <option value="25"><?php echo 25 ?>
+                                           <option value="30"><?php echo 30 ?>
+                                           <option value="35"><?php echo 35 ?>
+                                           <option value="40"><?php echo 40 ?>                                      
+                                           <option value="45"><?php echo 45 ?>                                  
+                                           <option value="50"><?php echo 50 ?>
+                                           <option value="55"><?php echo 55 ?>
+                                           <option value="60"><?php echo 60 ?>
+                                           <option value="65"><?php echo 65 ?>
+                                           <option value="70"><?php echo 70 ?>
+                                           <option value="75"><?php echo 75 ?>
+                                           <option value="80"><?php echo 80 ?>
+                                           <option value="85"><?php echo 85 ?>                                                                                   
+                                        </option>
+                                       
+                                    </select>
+                                </div>
+                            </div>
+                            <div class='col-md-3'>
+                                <div class='form-group'>
+                                    <label for='cantidad'>Cantidad(<font color="red">*</font>)</label>
+                                    <input type='text' name='cantidad' id='cantidad'
+                                        class='form-control valid validNumber' placeholder='Cantidad'
+                                        aria-describedby='helpId'>
+
+                                </div>
+                            </div>
                         </div>
                         <div class='row'>
-                            <div class='col-md-4'>
+                            <div class='col-md-2'>
                                 <div class='form-group'>
-                                    <label for='medida'>Medidas</label>
+                                    <label for='iva'>IVA</label>
+                                    <input type='text' name='iva' id='iva'
+                                        class='form-control valid validNumber' placeholder='Valor IVA'
+                                        aria-describedby='helpId'>
+
+                                </div>
+                            </div>
+                            <div class='col-md-2'>
+                                <div class='form-group'>
+                                    <label for='medida'>Medidas(<font color="red">*</font>)</label>
                                     <select class="form-control selectpicker" id="id_medida" name="id_medida">
                                         <option selected="selected">Seleccionar..</option>
                                         <?php foreach ($data['medidas'] as $row){ ?>
@@ -115,7 +164,7 @@ include 'Views/Templates/body.php';
                             </div>
                             <div class='col-md-4'>
                                 <div class='form-group'>
-                                    <label for='categoria'>Categoría</label>
+                                    <label for='categoria'>Categoría(<font color="red">*</font>)</label>
                                     <select class='form-control selectpicker' name='id_categoria' id='id_categoria'>
                                         <option selected="selected">Seleccionar..</option>
                                         <?php foreach ($data['categorias'] as $row){ ?>
@@ -127,7 +176,7 @@ include 'Views/Templates/body.php';
                             </div>
                             <div class='col-md-4'>
                                 <div class='form-group'>
-                                    <label for='proveedor'>Proveedor</label>
+                                    <label for='proveedor'>Proveedor(<font color="red">*</font>)</label>
                                     <select class='form-control selectpicker' name='id_proveedor' id='id_proveedor'>
                                     <option selected="selected">Seleccionar..</option>
                                         <?php foreach ($data['proveedores'] as $row){ ?>

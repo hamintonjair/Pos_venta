@@ -6,13 +6,7 @@ class UsuariosModel extends Query{
     {
         parent::__construct();
     }
-   // validar usuario
-    public function getUsuario(string $usuario, string $clave){
 
-        $sql = "SELECT * FROM usuarios WHERE usuario = '$usuario' AND clave  = '$clave' ";
-        $data = $this->select($sql);
-        return $data;
-    }
     //listar caja 
     public function getCajas(){
 
@@ -108,5 +102,13 @@ class UsuariosModel extends Query{
         return $data;
 
     }
+    //permisos
+    public function getPermisos(){
+
+        $sql = "SELECT * FROM permisos";
+        $data = $this->selectAll($sql);
+        return $data;
+    }
+    
 }
 ?>

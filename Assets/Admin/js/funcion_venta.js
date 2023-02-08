@@ -22,11 +22,13 @@ function buscarCodigoVenta(e) {
             document.getElementById("cantidad").value = "0.00";
             document.getElementById("precio").value = "0.00";
             document.getElementById("sub_total").value = "0.00";
+            document.getElementById("iva").value = "0.00";
             document.getElementById("precio").focus()
           }else{
             
             document.getElementById("descripcion").value = resp.descripcion;
             document.getElementById("precio").value = resp.precio_venta;
+            document.getElementById("iva").value = resp.iva;
             document.getElementById("id").value = resp.id;
             document.getElementById("cantidad").removeAttribute('disabled');
             document.getElementById("cantidad").focus();
@@ -78,7 +80,10 @@ function calcularPrecioVenta(e) {
     e.preventDefault();
     const cant = document.getElementById("cantidad").value;
     const precio = document.getElementById("precio").value;
-    document.getElementById("sub_total").value = precio * cant;
+    const iva = document.getElementById("iva").value;
+    const subTotal =  precio * cant
+    const subIva = (subTotal * iva) / 100 ;
+    document.getElementById("sub_total").value = subIva +  subTotal;
    if (e.which == 13) {
       if (cant > 0) {
         const url = base_url + "Ventas/ingresar";
@@ -135,6 +140,7 @@ function cargarDetalle() {
                 <td><input class="form-control" placeholder="Descuento" type="text" onkeyup="calcularDescuento(event,${row['id']})"></td>
                 <td>${row['descuento']}</td>
                 <td>${row['precio']}</td>
+                <td>${row['iva']}</td>
                 <td>${row['sub_total']}</td>     
                 <td>
                    <button class="btn btn-danger" title="Eliminar" type="button" onclick="deleteDetalle(${row['id']})"><i class="fas fa-trash-alt"></i></button>
@@ -238,7 +244,7 @@ function generarVenta(){
              const resp = JSON.parse(this.responseText);             
              if (resp.modificado == true) {
                 swalWithBootstrapButtons.fire(
-                   'Vneta generada!',
+                   'Venta generada!',
                    resp.post,
                    'success',                 
                 );
@@ -250,7 +256,7 @@ function generarVenta(){
              } else {
                 swalWithBootstrapButtons.fire(
                    'Venta Cancelado!',
-                   resp.msg,
+                    resp.msg,
                    'error'
                 );
              }

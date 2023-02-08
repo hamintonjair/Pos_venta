@@ -1,7 +1,7 @@
 <?php 
 
 class ProductosModel extends Query{
-    private $codigo, $descripcion, $precio_compra , $precio_venta, $id_medida,$id_categoria, $id_proveedor, $foto;
+    private $iva, $codigo, $cantidad, $descripcion, $precio_compra , $precio_venta, $id_medida,$id_categoria, $id_proveedor, $foto;
     public function __construct()
     {
         parent::__construct();
@@ -33,12 +33,14 @@ class ProductosModel extends Query{
         return $data;
     }
     //registrar productos
-    public function registrarProducto(string $codigo, string $descripcion, string $precio_compra, string $precio_venta,
-     int $id_medida, int $id_categoria, int $id_proveedor, string $foto){
+    public function registrarProducto(string $codigo, string $descripcion, string $precio_compra, string $precio_venta, int $cantidad, int $iva, int $descuento, int $id_medida, int $id_categoria, int $id_proveedor, string $foto){
+        $this->iva = $iva;
+        $this->descuento = $descuento;
         $this->codigo = $codigo;
         $this->descripcion =$descripcion;
         $this->precio_compra = $precio_compra;
-        $this->precio_venta = $precio_venta;       
+        $this->precio_venta = $precio_venta;  
+        $this->cantidad = $cantidad;       
         $this->id_medida = $id_medida;
         $this->id_categoria = $id_categoria;
         $this->id_proveedor = $id_proveedor;
@@ -46,8 +48,9 @@ class ProductosModel extends Query{
         $verificar = "SELECT * FROM productos WHERE codigo = '$this->codigo'";
         $existe = $this->select($verificar);
         if(empty($existe)){
-             $sql ="INSERT INTO productos(codigo,descripcion,precio_compra,precio_venta,id_medida,id_categoria,id_proveedor,foto) VALUES (?,?,?,?,?,?,?,?)";
-            $data = array( $this->codigo,$this->descripcion, $this->precio_compra,$this->precio_venta, $this->id_medida,$this->id_categoria, $this->id_proveedor, $this->foto);
+             $sql ="INSERT INTO productos(codigo, descripcion, precio_compra, precio_venta, cantidad, iva, descuento,
+             id_medida, id_categoria, id_proveedor, foto) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+            $data = array( $this->codigo,$this->descripcion, $this->precio_compra,$this->precio_venta, $this->cantidad,$this->iva,$this->descuento, $this->id_medida,$this->id_categoria, $this->id_proveedor, $this->foto);
             $datos = $this->save($sql, $data);
 
             if($datos == 1){
@@ -70,21 +73,23 @@ class ProductosModel extends Query{
 
     }
     //update usuario
-    public function updateProducto(string $codigo, string $descripcion, string $precio_compra, string $precio_venta,
-   int $id_medida, int $id_categoria, int $id_proveedor, string $foto, int $id){
+    public function updateProducto(string $codigo, string $descripcion, string $precio_compra, string $precio_venta, int $cantidad, int $iva,int $descuento, int $id_medida, int $id_categoria, int $id_proveedor, string $foto, int $id){
+        $this->iva = $iva;
+        $this->descuento = $descuento;
         $this->codigo = $codigo;
         $this->descripcion =$descripcion;
         $this->precio_compra = $precio_compra;
         $this->precio_venta = $precio_venta;  
+        $this->cantidad = $cantidad;   
         $this->id_medida = $id_medida;
         $this->id_categoria = $id_categoria;
         $this->id_proveedor = $id_proveedor;
         $this->foto = $foto;
         $this->id = $id;     
     
-        $sql ="UPDATE productos SET codigo = ?, descripcion = ?, precio_compra = ?, precio_venta = ?, id_medida = ?
+        $sql ="UPDATE productos SET codigo = ?, descripcion = ?, precio_compra = ?, precio_venta = ?, cantidad = ?, iva = ?,  descuento = ?, id_medida = ?
         , id_categoria = ?, id_proveedor = ? , foto = ? WHERE id = ? ";
-        $data = array($this->codigo,$this->descripcion, $this->precio_compra,$this->precio_venta, $this->id_medida,$this->id_categoria, $this->id_proveedor,$this->foto, $this->id);
+        $data = array($this->codigo,$this->descripcion, $this->precio_compra,$this->precio_venta, $this->cantidad, $this->iva, $this ->descuento, $this->id_medida,$this->id_categoria, $this->id_proveedor,$this->foto, $this->id);
         $datos = $this->save($sql, $data);
 
             if($datos == 1){

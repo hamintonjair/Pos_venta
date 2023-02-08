@@ -13,7 +13,7 @@ function frmLogin(e) {
         clave.classList.add("is-invalid");
         clave.focus();
     } else {
-        const url = base_url + "Usuarios/validar";
+        const url = base_url + "Login/validar";
         const frm = document.getElementById("frmLogin");
         const http = new XMLHttpRequest();
         http.open("POST", url, true);
@@ -23,11 +23,11 @@ function frmLogin(e) {
                 const resp = JSON.parse(this.responseText);
 
                 if (resp.ok == true) {
-                    alert("Atención", resp.post, "success");
+                    alerta("Atención", resp.post, "success");
                     window.location = base_url + "Configuracion/dashboard";
                 } else {
                     document.getElementById("alerta").classList.remove("d-none");
-                    document.getElementById("alerta").innerHTML = resp;
+                    document.getElementById("alerta").innerHTML = resp.msg;
                 }
             }
         }
@@ -35,8 +35,7 @@ function frmLogin(e) {
 
 }
 
-
-function alert(title, text, icon) {
+function alerta(title, text, icon) {
     Swal.fire({
         title,
         text,

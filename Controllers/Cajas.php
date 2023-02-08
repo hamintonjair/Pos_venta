@@ -136,29 +136,44 @@ class Cajas extends Controller {
 
         $fecha_apertura = date('Y-m-d' );
         $id_usuario = $_SESSION['id_usuario'];
+        $id = $_POST['id'];
 
         if ( empty( $monto_inicial ) || empty( $fecha_apertura ) ) {
             $msg = ( array( 'ok'=>false, 'post' => 'Todos los campos son obligatorios.' ) );
         } else {
+            if($id == ""){
+                 //registrar
+                $data = $this->model->registrarArqueoCaja($id_usuario, $monto_inicial,    $fecha_apertura);
+                if ( $data == 'ok' ) {
+                    $msg = ( array( 'ok'=>true, 'post' => 'Caja abierta con éxito.' ) );
 
-            //registrar
-            $data = $this->model->registrarArqueoCaja($id_usuario, $monto_inicial,    $fecha_apertura);
-            if ( $data == 'ok' ) {
-                $msg = ( array( 'ok'=>true, 'post' => 'Caja abierta con éxito.' ) );
+                } else if ( $data == 'existe' ) {
+                    $msg = ( array( 'ok'=>false, 'post' => 'la Caja ya está abierta.' ) );
 
-            } else if ( $data == 'existe' ) {
-                $msg = ( array( 'ok'=>false, 'post' => 'la Caja ya está abierta.' ) );
+                } else {
+                    $msg = ( array( 'ok'=>false, 'post' => 'Error al abrir la Caja.' ) );
+                }
+            }else{
+                $monto_final = $this->model->getVentas(  $id_usuario );          
+                $total_ventas = $this->model->getTotalVentas(  $id_usuario );           
+                $inicial = $this->model->getMontoInicial( $id_usuario );
+                $general = $monto_final['total'] + $inicial['monto_inicial'];
 
-            } else {
-                $msg = ( array( 'ok'=>false, 'post' => 'Error al abrir la Caja.' ) );
-            }
+                $data = $this->model->actualizarArqueoCaja($monto_final['total'], $fecha_apertura, $total_ventas['total'],$general, $inicial['id']);
+                if ( $data == 'ok' ) {
+                    $this->model->actualizarApertura($id_usuario);
+                    $msg = ( array( 'ok'=>true, 'post' => 'Caja cerrada con éxito.' ) );
 
+                } else {
+                    $msg = ( array( 'ok'=>false, 'post' => 'Error al cerrar la caja.' ) );
+
+                }
+            }         
         }
         echo json_encode( $msg, JSON_UNESCAPED_UNICODE );
         die;
     }
-    //listar arqueo
-    
+    //listar arqueo 
     public function listarArqueo() {
 
         $data = $this->model->getCajas('cierre_caja');
@@ -181,8 +196,15 @@ class Cajas extends Controller {
     public function consultarVentas(){
         
         $id_usuario = $_SESSION['id_usuario'];
-        $data['monto_total'] = $this->model->getVentas(  $id_usuario );
-        $data['total_ventas'] = $this->model->getTotalVentas(  $id_usuario );
+        $data['inicial'] = $this->model->getMontoInicial( $id_usuario );
+        
+        if($data['inicial'] == false){            
+            $data = ( array( 'ok'=>false, 'post' => 'No hay caja abierta.' ) ); 
+        }else{           
+            $data['monto_total'] = $this->model->getVentas( $id_usuario );           
+            $data['total_ventas'] = $this->model->getTotalVentas(  $id_usuario ); 
+            $data['monto_general'] = $data['monto_total']['total'] + $data['inicial']['monto_inicial'] ;
+        }
         echo json_encode( $data, JSON_UNESCAPED_UNICODE );
         die();
     }

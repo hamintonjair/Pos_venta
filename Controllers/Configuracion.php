@@ -29,6 +29,8 @@ class Configuracion extends Controller{
     public function editar(){
 
         $nit = $_POST['nit'];
+        $regimen = $_POST['regimen'];
+        $resolucion = $_POST['resolucion'];
         $nombre = $_POST['nombre'];
         $telefono = $_POST['telefono'];
         $direccion = $_POST['direccion'];
@@ -36,7 +38,7 @@ class Configuracion extends Controller{
         $mensaje = $_POST['mensaje'];
         $id = $_POST['id'];
 
-        $data = $this->model->actualizar($nit,$nombre,$telefono,$direccion,$ciudad,$mensaje,$id);
+        $data = $this->model->actualizar($nit,$regimen, $resolucion ,$nombre,$telefono,$direccion,$ciudad,$mensaje,$id);
 
         if($data == "ok"){        
             $msg = (array('ok'=> true, 'post' => 'Se actualizaron los datos.'));		          

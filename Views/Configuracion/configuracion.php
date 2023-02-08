@@ -25,7 +25,7 @@ include 'Views/Templates/body.php';
         <div class="card-body">
             <form id="frmEmpresa" method="post">
                 <div class="row">
-                <div class="col-md-6">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="nit">Nit</label>
                             <input type="hidden" id="id" name="id" class="form-control "
@@ -34,15 +34,32 @@ include 'Views/Templates/body.php';
                                 aria-describedby="helpId" value="<?php echo $data['nit'] ?>">
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="regimen">Regimen</label>
+                            <input type="hidden" id="id" name="id" class="form-control "
+                                value="<?php echo $data['id'] ?>">
+                            <input type="text" name="regimen" id="regimen" class="form-control valid validText" placeholder="Regimen de la empresa"
+                                aria-describedby="helpId" value="<?php echo $data['regimen'] ?>">
+                        </div>
+                    </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="nombre">Nombre</label>                          
+                            <label for="nombre">Nombre empresa</label>
                             <input type="text" name="nombre" id="nombre" class="form-control valid validText"
                                 placeholder="Nombre empresa" aria-describedby="helpId"
                                 value="<?php echo $data['nombre'] ?>">
                         </div>
-                    </div>                    
-                    <div class="col-md-6">
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="resolucion">Resolución DIAN</label>
+                            <input type="text" name="resolucion" id="resolucion" class="form-control valid validNumber"
+                                placeholder="Resolución DIAN" aria-describedby="helpId"
+                                value="<?php echo $data['resolucion'] ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="telefono">Teléfono</label>
                             <input type="text" name="telefono" id="telefono" class="form-control valid validNumber"
@@ -73,11 +90,11 @@ include 'Views/Templates/body.php';
                                 placeholder="Mensaje a mostrar en factura" 0
                                 aria-describedby="helpId"><?php echo $data['mensaje'] ?></textarea>
                         </div>
-                    </div>                               
+                    </div>
                 </div>
                 <div class="form-group">
-                        <button type='button' class='btn btn-primary' onclick="actualizarEmpresa(event)">Actualizar</button>
-                    </div>
+                    <button type='button' class='btn btn-primary' onclick="actualizarEmpresa(event)">Actualizar</button>
+                </div>
             </form>
         </div>
     </div>

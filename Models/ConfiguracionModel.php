@@ -28,10 +28,10 @@ class ConfiguracionModel extends Query {
     }
     //actualizar
 
-    public function actualizar( string $nit, string $nombre, string $telefono, string $direccion, string $ciudad, string $mensaje, int $id ) {
+    public function actualizar( string $nit, string $regimen, int $resolucion, string $nombre, string $telefono, string $direccion, string $ciudad, string $mensaje, int $id ) {
 
-        $sql = 'UPDATE configuracion SET nit = ?, nombre = ?, telefono = ?, direccion = ?, ciudad = ?, mensaje = ? WHERE id = ?';
-        $data = array( $nit, $nombre,  $telefono,  $direccion,  $ciudad,  $mensaje,  $id );
+        $sql = 'UPDATE configuracion SET nit = ?, regimen = ?,resolucion = ?, nombre = ?, telefono = ?, direccion = ?, ciudad = ?, mensaje = ? WHERE id = ?';
+        $data = array( $nit, $regimen,$resolucion, $nombre,  $telefono,  $direccion,  $ciudad,  $mensaje,  $id );
         $datos = $this->save( $sql, $data );
 
         if ( $datos == 1 ) {
@@ -60,7 +60,7 @@ class ConfiguracionModel extends Query {
   //historial venatas ´para ña grafica
     public function getVentas(){
 
-      $sql = "SELECT COUNT(*) as total FROM ventas WHERE fecha > CURDATE()";
+      $sql = "SELECT COUNT(*) as total FROM ventas WHERE estado = 1";
       $data = $this->select($sql);
       return $data;
    }

@@ -5,47 +5,21 @@ class Usuarios extends Controller{
     public function __construct()
     {
         session_start();
-        if( empty($_SESSION['activo'] == true)){
-             header("location:".base_url);
-        }
+               
         parent::__construct();
     }
 
     //VISTA DASHBOARD
     public function index(){
 
+        if( empty($_SESSION['activo'])){
+            header("location:".base_url);
+        }
         $data['cajas'] =  $this->model->getCajas();
         $this->views->getView($this, "usuario",  $data );
 
     }
-  //VALIDAMOS EL INICIO DE SESION
-    public function validar(){
 
-        if(empty($_POST['usuario']) || empty($_POST['clave']) ){
-            $msg = "Los campos estan vacios";
-        }else{
-            $usuario = $_POST['usuario'];
-            $clave = $_POST['clave'];
-            $hash = hash("SHA256", $clave);
-  
-            $data = $this->model->getUsuario($usuario, $hash);
-
-         
-            if($data){
-               $_SESSION['id_usuario'] = $data['id'];
-               $_SESSION['usuario'] = $data['usuario'];
-               $_SESSION['nombre'] = $data['nombre'];
-               $_SESSION['activo'] = true;
-
-               $msg = (array('ok'=> true, 'post' => 'Logueado'));		
-              
-            }else{
-                 $msg = "usuario o contraseña incorrecta";
-            }
-        }           
-        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
-        die();
-    }
     //listar los usuarios
     public function listar(){
 
@@ -54,7 +28,8 @@ class Usuarios extends Controller{
           
             if($data[$i]['estado'] == 1){
                 $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
-                $data[$i]['acciones'] = '<div>            
+                $data[$i]['acciones'] = '<div>   
+                <a type="button" class="btn btn-dark" href="'.base_url.'Usuarios/permisos/'.$data[$i]['id'].'" title="Permisos"><i class="fas fa-key"></i></a>          
                 <button type="button" class="btn btn-primary" onclick="editarUsuario('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
                 <button type="button" class="btn btn-danger" onclick="eliminarUsuario('.$data[$i]['id'].');" title="Eliminar"><i class="far   
                 fa-trash-alt"></i></button>    
@@ -189,6 +164,15 @@ class Usuarios extends Controller{
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
+    }
+    //permisos
+    public function permisos($id){
+
+        if( empty($_SESSION['activo'])){
+            header("location:".base_url);
+        } 
+        $data =  $this->model->getPermisos();
+        $this->views->getView( $this, "permisos",  $data ); 
     }
 }
 ?>

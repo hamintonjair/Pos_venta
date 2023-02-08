@@ -65,28 +65,29 @@ include 'Views/Templates/body.php';
                 </div>
                 <div class='modal-body'>
                     <form method='post' id='frmAbrirCaja' onsubmit="abrirArqueo(event);">
-                        <input type='hidden' id='idCaja' name='idCaja' value=''>
+                        <input type='hidden' id='id' name='id' value=''>
                         <div class='form-group'>
                             <label for='caja'>Monto inicial</label>
                             <input type='text' name='monto_inicial' id='monto_inicial'
                                 class='form-control valid validNumber' placeholder='Monto inicial'
                                 aria-describedby='helpId'>
                         </div>
-                        <div class='form-group'>
-                            <label for='caja'>Fecha apertura</label>
-                            <input type='date' value="<?php echo date('Y-m-d');?>" name='fecha_apertura'
-                                id='fecha_apertura' class='form-control valid validText' aria-describedby='helpId'
-                                required>
-                        </div>
-                        <div class="form-group">
-                            <label for="monto_final">Monto final</label>
-                            <input type="text" id="monto_final" class="form-control" aria-describedby="helpId"
-                                disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="total_ventas">Total ventas</label>
-                            <input type="text" id="total_ventas" class="form-control" aria-describedby="helpId"
-                                disabled>
+                        <div id="ocultar_campos">
+                            <div class="form-group">
+                                <label for="monto_final">Monto final</label>
+                                <input type="text" id="monto_final" class="form-control" aria-describedby="helpId"
+                                    disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="total_ventas">Total ventas</label>
+                                <input type="text" id="total_ventas" class="form-control" aria-describedby="helpId"
+                                    disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="monto_general">Monto total</label>
+                                <input type="text" id="monto_general" class="form-control" aria-describedby="helpId"
+                                    disabled>
+                            </div>
                         </div>
                         <div class='modal-footer'>
 

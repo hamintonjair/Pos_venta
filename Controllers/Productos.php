@@ -27,6 +27,7 @@ class Productos extends Controller{
     public function listar(){
 
         $data = $this->model->getProductos();
+
         for($i=0; $i < count($data); $i++){
           
             if($data[$i]['estado'] == 1){
@@ -53,25 +54,30 @@ class Productos extends Controller{
     //registrar y actualizar usuarios
     public function registrarProductos(){
 
-    
+        $iva = $_POST['iva'];
         $codigo = $_POST['codigo'];
         $descripcion = $_POST['descripcion'];
         $precio_compra = $_POST['precio_compra'];
-        $precio_venta = $_POST['precio_venta'];    
+        $precio_venta = $_POST['precio_venta'];  
+        $descuento = $_POST['descuento'];  
+        $cantidad = $_POST['cantidad'];    
         $id_medida = $_POST['id_medida'];
         $id_categoria = $_POST['id_categoria'];
         $id_proveedor = $_POST['id_proveedor'];      
         $id = $_POST['idProducto'];
         $img = $_FILES['imagen'];
         $name = $img['name'];
-        $tpmName = $img['tmp_name'];           
+        $tpmName = $img['tmp_name'];  
+        if($descuento == "noAplica"){
+            $descuento = 0;
+        }  
         $fecha = date("YmdHis");
      
          if($id_medida == "Seleccionar.." || $id_categoria == "Seleccionar.." ||  $id_proveedor == "Seleccionar.."){
 
             $msg = (array('ok'=>false, 'post' => 'Todos los campos son obligatorios.'));
 
-         }else if(empty($codigo) || empty($descripcion ) || empty( $precio_compra) || empty( $precio_venta )){
+         }else if(empty($codigo) || empty($descripcion ) || empty( $precio_venta )){
 
             $msg = (array('ok'=>false, 'post' => 'Todos los campos son obligatorios.'));
               
@@ -88,7 +94,7 @@ class Productos extends Controller{
             }
             if($id == ""){
                 //registrar               
-                    $data = $this->model->registrarProducto($codigo , $descripcion, $precio_compra , $precio_venta ,$id_medida,$id_categoria,$id_proveedor, $imgNombre  );
+                    $data = $this->model->registrarProducto($codigo , $descripcion, $precio_compra , $precio_venta, $cantidad, $iva, $descuento,$id_medida,$id_categoria,$id_proveedor, $imgNombre  );
 
                     if($data == 'ok'){
                         $msg = (array('ok'=>true, 'post' => 'Producto registrado con éxito.'));
@@ -111,7 +117,7 @@ class Productos extends Controller{
                         unlink("Assets/img/".$imgDelete['foto']);
                     }
                 }              
-                $data = $this->model->updateProducto($codigo , $descripcion, $precio_compra , $precio_venta ,$id_medida,$id_categoria,$id_proveedor, $imgNombre,$id);
+                $data = $this->model->updateProducto($codigo , $descripcion, $precio_compra , $precio_venta,$cantidad, $iva, $descuento ,$id_medida,$id_categoria,$id_proveedor, $imgNombre,$id);
 
                     if($data == 'modificado'){
                             //eliminar la imagen

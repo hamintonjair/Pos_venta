@@ -37,14 +37,14 @@ include 'Views/Templates/body.php';
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="descripcion">Descripción</label>
-                            <input type="text" name="descripcion" id="descripcion" class="form-control valid validText"
+                            <input type="text" name="descripcion" id="descripcion" class="form-control "
                                 placeholder="Descripcion del producto" aria-describedby="helpId" disabled>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="cantidad">Cantidad</label>
-                            <input type="number" name="cantidad" id="cantidad" class="form-control valid validNumber"
+                            <input type="number" name="cantidad" id="cantidad" class="form-control "
                                 placeholder="Cantidad" onkeyup="calcularPrecioVenta(event)" aria-describedby="helpId"
                                 disabled>
                         </div>
@@ -52,14 +52,21 @@ include 'Views/Templates/body.php';
                     <div class="col-md-2">
                         <div class="form-group">
                             <label for="precio">Precio</label>
-                            <input type="text" name="precio" id="precio" class="form-control valid validNumber"
+                            <input type="text" name="precio" id="precio" class="form-control"
                                 placeholder="Precio venta" aria-describedby="helpId" disabled>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
+                            <label for="iva">Valor IVA</label>
+                            <input type="text" name="iva" id="iva" class="form-control "
+                                placeholder="0.00" aria-describedby="helpId" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
                             <label for="sub_total">Sub Total</label>
-                            <input type="text" name="sub_total" id="sub_total" class="form-control valid validNumber"
+                            <input type="text" name="sub_total" id="sub_total" class="form-control "
                                 placeholder="0.00" aria-describedby="helpId" disabled>
                         </div>
                     </div>
@@ -84,6 +91,7 @@ include 'Views/Templates/body.php';
                                     <th>Aplicar</th>
                                     <th>Descuento</th>
                                     <th>Precio</th>
+                                    <th>IVA</th>
                                     <th>Sub Total</th>
                                     <th>Acción </th>
                                 </tr>
@@ -98,7 +106,11 @@ include 'Views/Templates/body.php';
     </div>
     <form id="frmVentas">
         <div class="row">
-            <div class="col-md-3 ">
+        <div class="form-group ">
+                <a type="button" class="btn btn-primary mt-4" href="<?php echo base_url; ?>clientes"
+                    target="_blank">Registrar</a>
+            </div>
+            <div class="col-md-2 ">
                 <div class="form-group">
                     <label for="cliente"><i class="fas fa-users"></i>Buscar Cliente </label>
                     <input type="text" name="cliente" id="cliente" class="form-control valid validNumber"
@@ -126,6 +138,5 @@ include 'Views/Templates/body.php';
         </div>
     </form>
 </main>
-
 <?php include 'Views/Templates/footer_admin.php';
 ?>

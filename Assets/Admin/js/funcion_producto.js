@@ -20,6 +20,8 @@ document.addEventListener("DOMContentLoaded", function () {
          { "data": "descripcion" },
          { "data": "precio_venta" },
          { "data": "cantidad" },
+         { "data": "iva" },
+         { "data": "descuento" },
          { "data": "estado" },
          { "data": "acciones" },
 
@@ -31,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Copiar",
             "className": "btn btn-secondary",
             "exportOptions": {
-               "columns": [0, 2, 3, 4, 5]
+               "columns": [0, 2, 3, 4, 5, 6, 7]
             }
          }, {
             "extend": "excelHtml5",
@@ -39,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Expotar a Excel",
             "className": "btn btn-success",
             "exportOptions": {
-               "columns": [0, 2, 3, 4, 5]
+               "columns": [0, 2, 3, 4, 5, 6, 7]
             }
          }, {
             "extend": "pdfHtml5",
@@ -47,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Exportar a PDF",
             "className": "btn btn-danger",
             "exportOptions": {
-               "columns": [0, 2, 3, 4, 5]
+               "columns": [0, 2, 3, 4, 5, 6, 7]
             }
          }, {
             "extend": "csvHtml5",
@@ -55,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "titleAttr": "Eportar",
             "className": "btn btn-secondary",
             "exportOptions": {
-               "columns": [0, 2, 3, 4, 5]
+               "columns": [0, 2, 3, 4, 5, 6, 7]
             }
          },
 
@@ -80,14 +82,15 @@ function registrarProducto(e) {
    const codigo = document.getElementById("codigo");
    const descripcion = document.getElementById("descripcion");
    const precio_venta = document.getElementById("precio_venta");
-   const precio_compra = document.getElementById("precio_compra");
+   const cantidad = document.getElementById("cantidad");
+   const descuento = document.getElementById("descuento");
    const medida = document.getElementById("id_medida");
    const categoria = document.getElementById("id_categoria");
    const proveedor = document.getElementById("id_proveedor");
 
-   if (codigo.value == "" || descripcion.value == "" || precio_venta.value == "" || precio_compra.value == "" || medida.value == "" || categoria.value == "" || proveedor.value == "") {
+   if (codigo.value == "" || descripcion.value == "" || precio_venta.value == "" || descuento.value == "" || cantidad.value == "" ||  medida.value == "" || categoria.value == "" || proveedor.value == "") {
 
-      alert("Error", "Todos los campos son obligatorios", "error");
+      alert("Todos los campos son obligatorios", "error");
 
    } else {
       const url = base_url + "Productos/registrarProductos";
@@ -135,10 +138,14 @@ function editarProducto(id) {
          const resp = JSON.parse(this.responseText);
 
          document.getElementById('idProducto').value = resp.id;
-         document.getElementById("codigo").value = resp.codigo;;
+         document.getElementById("codigo").value = resp.codigo;
          document.getElementById("descripcion").value = resp.descripcion;
          document.getElementById("precio_venta").value = resp.precio_venta;
          document.getElementById("precio_compra").value = resp.precio_compra;
+         document.getElementById("cantidad").value = resp.cantidad;
+         document.getElementById("cantidad").setAttribute('disabled', 'disabled');
+         document.getElementById("iva").value = resp.iva;
+         document.getElementById("descuento").value = resp.descuento;
          document.getElementById("id_medida").value = resp.id_medida;
          document.getElementById("id_categoria").value = resp.id_categoria;
          document.getElementById("id_proveedor").value = resp.id_proveedor;

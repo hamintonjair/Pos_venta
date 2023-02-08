@@ -87,6 +87,7 @@ class Compras extends Controller{
     //registrar compra
     public function registrarCompra($cod){
      
+      
         $id_usuario = $_SESSION['id_usuario'];       
         $datos = $this->model->getProCodi($cod);  
         $total = $this->model->calcularCompra( $id_usuario);

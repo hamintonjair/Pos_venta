@@ -246,7 +246,9 @@ function openArqueo() {
 }
 //abrir modal
 function arqueoCaja() {
-
+   document.getElementById('ocultar_campos').classList.add('d-none');   
+   document.getElementById('monto_inicial').value = "";  
+   document.getElementById('btnActionForm').textContent ='Abrir caja';     
    $('#abrir_caja').modal('show');
 }
 function abrirArqueo(e) {
@@ -267,6 +269,7 @@ function abrirArqueo(e) {
             if (resp.ok == true) {
                alert(resp.post, "success");             
                $('#abrir_caja').modal('hide');
+               window.location.reload();     
             } else{
                alert(resp.post, "warning");            
             }
@@ -354,12 +357,22 @@ function cerrarArqueo(){
    http.send();
    http.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
-         const resp = JSON.parse(this.responseText);    
-          document.getElementById('monto_final').value = resp.monto_total.total;    
-          document.getElementById('total_ventas').value = resp.total_ventas.total;      
-            $('#abrir_caja').modal('show');
-        
-       
+         const resp = JSON.parse(this.responseText); 
+
+         if (resp.ok == false) {
+
+            alert(resp.post, "error");            
+          
+         } else{
+            document.getElementById('monto_inicial').value = resp.inicial.monto_inicial;      
+            document.getElementById('monto_final').value = resp.monto_total.total;    
+            document.getElementById('total_ventas').value = resp.total_ventas.total;    
+            document.getElementById('monto_general').value = resp.monto_general;  
+            document.getElementById('id').value = resp.inicial.id;  
+            document.getElementById('ocultar_campos').classList.remove('d-none');   
+            document.getElementById('btnActionForm').textContent ='Cerrar caja';          
+            $('#abrir_caja').modal('show');   
+         }   
       }
    }
 

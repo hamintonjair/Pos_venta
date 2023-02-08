@@ -310,3 +310,4 @@ function openModalUsuarios() {
    document.querySelector('#frmUsuarios').reset();
    $('#nuevo_usuario').modal('show');
 }
+

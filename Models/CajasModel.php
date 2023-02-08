@@ -107,18 +107,48 @@ class CajasModel extends Query {
         return $result;
     }
     //consultar ventas
-    public function getVentas(int $id_usuario){
+
+    public function getVentas( int $id_usuario ) {
 
         $sql = "SELECT total, SUM(total) as total FROM ventas WHERE id_usuario = $id_usuario AND estado = 1 AND apertura = 1";
         $data = $this->select( $sql );
         return $data;
     }
-   
-    public function getTotalVentas(int $id_usuario){
+    //contar el valor total que hay en caja
+
+    public function getTotalVentas( int $id_usuario ) {
 
         $sql = "SELECT COUNT(total) AS total FROM ventas WHERE id_usuario = $id_usuario AND estado = 1 AND apertura = 1";
         $data = $this->select( $sql );
         return $data;
+    }
+
+    public function getMontoInicial( int $id_usuario ) {
+
+        $sql = "SELECT id, monto_inicial FROM cierre_caja WHERE id_usuario = $id_usuario AND estado = 1";
+        $data = $this->select( $sql );
+        return $data;
+    }
+    //cierre caja
+    public function actualizarArqueoCaja( string $final, string $cierre, string $total_ventas, string $general, int $id ) {
+
+        $sql = "UPDATE cierre_caja SET monto_final = ?, fecha_cierre = ?, total_ventas = ?, monto_total = ?, estado = ? WHERE id = ?";
+        $data = array( $final, $cierre, $total_ventas, $general, 0, $id  );
+        $datos = $this->save( $sql, $data );
+
+        if ( $datos == 1 ) {
+            $result = 'ok';
+        } else {
+            $result = 'error';
+        }
+        return $result;
+
+    }
+    //actualizar apertura
+    public function actualizarApertura( int $id ){
+        $sql = "UPDATE ventas SET apertura = ? WHERE id_usuario = ?";
+        $data = array( 0, $id );
+        $this->save( $sql, $data );
     }
 }
 

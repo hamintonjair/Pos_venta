@@ -1,6 +1,6 @@
 <?php
 
-const base_url = "http://localhost/Pos_venta/";
+const base_url = "http://localhost/pos_venta/";
 const host = "localhost";
 const user = "root";
 const pass = "menaH01*";
