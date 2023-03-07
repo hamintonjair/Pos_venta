@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>    
-  <title>Punto de vanta</title>
+  <title>Punto de venta</title>
     <meta charset="utf-8">
     <meta name="description" content="#">   <!-- Twitter meta--> 
 

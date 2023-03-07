@@ -10,12 +10,14 @@ include 'Views/Templates/body.php';
             <h1><i class='fas fa-box'></i> Clientes <small>Sistema de ventas</small>
                 <button class="btn btn-primary" type="button" onclick="openModalCliente();" data-toggle="modal"
                     class="fa-solid fa-circle-plus">Nuevo</button>
+                    <button class="btn btn-danger" type="button" onclick="clienteEliminado();" class="fa-solid fa-circle-plus">Eliminados</button>
+                  
 
             </h1>
         </div>  
         <ul class='app-breadcrumb breadcrumb'>
             <li class='breadcrumb-item'><i class='fa fa-home fa-lg'></i></li>
-            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>dashboard/categorias'>Ir a Rol
+            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>ventas'>Ir a Ventas
             <small>Sistema de ventas</small></a></li>
         </ul>
     </div>

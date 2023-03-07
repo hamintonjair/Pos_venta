@@ -14,22 +14,29 @@ class Productos extends Controller{
     //VISTA DASHBOARD
     public function index(){
 
+        $id_user = $_SESSION[ 'id_usuario' ];
+        $verificar = $this->model->verificarPermisos( $id_user, 'productos' );
+        if ( !empty( $verificar ) || $id_user == 1 ) {
+            $data = array(
+                'proveedores' =>  $this->model->getProveedores(),
+                'categorias' =>  $this->model->getCategorias(),
+                'medidas'   =>  $this->model->getMedidas(),
+           );  
+            $this->views->getView($this, "producto", $data );
+        } else {
+            header( 'location:'.base_url.'Errors/permisos' );
+        }
       
-       $data = array(
-            'proveedores' =>  $this->model->getProveedores(),
-            'categorias' =>  $this->model->getCategorias(),
-            'medidas'   =>  $this->model->getMedidas(),
-       );  
-        $this->views->getView($this, "producto", $data );
 
     }
-    //listar los usuarios
+    //listar loOS PRODUCTOS
     public function listar(){
 
         $data = $this->model->getProductos();
 
         for($i=0; $i < count($data); $i++){
           
+           
             if($data[$i]['estado'] == 1){
                 $data[$i]['imagen'] = '<img class="img-thumbnail" src ="'.base_url."Assets/img/".$data[$i]['foto'].'"
                 width = "50px"; height: 100px>';
@@ -51,6 +58,28 @@ class Productos extends Controller{
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
+    public function listarEliminados(){
+        
+        $data = $this->model->getProductosEliminados();
+
+        for($i=0; $i < count($data); $i++){
+          
+         
+                $data[$i]['imagen'] = '<img class="img-thumbnail" src ="'.base_url."Assets/img/".'default.png'.'"   width = "50px"; height: 100px>';
+                $data[$i]['estado'] = ' <span class="badge badge-danger">Inactivo</span>';
+                $data[$i]['acciones'] = '<div>                     
+                <button type="button" class="btn btn-success" onclick="reingresarProducto('.$data[$i]['id'].');" title="Reingresar"><i class="fa fa-undo" aria-hidden="true"></i></button>      
+               </div>';
+        
+           
+        }
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        die();
+    }
+    public function productosEliminados(){ 
+           
+        $this->views->getView($this, "productosEliminados");
+    }
     //registrar y actualizar usuarios
     public function registrarProductos(){
 
@@ -59,18 +88,30 @@ class Productos extends Controller{
         $descripcion = $_POST['descripcion'];
         $precio_compra = $_POST['precio_compra'];
         $precio_venta = $_POST['precio_venta'];  
-        $descuento = $_POST['descuento'];  
-        $cantidad = $_POST['cantidad'];    
+        $descuento = $_POST['descuento'];     
         $id_medida = $_POST['id_medida'];
+        $vencimiento = $_POST['vencimiento'];  
         $id_categoria = $_POST['id_categoria'];
         $id_proveedor = $_POST['id_proveedor'];      
         $id = $_POST['idProducto'];
         $img = $_FILES['imagen'];
         $name = $img['name'];
-        $tpmName = $img['tmp_name'];  
-        if($descuento == "noAplica"){
-            $descuento = 0;
+        $tpmName = $img['tmp_name'];       
+   
+       
+        if($vencimiento == "No"){                      
+      
+            $fecha_vencimiento = "0000-00-00"; 
+        }if($vencimiento  == "Seleccionar.."){            
+            $msg = (array('ok'=>false, 'post' => 'Todos los campos son obligatorios.'));
+        }if($vencimiento == "Si"){ 
+           
+            $fecha_vencimiento = $_POST['fecha']; 
+        }       
+        if($iva == ""){
+            $iva = 0;
         }  
+
         $fecha = date("YmdHis");
      
          if($id_medida == "Seleccionar.." || $id_categoria == "Seleccionar.." ||  $id_proveedor == "Seleccionar.."){
@@ -93,8 +134,16 @@ class Productos extends Controller{
                 $imgNombre = "default.png";
             }
             if($id == ""){
+
+                if(empty( $precio_compra)){
+                    $precio_compra = "0";
+                }
+                if(empty($_POST['cantidad'])){
+                    $cantidad = "0";
+                }                    
                 //registrar               
-                    $data = $this->model->registrarProducto($codigo , $descripcion, $precio_compra , $precio_venta, $cantidad, $iva, $descuento,$id_medida,$id_categoria,$id_proveedor, $imgNombre  );
+                    $data = $this->model->registrarProducto($codigo , $descripcion, $precio_compra , $precio_venta, $cantidad, $iva, $descuento,
+                    $id_medida,$id_categoria,$id_proveedor, $imgNombre, $vencimiento, $fecha_vencimiento  );
 
                     if($data == 'ok'){
                         $msg = (array('ok'=>true, 'post' => 'Producto registrado con éxito.'));
@@ -110,14 +159,17 @@ class Productos extends Controller{
                 
             }else{
                 //actualizar
-              
-                $imgDelete = $this->model->editarProducto($id);                              
-                if($imgDelete['foto'] != "default.png" ){            
+             
+     
+                $imgDelete = $this->model->editarProducto($id);       
+                // var_dump(  $imgNombre, $imgDelete['foto']);exit;                  
+                if($imgDelete['foto'] !=  $imgNombre ){            
                     if(file_exists("Assets/img/".$imgDelete['foto'])){
                         unlink("Assets/img/".$imgDelete['foto']);
                     }
                 }              
-                $data = $this->model->updateProducto($codigo , $descripcion, $precio_compra , $precio_venta,$cantidad, $iva, $descuento ,$id_medida,$id_categoria,$id_proveedor, $imgNombre,$id);
+                $data = $this->model->updateProducto($codigo , $descripcion, $precio_compra , $precio_venta, $iva, $descuento ,
+                $id_medida,$id_categoria,$id_proveedor, $imgNombre, $vencimiento, $fecha_vencimiento,$id);
 
                     if($data == 'modificado'){
                             //eliminar la imagen

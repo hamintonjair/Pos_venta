@@ -17,6 +17,13 @@ class CajasModel extends Query {
         $data = $this->selectAll( $sql );
         return $data;
     }
+    //listar caja
+    public function getCaja() {
+
+        $sql = "SELECT c.*, ca.caja FROM cierre_caja c INNER JOIN caja ca ON c.id_caja = ca.id";
+        $data = $this->selectAll( $sql );
+        return $data;
+    }
     //registrar caja
 
     public function registrarCaja( string $caja ) {
@@ -84,14 +91,14 @@ class CajasModel extends Query {
     }
     //arqueo  caja
 
-    public function registrarArqueoCaja( int $id_usuario, string $monto_inicial, string $fecha_apertura ) {
+    public function registrarArqueoCaja( int $id_usuario, int $id_caja, string $monto_inicial, string $fecha_apertura ) {
 
         $verificar = "SELECT * FROM cierre_caja WHERE id_usuario = '$id_usuario' AND estado = 1";
         $existe = $this->select( $verificar );
         if ( empty( $existe ) ) {
 
-            $sql = 'INSERT INTO cierre_caja (id_usuario, monto_inicial, fecha_apertura) VALUES (?,?,?)';
-            $data = array( $id_usuario, $monto_inicial, $fecha_apertura );
+            $sql = 'INSERT INTO cierre_caja (id_usuario, id_caja, monto_inicial, fecha_apertura) VALUES (?,?,?,?)';
+            $data = array( $id_usuario, $id_caja, $monto_inicial, $fecha_apertura );
             $datos = $this->save( $sql, $data );
 
             if ( $datos == 1 ) {
@@ -125,7 +132,7 @@ class CajasModel extends Query {
 
     public function getMontoInicial( int $id_usuario ) {
 
-        $sql = "SELECT id, monto_inicial FROM cierre_caja WHERE id_usuario = $id_usuario AND estado = 1";
+        $sql = "SELECT c.id, c.monto_inicial, ca.caja FROM cierre_caja c INNER JOIN caja ca ON c.id_caja = ca.id WHERE id_usuario = $id_usuario AND c.estado = 1";
         $data = $this->select( $sql );
         return $data;
     }
@@ -149,6 +156,13 @@ class CajasModel extends Query {
         $sql = "UPDATE ventas SET apertura = ? WHERE id_usuario = ?";
         $data = array( 0, $id );
         $this->save( $sql, $data );
+    }
+    //verificar permisos
+    public function verificarPermisos( int $id_user, string $nombre )
+    {
+        $sql = "SELECT p.id, p.permiso, d.id, d.id_usuario, d.id_permiso FROM permisos p INNER JOIN detalle_permisos d ON p.id = d.id_permiso WHERE d.id_usuario = $id_user AND p.permiso = '$nombre' ";
+        $data = $this->selectAll( $sql );
+        return $data;
     }
 }
 

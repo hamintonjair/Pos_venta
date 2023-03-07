@@ -83,6 +83,7 @@
 <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funcion_compra.js"></script>
 <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funcion_empresa.js"></script>
 <script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/funcion_venta.js"></script>
+<script type="text/javascript" src="<?php echo base_url; ?>Assets/Admin/js/function_reportesInventarios.js"></script>
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>

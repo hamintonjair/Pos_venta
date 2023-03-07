@@ -7,13 +7,14 @@ include 'Views/Templates/body.php';
 <main class='app-content'>
     <div class='app-title'>
         <div>
-            <h1><i class='fas fa-box'></i> <small>Sistema de ventas</small>              
+            <h1><i class='fas fa-box'></i> <small>Sistema de ventas</small>
 
             </h1>
         </div>
         <ul class='app-breadcrumb breadcrumb'>
             <li class='breadcrumb-item'><i class='fa fa-home fa-lg'></i></li>
-            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>compras/historialCompra'>Ir a historial de compras
+            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>compras/historialCompra'>Ir a historial de
+                    compras
                     <small>Sistema de ventas</small></a></li>
         </ul>
     </div>
@@ -26,7 +27,7 @@ include 'Views/Templates/body.php';
         <div class="card-body">
             <form id="frmCompra" method="post">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="codigo">Código de barra <i class="fas fa-barcode"></i></label>
                             <input type="hidden" id="id" name="id">
@@ -34,7 +35,15 @@ include 'Views/Templates/body.php';
                                 placeholder="Código de barra" onkeyup="buscarCodigo(event)" aria-describedby="helpId">
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="nombre">Buscar por Nombre <i class="fa fa-product-hunt"></i></label>
+                            <input type="text" name="nombre" id="nombre" class="form-control valid validText"
+                                placeholder="Nombre del producto" onkeyup="buscarNombreC(event)"
+                                aria-describedby="helpId">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="descripcion">Descripción</label>
                             <input type="text" name="descripcion" id="descripcion" class="form-control valid validText"
@@ -45,14 +54,15 @@ include 'Views/Templates/body.php';
                         <div class="form-group">
                             <label for="cantidad">Cantidad</label>
                             <input type="number" name="cantidad" id="cantidad" class="form-control valid validNumber"
-                                placeholder="Cantidad" onkeyup="calcularPrecioC(event)" aria-describedby="helpId" disabled>
+                                placeholder="Cantidad" onkeyup="calcularPrecioC(event)" aria-describedby="helpId"
+                                >
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="precio">Precio</label>
+                            <label for="precio">Precio compra</label>
                             <input type="text" name="precio" id="precio" class="form-control valid validNumber"
-                                placeholder="Precio compra" aria-describedby="helpId" disabled>
+                                placeholder="Precio compra" aria-describedby="helpId" >
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -77,12 +87,12 @@ include 'Views/Templates/body.php';
                         <table class='table table-light table-hover table-bordered' id='tableCompra'>
                             <thead class="thead-dark">
                                 <tr>
-                                    <th>#</th>                                    
+                                    <th>#</th>
                                     <th>Descripción</th>
                                     <th>Cantidad</th>
                                     <th>Precio</th>
-                                    <th>Sub Total</th> 
-                                    <th>Acción </th>                                  
+                                    <th>Sub Total</th>
+                                    <th>Acción </th>
                                 </tr>
                             </thead>
                             <tbody id="tblDetalleC">
@@ -97,13 +107,59 @@ include 'Views/Templates/body.php';
         <div class="col-md-4 ml-auto">
             <div class="col-md-12">
                 <div class="form-group">
-                    <label for="total"class="font-weight-bold" >Total a pagar</label>
+                    <label for="total" class="font-weight-bold">Total a pagar</label>
                     <input type="text" name="total" id="total" class="form-control valid validNumber"
                         placeholder="Total" aria-describedby="helpId" disabled>
-                       
-                    <button type="button" class="btn btn-primary mt-2 btn-block" onclick="generarCompra()">Generar Compra</button>
+
+                    <button type="button" class="btn btn-primary mt-2 btn-block" onclick="cerrarCompra()">Generar
+                        Compra</button>
                 </div>
-            </div>      
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class='modal fade' id='cerrarCompra' tabindex='-1' role='dialog' aria-labelledby='modelTitleId'
+            aria-hidden='true'>
+            <div class='modal-dialog' role='document'>
+                <div class='modal-content'>
+                    <div class='modal-header headerRegister'>
+                        <h5 class='modal-title' id='titleModal'>Cerrar compra </h5>
+                        <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                            <span aria-hidden='true'>&times;
+                            </span>
+                        </button>
+                    </div>
+                    <div class='modal-body'>
+                        <form id='frmCerrar'>
+                            <div class='form-group'>
+                                <label for='valor_pagar'>Valor a pagar</label>
+                                <input type='text' name='valor_pagar' id='valor_pagar' class='form-control'
+                                    aria-describedby='helpId' disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="pago">Tipo de pago</label>
+                                <select class="custom-select" name="pago" id="pago">
+                                    <option selected>Selecionar..</option>
+                                    <option value="Debito">Decontado</option>
+                                    <option value="Credito">Crádito</option>                                
+                                </select>
+                            </div>
+                            <div class='form-group'>
+                                <label for='efectivos'>Valor a pagar</label>
+                                <input type='text' name='efectivos' id='efectivos'
+                                    class='form-control valid validNumber' placeholder='Pagar' onkeyup="pago(event)"
+                                    aria-describedby='helpId'>
+                            </div>                          
+                            <div class='modal-footer'>
+                                <button id='btnActionForm' type='button' class='btn btn-primary'
+                                    onclick="generarCompra();"><span id='btnText'>
+                                        Registrar</span></button>
+                                <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
 </main>
 

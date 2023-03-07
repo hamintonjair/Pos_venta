@@ -10,9 +10,17 @@ class ComprasModel extends Query {
     //buscar producto por código
 
     public function getProCodi( string $cod ) {
+      
+        if(is_numeric($cod) == true){
 
-        $sql = "SELECT * FROM productos WHERE codigo = '$cod'";
+            $sql = "SELECT * FROM productos WHERE codigo = '$cod'";
+            
+        }else{
+            $sql = "SELECT * FROM productos WHERE descripcion = '$cod'";
+        }
+       
         $data = $this->select( $sql );
+      
         return $data;
     }
     //registrar detalles
@@ -218,6 +226,14 @@ class ComprasModel extends Query {
     public function getUsuario(int $id_usuario){
         $sql = "SELECT * FROM usuarios WHERE id = $id_usuario";
         $data = $this->select( $sql );
+        return $data;
+    }
+    //verificar permisos
+
+    public function verificarPermisos( int $id_user, string $nombre )
+   {
+        $sql = "SELECT p.id, p.permiso, d.id, d.id_usuario, d.id_permiso FROM permisos p INNER JOIN detalle_permisos d ON p.id = d.id_permiso WHERE d.id_usuario = $id_user AND p.permiso = '$nombre' ";
+        $data = $this->selectAll( $sql );
         return $data;
     }
 

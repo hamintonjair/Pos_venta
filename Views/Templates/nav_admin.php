@@ -19,26 +19,22 @@
         <li class="treeview">
           <a class="app-menu__item" href="#" data-toggle="treeview">       
           <i class="app-menu__icon fa fa-tools" aria-hidden="true"></i>
-            <span class="app-menu__label"> Configuración</span>
+            <span class="app-menu__label"> Administración</span>
               <i class="treeview-indicator fa fa-angle-right"></i>
           </a>  
           <ul class="treeview-menu">
-            <li><a class="treeview-item" href="<?php echo base_url; ?>usuarios">
-            <i class="icon fa fa-users" aria-hidden="true"></i> Usuarios</a></li>
             <li><a class="treeview-item" href="<?php echo base_url; ?>configuracion" >
-            <i class="icon fa fa-cogs" aria-hidden="true"></i> Configuración</a></li>         
-            <li><a class="treeview-item" href="<?php echo base_url; ?>roles" >
-            <i class="icon fa fa-user" aria-hidden="true"></i>Roles</a></li>
+            <i class="icon fa fa-cogs" aria-hidden="true"></i> Configuración</a></li> 
+            <li><a class="treeview-item" href="<?php echo base_url; ?>inventario" >
+            <i class="icon fa fa-file-text" aria-hidden="true"></i> Inventario</a></li>    
+            <li><a class="treeview-item" href="<?php echo base_url; ?>reportes" >
+            <i class="icon fa fa-flag" aria-hidden="true"></i> Reportes</a></li>   
+            <li><a class="treeview-item" href="<?php echo base_url; ?>usuarios">
+            <i class="icon fa fa-users" aria-hidden="true"></i> Usuarios</a></li>                     
             <li><a class="treeview-item" href="<?php echo base_url; ?>proveedores" >
-            <i class="icon fa fa-user" aria-hidden="true"></i>Proveedores</a></li>
-             
+            <i class="icon fa fa-user" aria-hidden="true"></i>Proveedores</a></li>            
           </ul>
-        </li>    
-        <li>
-            <a class="app-menu__item"href="<?php echo base_url; ?>productos"> 
-            <i class="app-menu__icon fa fa-product-hunt" aria-hidden="true"></i>   
-            <span class="app-menu__label">Productos</span></a>
-        </li> 
+        </li>          
         <li>
             <a class="app-menu__item"href="<?php echo base_url; ?>cajas"> 
             <i class="app-menu__icon fa fa-archive" aria-hidden="true"></i>   
@@ -48,17 +44,22 @@
             <a class="app-menu__item"href="<?php echo base_url; ?>categorias"> 
             <i class="app-menu__icon fa fa-arrow-circle-o-down" aria-hidden="true"></i>     
             <span class="app-menu__label">Categorias</span></a>
-        </li>    
+        </li>   
+         <li>
+            <a class="app-menu__item"href="<?php echo base_url; ?>clientes"> 
+            <i class="app-menu__icon fa fa-users" aria-hidden="true"></i>     
+            <span class="app-menu__label"> Clientes</span></a>
+        </li>  
         <li>
             <a class="app-menu__item"href="<?php echo base_url; ?>medidas"> 
             <i class="app-menu__icon fa fa-balance-scale-left" aria-hidden="true"></i>     
             <span class="app-menu__label"> Medidas</span></a>
         </li>  
         <li>
-            <a class="app-menu__item"href="<?php echo base_url; ?>clientes"> 
-            <i class="app-menu__icon fa fa-users" aria-hidden="true"></i>     
-            <span class="app-menu__label"> Clientes</span></a>
-        </li>  
+            <a class="app-menu__item"href="<?php echo base_url; ?>productos"> 
+            <i class="app-menu__icon fa fa-product-hunt" aria-hidden="true"></i>   
+            <span class="app-menu__label">Productos</span></a>
+        </li> 
          <li class="treeview">
           <a class="app-menu__item" href="#" data-toggle="treeview">       
               <i class="app-menu__icon fa fa-shopping-cart" aria-hidden="true"></i>

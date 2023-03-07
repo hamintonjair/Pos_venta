@@ -13,7 +13,14 @@ class Categorias extends Controller{
     //VISTA DASHBOARD
     public function index(){  
         
-        $this->views->getView($this, "categoria");
+        $id_user = $_SESSION['id_usuario'];
+        $verificar = $this->model->verificarPermisos($id_user, 'categorias');
+        if(!empty($verificar) || $id_user == 1){
+            $this->views->getView($this, "categoria");
+        }else{
+             header("location:".base_url.'Errors/permisos');
+        }
+       
     }
     //registrar y actualizar categoria
     public function registrarCategoria(){
@@ -58,23 +65,33 @@ class Categorias extends Controller{
 
         for($i=0; $i < count($data); $i++){
           
-            if($data[$i]['estado'] == 1){
                 $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
                 $data[$i]['acciones'] = '<div>            
                 <button type="button" class="btn btn-primary" onclick="editarCategoria('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
                 <button type="button" class="btn btn-danger" onclick="eliminarCategoria('.$data[$i]['id'].');" title="Eliminar"><i class="far fa-trash-alt"></i></button>            
                </div>';
-                
-            }else{
-                $data[$i]['estado'] = ' <span class="badge badge-danger">Inactivo</span>';
-                 $data[$i]['acciones'] = '<div>               
-                    <button type="button" class="btn btn-success" onclick="reingresarCategoria('.$data[$i]['id'].');" title="Reingresar"><i class="fa fa-undo" aria-hidden="true"></i></button>      
-                </div>';
-            }
-           
+                                
         }      
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
+    }
+    public function listarEliminado() {
+
+        $data = $this->model->getCategoriasEliminados();
+        for ( $i = 0; $i < count( $data );
+        $i++ ) {
+        
+            $data[$i]['estado'] = ' <span class="badge badge-danger">Inactivo</span>';
+            $data[$i]['acciones'] = '<div>               
+               <button type="button" class="btn btn-success" onclick="reingresarCategoria('.$data[$i]['id'].');" title="Reingresar"><i class="fa fa-undo" aria-hidden="true"></i></button>      
+           </div>';
+        }
+        echo json_encode( $data, JSON_UNESCAPED_UNICODE );
+        die();
+    }
+    public function categoriaEliminado(){ 
+           
+        $this->views->getView($this, "categoriaEliminado");
     }
     //Editar categoria
     public function editar(int $id){

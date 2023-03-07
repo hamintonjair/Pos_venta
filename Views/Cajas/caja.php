@@ -11,13 +11,13 @@ include 'Views/Templates/body.php';
                 <button class="btn btn-primary" type="button" onclick="openModalCaja();" data-toggle="modal"
                     class="fa-solid fa-circle-plus">Nuevo</button>
                 <button class="btn btn-success" type="button" onclick="openArqueo();"
-                    class="fa-solid fa-circle-plus">Arqueo caja</button>
+                    class="fa-solid fa-circle-plus">Abrir caja</button>
 
             </h1>
         </div>  
         <ul class='app-breadcrumb breadcrumb'>
             <li class='breadcrumb-item'><i class='fa fa-home fa-lg'></i></li>
-            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>rol'>Ir a rol
+            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>usuarios'>Ir a Usuarios
             <small>Sistema de ventas</small></a></li>
         </ul>
     </div>

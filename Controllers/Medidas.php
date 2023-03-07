@@ -13,7 +13,14 @@ class Medidas extends Controller{
     //VISTA DASHBOARD
     public function index(){  
        
-        $this->views->getView($this, "medida");
+        $id_user = $_SESSION[ 'id_usuario' ];
+        $verificar = $this->model->verificarPermisos( $id_user, 'medidas' );
+        if ( !empty( $verificar ) || $id_user == 1 ) {
+            $this->views->getView($this, "medida");
+        } else {
+            header( 'location:'.base_url.'Errors/permisos' );
+        }
+       
     }
     //registrar y actualizar caja
     public function registrarMedida(){
@@ -50,7 +57,7 @@ class Medidas extends Controller{
             
             }
             echo json_encode($msg, JSON_UNESCAPED_UNICODE);
-            die;
+            die();
     }
     //listar las caja
     public function listar(){
@@ -58,24 +65,33 @@ class Medidas extends Controller{
         $data = $this->model->getMedidas();
 
         for($i=0; $i < count($data); $i++){
-          
-            if($data[$i]['estado'] == 1){
+                
                 $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
                 $data[$i]['acciones'] = '<div>            
                 <button type="button" class="btn btn-primary" onclick="editarMedida('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
                 <button type="button" class="btn btn-danger" onclick="eliminarMedida('.$data[$i]['id'].');" title="Eliminar"><i class="far fa-trash-alt"></i></button>            
-               </div>';
-                
-            }else{
-                $data[$i]['estado'] = ' <span class="badge badge-danger">Inactivo</span>';
-                 $data[$i]['acciones'] = '<div>               
-                    <button type="button" class="btn btn-success" onclick="reingresarMedida('.$data[$i]['id'].');" title="Reingresar"><i class="fa fa-undo" aria-hidden="true"></i></button>      
-                </div>';
-            }
+               </div>';       
            
         }      
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
+    }
+    public function listarEliminado() {
+
+        $data = $this->model->getMedidasEliminados();
+        for ( $i = 0; $i < count( $data );
+        $i++ ) {
+            $data[$i]['estado'] = ' <span class="badge badge-danger">Inactivo</span>';
+            $data[$i]['acciones'] = '<div>               
+               <button type="button" class="btn btn-success" onclick="reingresarMedida('.$data[$i]['id'].');" title="Reingresar"><i class="fa fa-undo" aria-hidden="true"></i></button>      
+           </div>';
+        }
+        echo json_encode( $data, JSON_UNESCAPED_UNICODE );
+        die();
+    }
+    public function medidasEliminado(){ 
+           
+        $this->views->getView($this, "medidasEliminado");
     }
     //Editar caja
     public function editar(int $id){

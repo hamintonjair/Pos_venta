@@ -1,11 +1,10 @@
-
-document.addEventListener("DOMContentLoaded", function () {
-     $('#tableCategorias').dataTable({
+document.addEventListener("DOMContentLoaded", function() {
+    $('#tableCategorias').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
-            { 'className': "textcenter", "targets": [3] },  //status  
-            { 'className': "textcenter", "targets": [2] },  //status           
+            { 'className': "textcenter", "targets": [3] }, //status  
+            { 'className': "textcenter", "targets": [2] }, //status           
         ],
         "ajax": {
             "url": " " + base_url + "Categorias/listar",
@@ -18,8 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
             { "data": "acciones" },
 
         ],
-        buttons: [
-            {
+        buttons: [{
                 "extend": "copyHtml5",
                 "text": "<i class='far fa-copy'></i> Copiar",
                 "titleAttr": "Copiar",
@@ -57,12 +55,88 @@ document.addEventListener("DOMContentLoaded", function () {
         "resonsieve": "true",
         "bDestroy": true,
         "iDisplayLength": 5,
-        "order": [[0, "desc"]]
+        "order": [
+            [0, "desc"]
+        ]
+    });
+
+
+})
+document.addEventListener("DOMContentLoaded", function() {
+    $('#tableCategoriasEliminado').dataTable({
+        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        dom: 'lBfrtip',
+        "columnDefs": [
+            { 'className': "textcenter", "targets": [3] }, //status  
+            { 'className': "textcenter", "targets": [2] }, //status           
+        ],
+        "ajax": {
+            "url": " " + base_url + "Categorias/listarEliminado",
+            "dataSrc": ""
+        },
+        "columns": [
+            { "data": "id" },
+            { "data": "nombre" },
+            { "data": "estado" },
+            { "data": "acciones" },
+
+        ],
+        buttons: [{
+                "extend": "copyHtml5",
+                "text": "<i class='far fa-copy'></i> Copiar",
+                "titleAttr": "Copiar",
+                "className": "btn btn-secondary",
+                "exportOptions": {
+                    "columns": [0, 1]
+                }
+            }, {
+                "extend": "excelHtml5",
+                "text": "<i class='fas fa-file-excel'></i> Excel",
+                "titleAttr": "Expotar a Excel",
+                "className": "btn btn-success",
+                "exportOptions": {
+                    "columns": [0, 1]
+                }
+            }, {
+                "extend": "pdfHtml5",
+                "text": "<i class='fas fa-file-pdf'></i> PDF",
+                "titleAttr": "Exportar a PDF",
+                "className": "btn btn-danger",
+                "exportOptions": {
+                    "columns": [0, 1]
+                }
+            }, {
+                "extend": "csvHtml5",
+                "text": "<i class='faa fa-file-csv'></i> CSV",
+                "titleAttr": "Eportar",
+                "className": "btn btn-secondary",
+                "exportOptions": {
+                    "columns": [0, 1]
+                }
+            },
+
+        ],
+        "resonsieve": "true",
+        "bDestroy": true,
+        "iDisplayLength": 5,
+        "order": [
+            [0, "desc"]
+        ]
     });
 
 
 })
 
+//eliminado
+function categoriaEliminado() {
+
+    window.location = base_url + "Categorias/categoriaEliminado";
+}
+//volver
+function volverCategoria() {
+
+    window.location = base_url + "categorias";
+}
 //registrar categoria
 function registrarCategoria(e) {
     e.preventDefault();
@@ -71,29 +145,52 @@ function registrarCategoria(e) {
 
     if (categoria.value == "") {
 
-        alert("Error", "Todos los campos son obligatorios", "error");
-
+        Swal.fire({
+            position: 'top-end',
+            icon: 'info',
+            title: 'Todos los campos son obligatorios',
+            showConfirmButton: false,
+            timer: 1500
+        })
     } else {
         const url = base_url + "Categorias/registrarCategoria";
         const frm = document.getElementById("frmCategoria");
         const http = new XMLHttpRequest();
         http.open("POST", url, true);
         http.send(new FormData(frm));
-        http.onreadystatechange = function () {
+        http.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 const resp = JSON.parse(this.responseText);
 
                 if (resp.ok == true) {
-                    alert(resp.post, "success"); 
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: resp.post,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
                     $('#nueva_categoria').modal('hide');
                     window.location.reload();
                 } else if (resp.modificado == true) {
 
-                    alert(resp.post, "success"); 
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: resp.post,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
                     $('#nueva_categoria').modal('hide');
                     window.location.reload();
                 } else {
-                    alert(resp.post, "error"); 
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: resp.post,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
                 }
 
             }
@@ -114,7 +211,7 @@ function editarCategoria(id) {
     const http = new XMLHttpRequest();
     http.open("GET", url, true);
     http.send();
-    http.onreadystatechange = function () {
+    http.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             const resp = JSON.parse(this.responseText);
 
@@ -150,7 +247,7 @@ function eliminarCategoria(id) {
             const http = new XMLHttpRequest();
             http.open("GET", url, true);
             http.send();
-            http.onreadystatechange = function () {
+            http.onreadystatechange = function() {
 
                 if (this.readyState == 4 && this.status == 200) {
                     const resp = JSON.parse(this.responseText);
@@ -206,7 +303,7 @@ function reingresarCategoria(id) {
             const http = new XMLHttpRequest();
             http.open("GET", url, true);
             http.send();
-            http.onreadystatechange = function () {
+            http.onreadystatechange = function() {
 
                 if (this.readyState == 4 && this.status == 200) {
                     const resp = JSON.parse(this.responseText);
@@ -239,16 +336,6 @@ function reingresarCategoria(id) {
             )
         }
     })
-}
-
-function alert(msm, icon){
-    Swal.fire({
-       position: 'top-end',
-       icon: icon,
-       title: msm,
-       showConfirmButton: false,
-       timer: 1500
-     })      
 }
 
 function openModalCategoria() {

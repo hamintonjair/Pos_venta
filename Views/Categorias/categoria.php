@@ -10,6 +10,7 @@ include 'Views/Templates/body.php';
             <h1><i class='fas fa-box'></i> Categoria <small>Sistema de ventas</small>
                 <button class="btn btn-primary" type="button" onclick="openModalCategoria();" data-toggle="modal"
                     class="fa-solid fa-circle-plus">Nuevo</button>
+                    <button class="btn btn-danger" type="button" onclick="categoriaEliminado();" class="fa-solid fa-circle-plus">Eliminados</button>
 
             </h1>
         </div>  

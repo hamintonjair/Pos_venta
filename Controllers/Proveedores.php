@@ -14,8 +14,14 @@ class Proveedores extends Controller{
     //VISTA DASHBOARD
     public function index(){
         
+        $id_user = $_SESSION[ 'id_usuario' ];
+        $verificar = $this->model->verificarPermisos( $id_user, 'proveedor' );
+        if ( !empty( $verificar ) || $id_user == 1 ) {
+            $this->views->getView($this, "proveedor");
+        } else {
+            header( 'location:'.base_url.'Errors/permisos' );
+        }
       
-        $this->views->getView($this, "proveedor");
     }
     //listar los proveedores
     public function listar(){

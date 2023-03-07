@@ -50,7 +50,7 @@
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Todos los derechos reservados 2023</div>
+                            <div class="text-muted">Copyright &copy; Todos los derechos reservados <?php echo date("Y")?> <a href="https://jojama.shop/" target="_blaak" rel="noopener noreferrer">Visite mi página web</a></div>
 
                         </div>
                     </div>

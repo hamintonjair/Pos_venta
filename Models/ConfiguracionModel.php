@@ -31,7 +31,7 @@ class ConfiguracionModel extends Query {
     public function actualizar( string $nit, string $regimen, int $resolucion, string $nombre, string $telefono, string $direccion, string $ciudad, string $mensaje, int $id ) {
 
         $sql = 'UPDATE configuracion SET nit = ?, regimen = ?,resolucion = ?, nombre = ?, telefono = ?, direccion = ?, ciudad = ?, mensaje = ? WHERE id = ?';
-        $data = array( $nit, $regimen,$resolucion, $nombre,  $telefono,  $direccion,  $ciudad,  $mensaje,  $id );
+        $data = array( $nit, $regimen, $resolucion, $nombre,  $telefono,  $direccion,  $ciudad,  $mensaje,  $id );
         $datos = $this->save( $sql, $data );
 
         if ( $datos == 1 ) {
@@ -57,13 +57,21 @@ class ConfiguracionModel extends Query {
         $data = $this->selectAll( $sql );
         return $data;
     }
-  //historial venatas ´para ña grafica
-    public function getVentas(){
+    //historial venatas ´para ña grafica
 
-      $sql = "SELECT COUNT(*) as total FROM ventas WHERE estado = 1";
-      $data = $this->select($sql);
-      return $data;
-   }
+    public function getVentas() {
+
+        $sql = 'SELECT COUNT(*) as total FROM ventas WHERE estado = 1';
+        $data = $this->select( $sql );
+        return $data;
+    }
+    //verificar permisos
+    public function verificarPermisos( int $id_user, string $nombre )
+   {
+        $sql = "SELECT p.id, p.permiso, d.id, d.id_usuario, d.id_permiso FROM permisos p INNER JOIN detalle_permisos d ON p.id = d.id_permiso WHERE d.id_usuario = $id_user AND p.permiso = '$nombre' ";
+        $data = $this->selectAll( $sql );
+        return $data;
+    }
 }
 
 ?>

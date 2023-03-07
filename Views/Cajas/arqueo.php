@@ -8,7 +8,9 @@ include 'Views/Templates/body.php';
     <div class='app-title'>
         <div>
             <h1><i class='fas fa-box'></i>Arqueo de Caja <small>Sistema de ventas</small>
-                <button class="btn btn-primary" type="button" onclick="arqueoCaja();" data-toggle="modal_arqueo"
+            <button class="btn btn-primary" type="button" onclick="volverCaja();"
+                    class="fa-solid fa-circle-plus">Volver</button>
+                <button class="btn btn-info" type="button" onclick="arqueoCaja();" data-toggle="modal_arqueo"
                     class="fa-solid fa-circle-plus">Nuevo</button>
                 <button class="btn btn-danger" type="button" onclick="cerrarArqueo();"
                     class="fa-solid fa-circle-plus"><i class="fa fa-window-close" aria-hidden="true"></i>Cerrar
@@ -18,7 +20,7 @@ include 'Views/Templates/body.php';
         </div>
         <ul class='app-breadcrumb breadcrumb'>
             <li class='breadcrumb-item'><i class='fa fa-home fa-lg'></i></li>
-            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>cajas'>Ir a cajas
+            <li class='breadcrumb-item'><a href='<?php echo base_url; ?>ventas'>Ir a ventas
                     <small>Sistema de ventas</small></a></li>
         </ul>
     </div>
@@ -31,8 +33,8 @@ include 'Views/Templates/body.php';
                         <table class='table  table-light table-hover table-bordered' id='tableArqueoCajas'>
                             <thead class="thead-dark">
                                 <tr>
-                                    <th>#</th>
-                                    <th>Usuario</th>
+                                    <th>#</th>  
+                                    <th>Caja</th>                             
                                     <th>Monto inicial</th>
                                     <th>Monto final</th>
                                     <th>Fecha apertura</th>
@@ -66,17 +68,28 @@ include 'Views/Templates/body.php';
                 <div class='modal-body'>
                     <form method='post' id='frmAbrirCaja' onsubmit="abrirArqueo(event);">
                         <input type='hidden' id='id' name='id' value=''>
+                        <div class='form-group' id="ocultar_campos2">
+                            <label for='caja'>Cajas</label>
+                            <select class="form-control selectpicker" id="id_caja" name="id_caja">
+                                        <!-- <option selected="selected">Seleccionar..</option> -->
+                                        <?php foreach ($data['cajas'] as $row){ ?>
+                                        <option value="<?php echo $row['id']; ?>"><?php echo $row['caja']; ?>
+                                        </option>
+                                        <?php }; ?>
+                                    </select>
+                        </div>
                         <div class='form-group'>
                             <label for='caja'>Monto inicial</label>
                             <input type='text' name='monto_inicial' id='monto_inicial'
                                 class='form-control valid validNumber' placeholder='Monto inicial'
                                 aria-describedby='helpId'>
                         </div>
+                        
                         <div id="ocultar_campos">
                             <div class="form-group">
                                 <label for="monto_final">Monto final</label>
                                 <input type="text" id="monto_final" class="form-control" aria-describedby="helpId"
-                                    disabled>
+                                    >
                             </div>
                             <div class="form-group">
                                 <label for="total_ventas">Total ventas</label>

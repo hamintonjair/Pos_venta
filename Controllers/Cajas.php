@@ -16,13 +16,23 @@ class Cajas extends Controller {
 
     public function index() {
 
-        $this->views->getView( $this, 'caja' );
+        $id_user = $_SESSION['id_usuario'];
+        $verificar = $this->model->verificarPermisos($id_user, 'cajas');
+        if(!empty($verificar) || $id_user == 1){
+            $this->views->getView( $this, 'caja' );
+        }else{
+             header("location:".base_url.'Errors/permisos');
+        }
+       
     }
     //Varqueo caja
-
     public function arqueo() {
 
-        $this->views->getView( $this, 'arqueo' );
+       $data = array(
+             'cajas' =>  $this->model->getCajas('caja')
+        );
+  
+       $this->views->getView( $this, 'arqueo', $data );
     }
     //registrar y actualizar caja
 
@@ -136,14 +146,16 @@ class Cajas extends Controller {
 
         $fecha_apertura = date('Y-m-d' );
         $id_usuario = $_SESSION['id_usuario'];
+      
         $id = $_POST['id'];
 
         if ( empty( $monto_inicial ) || empty( $fecha_apertura ) ) {
             $msg = ( array( 'ok'=>false, 'post' => 'Todos los campos son obligatorios.' ) );
         } else {
             if($id == ""){
+                $id_caja = $_POST['id_caja'];
                  //registrar
-                $data = $this->model->registrarArqueoCaja($id_usuario, $monto_inicial,    $fecha_apertura);
+                $data = $this->model->registrarArqueoCaja($id_usuario, $id_caja, $monto_inicial,    $fecha_apertura);
                 if ( $data == 'ok' ) {
                     $msg = ( array( 'ok'=>true, 'post' => 'Caja abierta con éxito.' ) );
 
@@ -176,7 +188,7 @@ class Cajas extends Controller {
     //listar arqueo 
     public function listarArqueo() {
 
-        $data = $this->model->getCajas('cierre_caja');
+        $data = $this->model->getCaja();
 
         for ( $i = 0; $i < count( $data );
         $i++ ) {
@@ -204,6 +216,7 @@ class Cajas extends Controller {
             $data['monto_total'] = $this->model->getVentas( $id_usuario );           
             $data['total_ventas'] = $this->model->getTotalVentas(  $id_usuario ); 
             $data['monto_general'] = $data['monto_total']['total'] + $data['inicial']['monto_inicial'] ;
+            $data['caja'] = $data['inicial']['caja'] ;
         }
         echo json_encode( $data, JSON_UNESCAPED_UNICODE );
         die();

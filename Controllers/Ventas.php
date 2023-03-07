@@ -11,18 +11,30 @@ class Ventas extends Controller {
         }
 
         parent::__construct();
+        
     }
     //VISTA DASHBOARD
 
     public function index() {
 
-        $this->views->getView( $this, 'venta' );
+        $id_user = $_SESSION[ 'id_usuario' ];
+        $verificar = $this->model->verificarPermisos( $id_user, 'nueva_venta' );
+        if ( !empty( $verificar ) || $id_user == 1 ) {
+            $this->views->getView( $this, 'venta' );
+        } else {
+            header( 'location:'.base_url.'Errors/permisos' );
+        }
+       
     }
     //buscar código
-
     public function buscarVenta( $cod ) {
+       
+        if(is_numeric($cod) == true){
 
-        $data = $this->model->getProCod( $cod );
+            $data = $this->model->getProCod($cod);
+        }else{
+            $data = $this->model->getProCod($cod);
+        }
 
         if ( $data ) {
             if ( $data[ 1 ][ 'cantidad' ] == 0 ) {
@@ -39,7 +51,6 @@ class Ventas extends Controller {
         die();
     }
     //buscar cliente por nombre
-
     public function buscarCliente( $cedula ) {
         $data = $this->model->getCliente( $cedula );
         echo json_encode( $data, JSON_UNESCAPED_UNICODE );
@@ -53,7 +64,7 @@ class Ventas extends Controller {
         $id = $_POST[ 'id' ];
         $datos = $this->model->getProductos( $id );
         $id_producto = $datos[ 'id' ];
-        $id_usuario = $_SESSION[ 'id_usuario' ];
+        $id_usuario = $_SESSION['id_usuario'];
         $precio = $datos[ 'precio_venta' ];
         $cantidad = $_POST[ 'cantidad' ];
         $iva = $datos[ 'iva' ];   
@@ -105,6 +116,7 @@ class Ventas extends Controller {
         $data[ 'detalle' ] = $this->model->getDetalle( $id_usuario );
 
         $data[ 'total_pagar' ] = $this->model->calcularVenta( $id_usuario );
+
         echo json_encode( $data, JSON_UNESCAPED_UNICODE );
         die();
     }
@@ -124,13 +136,33 @@ class Ventas extends Controller {
         die();
 
     }
+    //cambio
+    public function ingresarCambio(){
+
+        $efectivos = $_POST[ 'efectivos' ];        
+        $data = $this->model->getDetalles();
+        $sub_total = $data['total'];
+
+     
+        if( $efectivos < $sub_total){
+            $msg = ( array( 'modificado'=>false, 'msg' => 'Error el valor debe ser mayor a la compra.' ) );
+                   
+        }else{
+           $_SESSION['cambio'] = $total = $efectivos - $sub_total;
+           $_SESSION['pago'] = $efectivos ;
+           $msg = ( array( 'modificado'=> true, 'post' => 'Exitoso.' ) );
+        }  
+        echo json_encode( $msg, JSON_UNESCAPED_UNICODE );
+        die();       
+    }
     //registrar compra
 
-    public function registrarVenta( $cod ) {
-
+    public function registrarVenta() {
+       
         $id_usuario = $_SESSION[ 'id_usuario' ];
         $verificar = $this->model->verificarCaja( $id_usuario );
 
+    
         if (empty( $verificar) ) {
             $msg = ( array( 'modificado'=>false, 'msg' => 'La caja está cerrada.' ) );
 
@@ -138,14 +170,16 @@ class Ventas extends Controller {
             $cliente = $_POST[ 'ID' ];
 
             $total = $this->model->calcularVenta( $id_usuario );
+
+          
             if ( empty( $cliente ) ) {
                 $cliente = '1';
-                $data = $this->model->registrarVenta( $id_usuario, $total[ 'total' ], $cliente );
+                $data = $this->model->registrarVenta( $id_usuario, $total[ 'total' ], $cliente, $_SESSION['pago'],  $_SESSION['cambio'] );
             } else {
-                $data = $this->model->registrarVenta($id_usuario, $total[ 'total' ], $cliente );
+                $data = $this->model->registrarVenta($id_usuario, $total[ 'total' ], $cliente, $_SESSION['pago'],  $_SESSION['cambio'] );
 
             }
-
+    
             if ( $data == 'modificado' ) {
                 $detalle = $this->model->getDetalle( $id_usuario );
 
@@ -182,7 +216,6 @@ class Ventas extends Controller {
         die();
     }
     //generar pfd
-
     public function generarPDF( $id_venta ) {
 
         //traer datos d ela empresa
@@ -275,7 +308,7 @@ class Ventas extends Controller {
         $pdf->SetFont( 'Arial', 'B', 12 );
 
         $pdf->Cell( 110, 5, 'Estado de la venta:', 0, 0, 'R' );
-
+        $pdf->SetFont( 'Arial', '', 12 );
         if ( $estado == 0 ) {
             $pdf->Cell( 20, 5, 'Anulado', 0, 1, 'R' );
 
@@ -286,8 +319,8 @@ class Ventas extends Controller {
 
         $pdf->Ln();
 
-        $pdf->SetFont( 'Arial', '', 12 );
-        $pdf->Cell( 24, 5, utf8_decode( $empresa[ 'mensaje' ] ), 0, 1, 'L' );
+        $pdf->SetFont( 'Arial', 'B', 12 );
+        $pdf->Cell( 24, 5, utf8_decode( $empresa[ 'mensaje' ] ), 0, 1, 'J' );
 
         //encabezado de productos
         $pdf->Ln( 15 );
@@ -312,46 +345,64 @@ class Ventas extends Controller {
 
         $pdf->Ln();
 
-        $total = 0.00;
-        $subTotal = 0;
+        $descuentos = 0.00;
+        $Total = 0;
         $sub_total  = 0;
+        $totalPagar = 0;
+        $cambio = 0;
+        $pagado = 0;
         //fondo
         $pdf->setFillColor( 240, 240, 240 );
         $pdf->SetTextColor( 40, 40, 40 );
         $pdf->SetDrawColor( 255, 255, 255 );
-      
+        $pdf->SetFont( 'Arial', '', 12 );
         foreach ( $productos as $row ) {
 
-            $subTotal =    $subTotal + ($row['precio'] * $row['cantidad']);
+            $Total =    $Total + ($row['precio'] * $row['cantidad']);
             $sub_total = $sub_total + $row['sub_total']; 
-            // $total = $total + $row['sub_total'];          
+            $descuentos =  ($sub_total * $row['descuento']) / 100;  
+            $pagado =  $row['pagado'] ;  
+            $cambio =  $row['cambio'] ;      
             $pdf->Cell( 15, 5, $row['cantidad'], 1, 0, 'L', 1 );
             $pdf->Cell( 90, 5, utf8_decode( $row['descripcion' ] ), 1, 0, 'L', 1 );
             $pdf->Cell( 8, 5,  $row['iva'] , 1, 0, 'L', 1 );
             $pdf->Cell( 35, 5, formatMoney( $row['precio'] ), 1, 0, 'L', 1 );
             $pdf->Cell( 38, 5, formatMoney( $row['sub_total']), 1, 1, 'L', 1 );
+           
         }
 
+        //descuento
+         $totalPagar =  (($sub_total -  $Total) +  $Total) -  $descuentos;  
+        //   $totalPagar = $totalC - $total;
+
        
-        $totalApagar = $sub_total - $descuento[ 'total' ];
+        // $totalApagar = $sub_total - $descuento[ 'total' ];
         $pdf->Ln();
 
         $pdf->setFillColor( 79, 78, 77 );
         $pdf->SetTextColor( 255, 255, 255 );
 
+        $pdf->SetFont( 'Arial', '', 12 );
+
+        $pdf->Cell( 140, 5, 'Sub Total:', 0, 0, 'R', 1 );
+        $pdf->Cell( 45, 5, formatMoney(  $Total ), 0, 1, 'R', 1 );
+
+        $pdf->Cell( 140, 5, 'IVA%:', 0, 0, 'R', 1 );
+        $pdf->Cell( 45, 5, formatMoney($sub_total -  $Total), 0, 1, 'R', 1 );
+
+        $pdf->Cell( 140, 5, 'Descuento Total:', 0, 0, 'R', 1 );
+        $pdf->Cell( 45, 5, formatMoney( $descuentos), 0, 1, 'R', 1 );
+
+        $pdf->SetFont( 'Arial', 'B', 15 );
+        $pdf->Cell( 140, 5, 'Total a Pagar:', 0, 0, 'R', 1 );
+        $pdf->Cell( 45, 5, formatMoney( $totalPagar ), 0, 1, 'R', 1 );
+        
         $pdf->SetFont( 'Arial', 'B', 12 );
+        $pdf->Cell( 20, 5, 'Pagado:', 0, 0, 'L', 1 );
+        $pdf->Cell( 35, 5, formatMoney( $pagado ), 0, 1, 'L', 1 );
 
-        $pdf->Cell( 150, 5, 'Sub Total:', 0, 0, 'R', 1 );
-        $pdf->Cell( 35, 5, formatMoney(  $sub_total ), 0, 1, 'R', 1 );
-
-        $pdf->Cell( 150, 5, 'IVA%:', 0, 0, 'R', 1 );
-        $pdf->Cell( 35, 5, formatMoney($sub_total -  $subTotal), 0, 1, 'R', 1 );
-
-        $pdf->Cell( 150, 5, 'Descuento Total:', 0, 0, 'R', 1 );
-        $pdf->Cell( 35, 5, formatMoney( $descuento[ 'total' ] ), 0, 1, 'R', 1 );
-
-        $pdf->Cell( 150, 5, 'Total a Pagar:', 0, 0, 'R', 1 );
-        $pdf->Cell( 35, 5, formatMoney( $totalApagar ), 0, 1, 'R', 1 );
+        $pdf->Cell( 20, 5, 'Cambio:', 0, 0, 'L', 1 );
+        $pdf->Cell( 35, 5, formatMoney( $cambio ), 0, 1, 'L', 1 );
 
         $pdf->Output();
     }
@@ -377,14 +428,14 @@ class Ventas extends Controller {
 
                 $data[ $i ][ 'acciones' ] = '<div>  
                 <button class="btn btn-warning" title="Anular" onclick="btnAnularV('.$data[ $i ][ 'id' ].')"><i class="fas fa-ban"></i></button>          
-                <a type="button" class="btn btn-danger" href="'.base_url.'Ventas/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
+                <a type="button" class="btn btn-danger" href="'.base_url.'ventas/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
                </div>';
 
             } else {
                 $data[ $i ][ 'estado' ] = ' <span class="badge badge-danger">Anulado</span>';
 
                 $data[ $i ][ 'acciones' ] = '<div>                        
-                <a type="button" class="btn btn-danger" href="'.base_url.'Ventas/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
+                <a type="button" class="btn btn-danger" href="'.base_url.'ventas/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
                 </div>';
 
             }
@@ -413,12 +464,17 @@ class Ventas extends Controller {
 
             $iva = $descAct[ 'iva' ];   
             $descuento_total = $descAct[ 'descuento' ] + $desc;
+            //sum total
             $subTotal =   $precio *  $cantidad;
-            $subIva = ($subTotal * $iva ) / 100 ;           
- 
-            $total =  ($subIva  +  $subTotal) - $descuento_total;  
-          
-            $datos = $this->model->actualizarDescuento($descuento_total, $total, $id);
+            //valor iva
+            $subIva = ($subTotal * $iva) / 100 ;  
+            //total
+            $totalC =  ($subIva  +  $subTotal);         
+            //descuento
+            $total =  ($totalC * $descuento_total) / 100;  
+            $totalPagar = $totalC - $total;
+         
+            $datos = $this->model->actualizarDescuento($descuento_total, $totalPagar, $id);
 
 
             // $descuento_total = $descAct[ 'descuento' ] + $desc;
@@ -457,5 +513,74 @@ class Ventas extends Controller {
         echo json_encode( $msg, JSON_UNESCAPED_UNICODE );
         die();
     }
+    public function pdf( ) {
+
+        //traer datos d ela empresa
+        $desde = $_POST['desde'];
+        $hasta = $_POST['hasta'];
+        //traer datos d ela empresa
+        $empresa = $this->model->getEmpresa();
+
+        if(empty($desde) || empty($hasta)){
+            $data = $this->model->getHistorialVenta();
+        }else{
+            $data = $this->model->getRangoFechas($desde, $hasta);
+        }
+        require( 'Libraries/fpdf/fpdf.php' );
+
+        $pdf = new FPDF( 'P', 'mm', 'letter', true );
+        $pdf->AddPage( 'PORTRAIT', 'letter' );
+        $pdf->setMargins( 15, 30, 20, 20 );
+        $pdf->setTitle( 'Reporte Venta' );
+        $pdf->Image( base_url.'Assets/img/logo.png', 95, 23, 20, 20, 'png' );
+        $pdf->setFillColor( 77, 182, 172 );
+        $pdf->Rect( 0, 0, 220, 20, 'F' );
+
+
+        $pdf->Ln( 35 );
+        $pdf->SetFont( 'Arial', 'B', 14 );
+        $pdf->Cell( 0, 5, 'Reporte de Ventas ', 0, 1, 'C' );
+        $pdf->SetFont( 'Arial', '', 12 );
+        $pdf->Cell( 0, 5, $empresa[ 'nombre' ], 0, 1, 'C' );
+        $pdf->Ln( 10 );
+      
+        $pdf->SetFont( 'Arial', 'B', 12 );
+        $pdf->Cell(26, 5, 'Id', 0, 0, 'L');
+        $pdf->Cell(76, 5, 'Nombre', 0, 0, 'L');
+        $pdf->Cell(45, 5, 'Fecha', 0, 0, 'L');
+        $pdf->Cell(39, 5, 'Total', 0, 1, 'L');
+
+
+        $pdf->SetLineWidth( 1 );
+        $pdf->SetDrawColor( 61, 174, 273, 1 );
+
+        $pdf->setTextColor( 0, 0, 0 );
+        $pdf->Line( 15, 70, 200, 70 );
+
+        $pdf->Ln();
+
+        //fondo
+        $pdf->setFillColor( 240, 240, 240 );
+        $pdf->SetTextColor( 40, 40, 40 );
+        $pdf->SetDrawColor( 255, 255, 255 );
+
+        $pdf->SetFont( 'Arial', '', 12 );
+        foreach ( $data as $row ) {
+            $pdf->Cell(26, 5, $row[ 'id' ], 0, 0, 'L', 1);
+            $pdf->Cell(76, 5, $row[ 'nombre' ], 0, 0, 'L', 1);
+            $pdf->Cell(45, 5, $row[ 'fecha' ], 0, 0, 'L', 1);
+            $pdf->Cell(39, 5, formatMoney(  $row[ 'total' ]), 0, 1, 'L', 1);
+    
+        }
+        // $pdf->SetFont( 'Arial', 'B', 14 );
+        // $pdf->Cell( 0, 5, 'Reporte Ventas ', 0, 1, 'C' );
+        // $pdf->Cell( 20, 5, $row[ 'cantidad' ], 0, 1, 'L' );
+
+
+
+    
+        $pdf->Output();
+    }
+
 }
 ?>

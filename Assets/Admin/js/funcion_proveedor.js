@@ -1,11 +1,10 @@
-
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     $('#tableProveedores').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
             { 'className': "textcenter", "targets": [6] }, //status
-            { 'className': "textcenter", "targets": [7] },  //accion            
+            { 'className': "textcenter", "targets": [7] }, //accion            
         ],
         "ajax": {
             "url": " " + base_url + "Proveedores/listar",
@@ -22,8 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
             { "data": "acciones" },
 
         ],
-        buttons: [
-            {
+        buttons: [{
                 "extend": "copyHtml5",
                 "text": "<i class='far fa-copy'></i> Copiar",
                 "titleAttr": "Copiar",
@@ -61,7 +59,9 @@ document.addEventListener("DOMContentLoaded", function () {
         "resonsieve": "true",
         "bDestroy": true,
         "iDisplayLength": 10,
-        "order": [[0, "desc"]]
+        "order": [
+            [0, "desc"]
+        ]
     });
 
 
@@ -80,7 +80,13 @@ function registrarProveedor(e) {
 
     if (nit.value == "" || razon_social.value == "" || nombre.value == "" || telefono.value == "" || direccion.value == "") {
 
-        alert("Error", "Todos los campos son obligatorios", "error");
+        Swal.fire({
+            position: 'top-end',
+            icon: 'info',
+            title: 'Todos los campos son obligatorios',
+            showConfirmButton: false,
+            timer: 1500
+        })
 
     } else {
         const url = base_url + "Proveedores/registrarProveedor";
@@ -88,23 +94,43 @@ function registrarProveedor(e) {
         const http = new XMLHttpRequest();
         http.open("POST", url, true);
         http.send(new FormData(frm));
-        http.onreadystatechange = function () {
+        http.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 const resp = JSON.parse(this.responseText);
 
                 if (resp.ok == true) {
-                    alert(resp.post, "success");     
+
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: resp.post,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
                     $('#nuevo_proveedor').modal('hide');
                     window.location.reload();
-               
+
                 } else if (resp.modificado == true) {
 
-                    alert(resp.post, "success");   
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: resp.post,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
                     $('#nuevo_proveedor').modal('hide');
                     window.location.reload();
-                
+
                 } else {
-                    alert(resp.post, "error");    
+
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: resp.post,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
                 }
 
             }
@@ -125,7 +151,7 @@ function editarProveedor(id) {
     const http = new XMLHttpRequest();
     http.open("GET", url, true);
     http.send();
-    http.onreadystatechange = function () {
+    http.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             const resp = JSON.parse(this.responseText);
 
@@ -165,7 +191,7 @@ function eliminarProveedor(id) {
             const http = new XMLHttpRequest();
             http.open("GET", url, true);
             http.send();
-            http.onreadystatechange = function () {
+            http.onreadystatechange = function() {
 
                 if (this.readyState == 4 && this.status == 200) {
                     const resp = JSON.parse(this.responseText);
@@ -221,7 +247,7 @@ function reingresarProveedor(id) {
             const http = new XMLHttpRequest();
             http.open("GET", url, true);
             http.send();
-            http.onreadystatechange = function () {
+            http.onreadystatechange = function() {
 
                 if (this.readyState == 4 && this.status == 200) {
                     const resp = JSON.parse(this.responseText);
@@ -255,16 +281,6 @@ function reingresarProveedor(id) {
         }
     })
 }
-
-function alert(msm, icon){
-    Swal.fire({
-       position: 'top-end',
-       icon: icon,
-       title: msm,
-       showConfirmButton: false,
-       timer: 1500
-     })      
- }
 
 function openModalProveedor() {
 

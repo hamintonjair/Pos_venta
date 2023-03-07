@@ -12,39 +12,64 @@ class Usuarios extends Controller{
     //VISTA DASHBOARD
     public function index(){
 
-        if( empty($_SESSION['activo'])){
-            header("location:".base_url);
+        $id_user = $_SESSION[ 'id_usuario' ];
+        $verificar = $this->model->verificarPermisos( $id_user, 'usuarios' );
+        if ( !empty( $verificar ) || $id_user == 1 ) {
+            if( empty($_SESSION['activo'])){
+                header("location:".base_url);
+            }
+            $data['cajas'] =  $this->model->getCajas();
+            $this->views->getView($this, "usuario",  $data );
+        } else {
+            header( 'location:'.base_url.'Errors/permisos' );
         }
-        $data['cajas'] =  $this->model->getCajas();
-        $this->views->getView($this, "usuario",  $data );
-
     }
 
     //listar los usuarios
     public function listar(){
 
         $data = $this->model->getUsuarios();
-        for($i=0; $i < count($data); $i++){
-          
-            if($data[$i]['estado'] == 1){
-                $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
+
+        for($i=0; $i < count($data); $i++){          
+                
+               $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
+               if($data[$i]['id'] == 1){
+                    $data[$i]['acciones'] = '<div>                     
+                       <span class="badge bg-primary">Administrador</span>';
+                    '<div>   
+                </div>';
+               }else{
+              
                 $data[$i]['acciones'] = '<div>   
-                <a type="button" class="btn btn-dark" href="'.base_url.'Usuarios/permisos/'.$data[$i]['id'].'" title="Permisos"><i class="fas fa-key"></i></a>          
+                <a type="button" class="btn btn-dark" href="'.base_url.'usuarios/permisos/'.$data[$i]['id'].'" title="Permisos"><i class="fas fa-key"></i></a>          
                 <button type="button" class="btn btn-primary" onclick="editarUsuario('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
                 <button type="button" class="btn btn-danger" onclick="eliminarUsuario('.$data[$i]['id'].');" title="Eliminar"><i class="far   
                 fa-trash-alt"></i></button>    
                </div>';
-                
-            }else{
-                $data[$i]['estado'] = ' <span class="badge badge-danger">Inactivo</span>';
-                $data[$i]['acciones'] = '<div>                     
-                <button type="button" class="btn btn-success" onclick="reingresarUsuario('.$data[$i]['id'].');" title="Reingresar"><i class="fa fa-undo" aria-hidden="true"></i></button>      
-               </div>';
-            }
+               }
+       
+        }
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        die();
+    }
+    public function listarEliminados(){
+        
+        $data = $this->model->getUsuariosEliminados();
+
+        for($i=0; $i < count($data); $i++){          
+         
+            $data[$i]['estado'] = ' <span class="badge bg-danger">Inactivo</span>';
+            $data[$i]['acciones'] = '<div>                     
+            <button type="button" class="btn btn-success" onclick="reingresarUsuario('.$data[$i]['id'].');" title="Reingresar"><i class="fa fa-undo" aria-hidden="true"></i></button>      
+           </div>';    
            
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
+    }
+    public function usuarioEliminado(){ 
+           
+        $this->views->getView($this, "usuarioEliminado");
     }
     //registrar y actualizar usuarios
     public function registrarUser(){
@@ -56,6 +81,7 @@ class Usuarios extends Controller{
         $caja = $_POST['caja'];
         $id = $_POST['idUsuario'];
         $hash = hash("SHA256", $clave);
+
 
         if(empty($usuario) || empty($nombre ) || $caja == "Seleccionar.."){
             $msg = (array('ok'=>false, 'post' => 'Todos los campos son obligatorios.'));
@@ -78,7 +104,10 @@ class Usuarios extends Controller{
                 }
             }else{
                 //actualizar
-                $data = $this->model->updateUsuario($usuario,$nombre,$caja, $id);
+                if($clave != $confirmar){
+                    $msg = (array('ok'=>false, 'post' => 'La contraseñas no coinciden.'));	
+                }
+                $data = $this->model->updateUsuario($usuario,$nombre,$caja, $hash,$id);
                 if($data == 'modificado'){
                     $msg = (array('modificado'=>true, 'post' => 'El Usuario fue actualizado con éxito.'));
 
@@ -94,7 +123,7 @@ class Usuarios extends Controller{
     //Editar usuario
     public function editar(int $id){
 
-        $data = $this->model->editarUsuario($id);
+        $data = $this->model->editarUsuario($id);       
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
 
@@ -124,6 +153,36 @@ class Usuarios extends Controller{
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
+    }
+
+    public function validar(){
+
+        if(empty($_POST['usuario']) || empty($_POST['clave']) ){
+            $msg = "Los campos estan vacios";           
+         }else{
+             $usuario = $_POST['usuario'];
+             $clave = $_POST['clave'];
+             $hash = hash("SHA256", $clave);  
+             $data = $this->model->getUsuario($usuario, $hash);
+        
+             if(empty($data)){
+                 $msg = 'El usuario o la contraseña es incorrecto.'; 
+             }else{
+                
+                 if($data['estado'] == 1){
+                     $_SESSION['id_usuario'] = $data['id'];
+                     $_SESSION['usuario'] = $data['usuario'];
+                     $_SESSION['nombre'] = $data['nombre'];
+                     $_SESSION['activo'] = true;
+      
+                     $msg = (array('ok'=> true, 'post' => 'Iniciando sesión'));		
+                 }else{                    
+                     $msg = 'usuario inactivo';
+                 }           
+             }
+         }           
+         echo json_encode($msg, JSON_UNESCAPED_UNICODE);       
+        die();     
     }
   //cerrar sesion
     public function logout(){
@@ -171,8 +230,38 @@ class Usuarios extends Controller{
         if( empty($_SESSION['activo'])){
             header("location:".base_url);
         } 
-        $data =  $this->model->getPermisos();
+        $data['datos'] =  $this->model->getPermisos();
+        $permisos =  $this->model->getDetallePermisos($id);
+        $data['asignados'] = array();   
+         
+        foreach ($permisos as $permiso){           
+            $data['asignados'][$permiso['id_permiso']] = true;
+        }      
+        $data['id_usuario'] =  $id;
         $this->views->getView( $this, "permisos",  $data ); 
+    }
+    //permisos usuarios
+    public function RegistrarPermisos(){
+        $msg = '';
+        $id_user = $_POST['id_usuario'];   
+        $eliminar = $this->model->eliminarPermisos($id_user);
+        if($eliminar == 'ok'){
+            if(!empty($_POST['permisos'])){
+                foreach ($_POST['permisos'] as $id_permiso){           
+                $msg = $this->model->registrarPermisos($id_user, $id_permiso);
+               }
+            }else{
+                $msg = (array('ok'=>false, 'post' => 'Error al asignar los permisos.'));   
+            }
+            
+        }
+        if($msg == 'ok'){
+             $msg = (array('ok'=>true, 'post' => 'Permisos asignado correctamente.'));          
+        }else{
+             $msg = (array('ok'=>false, 'post' => 'Error al asignar los permisos.'));   
+        }         
+        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+        die();
     }
 }
 ?>
