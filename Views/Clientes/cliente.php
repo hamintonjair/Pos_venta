@@ -87,7 +87,7 @@ include 'Views/Templates/body.php';
                         <div class='modal-footer'>
                             <button id='btnActionForm' type='button' class='btn btn-primary' onclick="registrarCliente(event);"><span id='btnText'>
                                     Registrar</span></button>
-                            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+                            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Closed</button>
                         </div>
                     </form>
                 </div>

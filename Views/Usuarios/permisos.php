@@ -36,7 +36,7 @@ include 'Views/Templates/body.php';
                     </div>
                     <div class="d-grid gap-2">
                          <button class="btn btn-outline-primary" type="button" onclick="registrarPermisos(event);" ><i class="fa fa-registered" aria-hidden="true"></i>Asignar permisos</button>   
-                    <a class="btn btn-outline-danger" href="<?php echo base_url; ?>Usuarios"></i>Cancelar</a>   
+                    <a class="btn btn-outline-danger" href="<?php echo base_url; ?>Usuarios"></i>Closed</a>   
                     </div>
                    
                 </form>

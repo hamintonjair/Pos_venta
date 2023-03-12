@@ -1,5 +1,5 @@
-let cod_productoV = "";
-
+let cod_productoV;
+let Pagar = 0;
 //buscar por codigo
 function buscarCodigoVenta(e) {
     e.preventDefault();
@@ -14,7 +14,6 @@ function buscarCodigoVenta(e) {
         http.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 const resp = JSON.parse(this.responseText);
-
 
                 if (resp.post == "Producto agotado." || resp.post == "Producto no existe.") {
 
@@ -134,7 +133,7 @@ function buscarCliente(e) {
 
 }
 
-
+let totalPago;
 //calcular cantidad
 function calcularPrecioVenta(e) {
     e.preventDefault();
@@ -197,8 +196,6 @@ function calcularPrecioVenta(e) {
         }
     }
 }
-let totalPagar = 0;
-let Pagar = 0;
 //mostar detalles del producto de la compra
 function cargarDetalle() {
     const url = base_url + "Ventas/listar";
@@ -231,7 +228,7 @@ function cargarDetalle() {
             Pagar = resp.total_pagar.total
             const pagar = new Intl.NumberFormat().format(resp.total_pagar.total);
             document.getElementById("tblDetalle").innerHTML = html;
-            totalPagar = document.getElementById("total").value = pagar;
+            totalPago = document.getElementById("total").value = pagar;
         }
 
     }
@@ -358,7 +355,7 @@ function efectivo(e) {
 function cerrarVenta() {
 
     $('#cerrarVenta').modal('show');
-    document.getElementById("valor_pagar").value = totalPagar;
+    document.getElementById("valor_pagar").value = totalPago;
 }
 
 //generar venta

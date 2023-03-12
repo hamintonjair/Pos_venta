@@ -9,7 +9,7 @@ include 'Views/Templates/body.php';
         <div>
             <h1><i class='fas fa-flag'></i>Reportes <small>Sistema de ventas</small>
                 <button class="btn btn-primary" type="button" onclick="volverEmpleados();"
-                    class="fa-solid fa-circle-plus">Volver</button> <small>Reporte por empleado cierre de
+                    class="fa-solid fa-circle-plus">Volver</button> <small>Por empleado cierre de
                     caja</small></a></li>
 
             </h1>
@@ -38,7 +38,7 @@ include 'Views/Templates/body.php';
             <div class="col-md-3">
                 <div class="form-group">
                     <label for='empleado'>Buscar Empleado</label>
-                    <button type="button" onclick="buscarEmpleados();" class="btn btn-primary">Buscar</button>
+                    <button type="button" onclick="buscarEmpleados();" class="btn btn-info">Buscar</button>
                 </div>
             </div>
         </div>

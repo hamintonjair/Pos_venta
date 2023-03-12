@@ -11,7 +11,7 @@ include 'Views/Templates/body.php';
                 <button class="btn btn-primary" type="button" onclick="ventasEmpleados();"
                     class="fa-solid fa-circle-plus">R. ventas por empleados</button></a>
                     <button class="btn btn-info" type="button" onclick="reporteGanacias();"
-                    class="fa-solid fa-circle-plus">R. ganancias por mes</button> <small> cierre de caja por día</small></a></li>
+                    class="fa-solid fa-circle-plus">R. ganancias por mes</button> <small> Por día</small></a></li>
             </h1>
         </div>
         <ul class='app-breadcrumb breadcrumb'>

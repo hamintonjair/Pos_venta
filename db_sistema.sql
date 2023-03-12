@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-03-2023 a las 15:02:38
--- Versión del servidor: 8.0.30
--- Versión de PHP: 8.0.23
+-- Tiempo de generación: 12-03-2023 a las 03:00:21
+-- Versión del servidor: 10.4.27-MariaDB
+-- Versión de PHP: 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,10 +28,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `caja` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `caja` varchar(50) NOT NULL,
-  `estado` int NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `estado` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `caja`
@@ -40,7 +40,7 @@ CREATE TABLE `caja` (
 INSERT INTO `caja` (`id`, `caja`, `estado`) VALUES
 (1, 'General', 1),
 (2, 'Secundario', 1),
-(3, 'Básica', 1);
+(3, 'Basica', 1);
 
 -- --------------------------------------------------------
 
@@ -49,10 +49,10 @@ INSERT INTO `caja` (`id`, `caja`, `estado`) VALUES
 --
 
 CREATE TABLE `categorias` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL,
-  `estado` int NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `estado` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `categorias`
@@ -63,7 +63,7 @@ INSERT INTO `categorias` (`id`, `nombre`, `estado`) VALUES
 (2, 'Lapiceros', 1),
 (3, 'Cartulinas', 1),
 (4, 'Carpetas', 1),
-(5, 'Tecnología', 1);
+(5, 'Tecnologia', 1);
 
 -- --------------------------------------------------------
 
@@ -72,17 +72,17 @@ INSERT INTO `categorias` (`id`, `nombre`, `estado`) VALUES
 --
 
 CREATE TABLE `cierre_caja` (
-  `id` int NOT NULL,
-  `id_usuario` int NOT NULL,
-  `id_caja` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_caja` int(11) NOT NULL,
   `monto_inicial` decimal(10,2) NOT NULL,
-  `monto_final` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `monto_final` decimal(10,2) NOT NULL DEFAULT 0.00,
   `fecha_apertura` date NOT NULL,
   `fecha_cierre` date NOT NULL DEFAULT '0000-00-00',
-  `total_ventas` int NOT NULL DEFAULT '0',
-  `monto_total` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `estado` int NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `total_ventas` int(11) NOT NULL DEFAULT 0,
+  `monto_total` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `estado` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `cierre_caja`
@@ -103,13 +103,13 @@ INSERT INTO `cierre_caja` (`id`, `id_usuario`, `id_caja`, `monto_inicial`, `mont
 --
 
 CREATE TABLE `clientes` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `dni` varchar(10) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `telefono` varchar(15) NOT NULL,
   `direccion` text NOT NULL,
-  `estado` int NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `estado` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `clientes`
@@ -128,12 +128,12 @@ INSERT INTO `clientes` (`id`, `dni`, `nombre`, `telefono`, `direccion`, `estado`
 --
 
 CREATE TABLE `compras` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `total` decimal(10,2) NOT NULL,
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `estado` int NOT NULL DEFAULT '1',
-  `id_proveedor` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
+  `estado` int(11) NOT NULL DEFAULT 1,
+  `id_proveedor` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `compras`
@@ -156,16 +156,16 @@ INSERT INTO `compras` (`id`, `total`, `fecha`, `estado`, `id_proveedor`) VALUES
 --
 
 CREATE TABLE `configuracion` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `nit` varchar(20) NOT NULL,
   `regimen` varchar(100) NOT NULL,
-  `resolucion` int NOT NULL,
+  `resolucion` int(11) NOT NULL,
   `nombre` varchar(200) NOT NULL,
   `telefono` varchar(15) NOT NULL,
   `direccion` varchar(200) NOT NULL,
   `ciudad` varchar(50) NOT NULL,
   `mensaje` varchar(200) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `configuracion`
@@ -181,13 +181,13 @@ INSERT INTO `configuracion` (`id`, `nit`, `regimen`, `resolucion`, `nombre`, `te
 --
 
 CREATE TABLE `datella_compras` (
-  `id` int NOT NULL,
-  `id_compra` int NOT NULL,
-  `id_producto` int NOT NULL,
-  `cantidad` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_compra` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `cantidad` int(11) NOT NULL,
   `precio` decimal(10,2) NOT NULL,
   `sub_total` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `datella_compras`
@@ -210,13 +210,13 @@ INSERT INTO `datella_compras` (`id`, `id_compra`, `id_producto`, `cantidad`, `pr
 --
 
 CREATE TABLE `detalle` (
-  `id` int NOT NULL,
-  `id_producto` int NOT NULL,
-  `id_usuario` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
   `precio` decimal(10,2) NOT NULL,
-  `cantidad` int NOT NULL,
+  `cantidad` int(11) NOT NULL,
   `sub_total` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `detalle`
@@ -233,10 +233,10 @@ INSERT INTO `detalle` (`id`, `id_producto`, `id_usuario`, `precio`, `cantidad`, 
 --
 
 CREATE TABLE `detalle_permisos` (
-  `id` int NOT NULL,
-  `id_usuario` int NOT NULL,
-  `id_permiso` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_permiso` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `detalle_permisos`
@@ -259,15 +259,15 @@ INSERT INTO `detalle_permisos` (`id`, `id_usuario`, `id_permiso`) VALUES
 --
 
 CREATE TABLE `detalle_temp` (
-  `id` int NOT NULL,
-  `id_producto` int NOT NULL,
-  `id_usuario` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
   `precio` decimal(10,2) NOT NULL,
-  `cantidad` int NOT NULL,
-  `iva` int NOT NULL,
-  `descuento` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `cantidad` int(11) NOT NULL,
+  `iva` int(11) NOT NULL,
+  `descuento` decimal(10,2) NOT NULL DEFAULT 0.00,
   `sub_total` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -276,15 +276,15 @@ CREATE TABLE `detalle_temp` (
 --
 
 CREATE TABLE `detalle_ventas` (
-  `id` int NOT NULL,
-  `id_venta` int NOT NULL,
-  `id_producto` int NOT NULL,
-  `cantidad` int NOT NULL,
-  `iva` int NOT NULL,
-  `descuento` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `id` int(11) NOT NULL,
+  `id_venta` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `cantidad` int(11) NOT NULL,
+  `iva` int(11) NOT NULL,
+  `descuento` decimal(10,2) NOT NULL DEFAULT 0.00,
   `precio` decimal(10,2) NOT NULL,
   `sub_total` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `detalle_ventas`
@@ -339,11 +339,11 @@ INSERT INTO `detalle_ventas` (`id`, `id_venta`, `id_producto`, `cantidad`, `iva`
 --
 
 CREATE TABLE `medidas` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL,
-  `nombre_corto` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `estado` int NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `nombre_corto` varchar(5) NOT NULL,
+  `estado` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `medidas`
@@ -361,9 +361,9 @@ INSERT INTO `medidas` (`id`, `nombre`, `nombre_corto`, `estado`) VALUES
 --
 
 CREATE TABLE `permisos` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `permiso` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `permisos`
@@ -394,22 +394,22 @@ INSERT INTO `permisos` (`id`, `permiso`) VALUES
 --
 
 CREATE TABLE `productos` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `codigo` varchar(20) NOT NULL,
   `descripcion` varchar(255) NOT NULL,
   `precio_compra` decimal(10,2) NOT NULL,
   `precio_venta` decimal(10,2) NOT NULL,
-  `cantidad` int NOT NULL DEFAULT '0',
-  `iva` int NOT NULL,
-  `descuento` int NOT NULL,
-  `id_medida` int NOT NULL,
-  `id_categoria` int NOT NULL,
-  `id_proveedor` int NOT NULL,
+  `cantidad` int(11) NOT NULL DEFAULT 0,
+  `iva` int(11) NOT NULL,
+  `descuento` int(11) NOT NULL,
+  `id_medida` int(11) NOT NULL,
+  `id_categoria` int(11) NOT NULL,
+  `id_proveedor` int(11) NOT NULL,
   `foto` varchar(50) NOT NULL,
   `vencimiento` varchar(10) NOT NULL,
   `fecha_vencimiento` date DEFAULT NULL,
-  `estado` int NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `estado` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `productos`
@@ -432,14 +432,14 @@ INSERT INTO `productos` (`id`, `codigo`, `descripcion`, `precio_compra`, `precio
 --
 
 CREATE TABLE `proveedor` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `nit` varchar(15) NOT NULL,
   `razon_social` varchar(100) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `telefono` varchar(15) NOT NULL,
   `direccion` varchar(100) NOT NULL,
-  `estado` int NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `estado` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `proveedor`
@@ -455,13 +455,13 @@ INSERT INTO `proveedor` (`id`, `nit`, `razon_social`, `nombre`, `telefono`, `dir
 --
 
 CREATE TABLE `usuarios` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `usuario` varchar(20) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `clave` varchar(100) NOT NULL,
-  `id_caja` int NOT NULL,
-  `estado` int NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `id_caja` int(11) NOT NULL,
+  `estado` int(11) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
@@ -478,16 +478,16 @@ INSERT INTO `usuarios` (`id`, `usuario`, `nombre`, `clave`, `id_caja`, `estado`)
 --
 
 CREATE TABLE `ventas` (
-  `id` int NOT NULL,
-  `id_usuario` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
   `total` decimal(10,2) NOT NULL,
-  `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `estado` int NOT NULL DEFAULT '1',
-  `id_cliente` int NOT NULL,
-  `apertura` int NOT NULL DEFAULT '1',
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
+  `estado` int(11) NOT NULL DEFAULT 1,
+  `id_cliente` int(11) NOT NULL,
+  `apertura` int(11) NOT NULL DEFAULT 1,
   `pagado` decimal(10,2) NOT NULL,
   `cambio` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `ventas`
@@ -598,197 +598,6 @@ ALTER TABLE `detalle_ventas`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_producto` (`id_producto`),
   ADD KEY `id_venta` (`id_venta`);
-
---
--- Indices de la tabla `medidas`
---
-ALTER TABLE `medidas`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indices de la tabla `permisos`
---
-ALTER TABLE `permisos`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indices de la tabla `productos`
---
-ALTER TABLE `productos`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_medida` (`id_medida`),
-  ADD KEY `id_categoria` (`id_categoria`),
-  ADD KEY `id_proveedor` (`id_proveedor`);
-
---
--- Indices de la tabla `proveedor`
---
-ALTER TABLE `proveedor`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indices de la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_caja` (`id_caja`);
-
---
--- Indices de la tabla `ventas`
---
-ALTER TABLE `ventas`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_cliente` (`id_cliente`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `caja`
---
-ALTER TABLE `caja`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT de la tabla `categorias`
---
-ALTER TABLE `categorias`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT de la tabla `cierre_caja`
---
-ALTER TABLE `cierre_caja`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
---
--- AUTO_INCREMENT de la tabla `clientes`
---
-ALTER TABLE `clientes`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT de la tabla `compras`
---
-ALTER TABLE `compras`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT de la tabla `configuracion`
---
-ALTER TABLE `configuracion`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `datella_compras`
---
-ALTER TABLE `datella_compras`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT de la tabla `detalle`
---
-ALTER TABLE `detalle`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
-
---
--- AUTO_INCREMENT de la tabla `detalle_permisos`
---
-ALTER TABLE `detalle_permisos`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=161;
-
---
--- AUTO_INCREMENT de la tabla `detalle_temp`
---
-ALTER TABLE `detalle_temp`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
-
---
--- AUTO_INCREMENT de la tabla `detalle_ventas`
---
-ALTER TABLE `detalle_ventas`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
-
---
--- AUTO_INCREMENT de la tabla `medidas`
---
-ALTER TABLE `medidas`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT de la tabla `permisos`
---
-ALTER TABLE `permisos`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
-
---
--- AUTO_INCREMENT de la tabla `productos`
---
-ALTER TABLE `productos`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT de la tabla `proveedor`
---
-ALTER TABLE `proveedor`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT de la tabla `ventas`
---
-ALTER TABLE `ventas`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `compras`
---
-ALTER TABLE `compras`
-  ADD CONSTRAINT `compras_ibfk_1` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id`);
-
---
--- Filtros para la tabla `datella_compras`
---
-ALTER TABLE `datella_compras`
-  ADD CONSTRAINT `datella_compras_ibfk_1` FOREIGN KEY (`id_compra`) REFERENCES `compras` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `datella_compras_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id`);
-
---
--- Filtros para la tabla `detalle`
---
-ALTER TABLE `detalle`
-  ADD CONSTRAINT `detalle_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `detalle_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id`);
-
---
--- Filtros para la tabla `detalle_temp`
---
-ALTER TABLE `detalle_temp`
-  ADD CONSTRAINT `detalle_temp_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`);
-
---
--- Filtros para la tabla `productos`
---
-ALTER TABLE `productos`
-  ADD CONSTRAINT `productos_ibfk_1` FOREIGN KEY (`id_medida`) REFERENCES `medidas` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `productos_ibfk_2` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `productos_ibfk_3` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
---
--- Filtros para la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  ADD CONSTRAINT `usuarios_ibfk_1` FOREIGN KEY (`id_caja`) REFERENCES `caja` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -79,7 +79,7 @@ class Cajas extends Controller {
     public function listar() {
 
         $data = $this->model->getCajas('caja');
-
+       
         for ( $i = 0; $i < count( $data );
         $i++ ) {
 

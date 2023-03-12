@@ -11,7 +11,7 @@ include 'Views/Templates/body.php';
             <button class="btn btn-primary" type="button" onclick="volverCaja();"
                     class="fa-solid fa-circle-plus">Volver</button>
                 <button class="btn btn-info" type="button" onclick="arqueoCaja();" data-toggle="modal_arqueo"
-                    class="fa-solid fa-circle-plus">Nuevo</button>
+                    class="fa-solid fa-circle-plus">Iniciar caja</button>
                 <button class="btn btn-danger" type="button" onclick="cerrarArqueo();"
                     class="fa-solid fa-circle-plus"><i class="fa fa-window-close" aria-hidden="true"></i>Cerrar
                     caja</button>
@@ -106,7 +106,7 @@ include 'Views/Templates/body.php';
 
                             <button id='btnActionForm' type='submit' class='btn btn-primary'><span id='btnText'>
                                     Abrir</span></button>
-                            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+                            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Closed</button>
                         </div>
                     </form>
                 </div>

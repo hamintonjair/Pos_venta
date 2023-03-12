@@ -36,12 +36,11 @@ include 'Views/Templates/body.php';
             <div class="col-md-2">
                 <div class="form-group">
                     <label for='empleado'>Buscar Mes</label>
-                    <button type="button" onclick="buscarMes()" class="btn btn-primary">Buscar</button>
+                    <button type="button" onclick="buscarMes()" class="btn btn-info">Buscar</button>
                 </div>
-            </div>
-            <div class="col-md-0">
+           
                 <div class="form-group">                   
-                    <button type="button" onclick="Todos()" class="btn btn-warning">Todos</button>
+                    <button type="button" onclick="Todos()" class="btn btn-warning">Todos.</button>
                 </div>
             </div>
         </div>
