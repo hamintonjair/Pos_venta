@@ -141,7 +141,7 @@ include 'Views/Templates/body.php';
                                 <select class="custom-select" name="pago" id="pago">
                                     <option selected>Selecionar..</option>
                                     <option value="Debito">Decontado</option>
-                                    <option value="Credito">Crádito</option>                                
+                                    <option value="Credito">Crédito</option>                                
                                 </select>
                             </div>
                             <div class='form-group'>
