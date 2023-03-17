@@ -252,7 +252,7 @@ function deleteDetalleC(id) {
 }
 //generar compra
 function generarCompra() {
-
+    compra();
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',
@@ -312,6 +312,21 @@ function generarCompra() {
     })
 }
 
+//pago efectivo
+function compra() {
+
+    const url = base_url + "Compras/TipoPago";
+    const frm = document.getElementById("frmCerrarC");
+    const http = new XMLHttpRequest();
+    http.open("POST", url, true);
+    http.send(new FormData(frm));
+    http.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            const resp = JSON.parse(this.responseText);
+            console.log(resp);
+        }
+    }
+}
 document.addEventListener("DOMContentLoaded", function() {
     $('#tableHistorial').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },

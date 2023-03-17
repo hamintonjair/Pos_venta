@@ -113,11 +113,18 @@ class Compras extends Controller {
     public function registrarCompra( $cod ) {
 
         $id_usuario = $_SESSION[ 'id_usuario' ];
-
+        $TipoPago = $_SESSION['compra'];
+             
         $datos = $this->model->getProCodi( $cod );
-
+        $pagos = $this->model->getidCompra();
+  
+       foreach($pagos as $row) {
+            if( $row['pago'] ==  $TipoPago) {
+                $idcompra = $row['id_pago'];
+            } 
+       }         
         $total = $this->model->calcularCompra( $id_usuario );
-        $data = $this->model->registrarCompra( $total[ 'total' ], $datos[ 'id_proveedor' ] );
+        $data = $this->model->registrarCompra( $total[ 'total' ], $datos[ 'id_proveedor' ], $idcompra  );
 
         if ( $data == 'modificado' ) {
             $detalle = $this->model->getDetalleC( $id_usuario );
@@ -147,7 +154,6 @@ class Compras extends Controller {
         die();
     }
     //generar pfd
-
     public function generarPDF( $id_compra ) {
 
         //traer datos d ela empresa
@@ -180,7 +186,8 @@ class Compras extends Controller {
 
             $fecha = $row[ 'fecha' ];
             $nombre = $row[ 'nombre' ];
-            $estado = $row[ 'estado' ];
+            $estado = $row[ 'estado' ];  
+            $pago = $row[ 'pago' ];        
         }
         $pdf->Ln( 10 );
 
@@ -232,16 +239,28 @@ class Compras extends Controller {
 
         $pdf->SetFont( 'Arial', 'B', 12 );
 
-        $pdf->Cell( 144, 5, 'Estado de la compra:', 0, 0, 'R' );
+        $pdf->Cell( 144, 5, 'Estado de la compra:', 0, 0, 'R' );       
 
         $pdf->SetFont( 'Arial', '', 12 );
         if ( $estado == 0 ) {
-            $pdf->Cell( 20, 5, 'Anulado', 0, 0, 'R' );
+            $pdf->Cell( 20, 5, 'Anulado', 0, 1, 'R' );
 
         } else {
-            $pdf->Cell( 27, 5, 'Completado', 0, 0, 'R' );
+            $pdf->Cell( 27, 5, 'Completado', 0, 1, 'R' );
 
         }
+        $pdf->SetFont( 'Arial', 'B', 12 );
+        $pdf->Cell( 144, 5, 'Tipo de pago:', 0, 0, 'R' );
+        $pdf->SetFont( 'Arial', '', 12 );
+        if ( $pago == "Credito" ) {
+            
+            $pdf->Cell( 18, 5, $pago , 0, 1, 'R' );
+
+        } else {
+            $pdf->Cell( 17, 5, $pago , 0, 1, 'R' );
+
+        }
+       
 
         //encabezado de productos
         $pdf->Ln( 15 );
@@ -357,6 +376,11 @@ class Compras extends Controller {
         }
         echo json_encode( $msg, JSON_UNESCAPED_UNICODE );
         die();
+    }
+    public function TipoPago(){
+        $_SESSION['compra'] = $_POST['pago'];
+        $msg =  $_SESSION['compra'] ;
+        echo json_encode( $msg, JSON_UNESCAPED_UNICODE );
     }
 }
 ?>

@@ -110,10 +110,10 @@ class ComprasModel extends Query {
     }
     //registrar compra
 
-    public function registrarCompra( string $total, int $id_proveedor ) {
+    public function registrarCompra( string $total, int $id_proveedor, int $tipoPago) {
 
-        $sql = 'INSERT INTO  compras (total, id_proveedor) VALUES(?,?)';
-        $datos = array( $total, $id_proveedor );
+        $sql = 'INSERT INTO  compras (total, id_proveedor, tipoPago) VALUES(?,?,?)';
+        $datos = array( $total, $id_proveedor, $tipoPago );
         $data = $this->save( $sql, $datos );
 
         if ( $data == 1 ) {
@@ -124,6 +124,13 @@ class ComprasModel extends Query {
 
         return $result;
 
+    }
+    //id tipo de pago
+    public function getidCompra(){
+        $sql = "SELECT * FROM pagos";
+        $data = $this->selectAll( $sql );
+
+        return $data; 
     }
     //seleccionar id compra
 
@@ -177,8 +184,8 @@ class ComprasModel extends Query {
 
     public function getCompra( int $id_compra ) {
 
-        $sql = "SELECT c.*, d.*, p.id, p.descripcion, pro.nombre FROM compras c INNER JOIN datella_compras d ON c.id = d.id_compra INNER JOIN productos p ON
-        p.id = d.id_producto  INNER JOIN proveedor pro ON pro.id = c.id_proveedor WHERE c.id = $id_compra";
+        $sql = "SELECT c.*, d.*, p.id, p.descripcion, pro.nombre, pago.id_pago, pago.pago FROM compras c INNER JOIN datella_compras d ON c.id = d.id_compra INNER JOIN productos p ON
+        p.id = d.id_producto  INNER JOIN proveedor pro ON pro.id = c.id_proveedor INNER JOIN pagos pago ON pago.id_pago = c.tipoPago WHERE c.id = $id_compra";
 
         $data = $this->selectAll( $sql );
         return $data;

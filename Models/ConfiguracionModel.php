@@ -46,7 +46,7 @@ class ConfiguracionModel extends Query {
     //mostrar datos en la grafica
 
     public function getStockMinimo() {
-        $sql = 'SELECT * FROM productos WHERE cantidad < 10 ORDER BY cantidad DESC LIMIT 10';
+        $sql = 'SELECT * FROM productos WHERE cantidad < 10 AND estado = 1 ORDER BY cantidad DESC LIMIT 10';
         $data = $this->selectAll( $sql );
         return $data;
     }

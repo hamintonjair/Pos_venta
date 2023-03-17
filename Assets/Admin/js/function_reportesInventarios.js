@@ -296,6 +296,7 @@ function Todos() {
 function reporteGanacias() {
     window.location = base_url + "Reportes/reporteGananciasMes";
 }
+
 //reporte por empleado
 document.addEventListener("DOMContentLoaded", function() {
     $('#tableReporteGananciasMes').dataTable({
@@ -361,3 +362,105 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
 })
+
+//reportes de compras a proveedores
+function reporteCompras() {
+    window.location = base_url + "Reportes/reporteCompas";
+}
+
+//reporte por compra a proveedores por fecha
+document.addEventListener("DOMContentLoaded", function() {
+        $('#tableReporteComprasMes').dataTable({
+            "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+            dom: 'lBfrtip',
+            "ajax": {
+                "url": " " + base_url + "Reportes/listarCompras",
+                "dataSrc": ""
+            },
+            "columns": [
+                { "data": "id" },
+                { "data": "fecha_cierre" },
+                { "data": "caja" },
+                { "data": "ventas" },
+                { "data": "total", render: $.fn.dataTable.render.number('.', ',', 2) },
+            ],
+            buttons: [{
+                    "extend": "copyHtml5",
+                    "text": "<i class='far fa-copy'></i> Copiar",
+                    "titleAttr": "Copiar",
+                    "className": "btn btn-secondary",
+                    "exportOptions": {
+                        "columns": [0, 1, 2, 3, 4]
+                    }
+                }, {
+                    "extend": "excelHtml5",
+                    "text": "<i class='fas fa-file-excel'></i> Excel",
+                    "titleAttr": "Expotar a Excel",
+                    "className": "btn btn-success",
+                    "exportOptions": {
+                        "columns": [0, 1, 2, 3, 4]
+                    }
+                }, {
+                    "extend": "pdfHtml5",
+                    "text": "<i class='fas fa-file-pdf'></i> PDF",
+                    "titleAttr": "Exportar a PDF",
+                    "className": "btn btn-danger",
+                    "exportOptions": {
+                        "columns": [0, 1, 2, 3, 4]
+                    }
+                }, {
+                    "extend": "csvHtml5",
+                    "text": "<i class='faa fa-file-csv'></i> CSV",
+                    "titleAttr": "Eportar",
+                    "className": "btn btn-secondary",
+                    "exportOptions": {
+                        "columns": [0, 1, 2, 3, 4]
+                    }
+                },
+
+            ],
+            "resonsieve": "true",
+            "bDestroy": true,
+            "iDisplayLength": 10,
+            "order": [
+                [0, "desc"]
+            ]
+        });
+        if (document.getElementById('stockMinimo')) {
+            reportStock();
+            productosVendidos();
+
+        }
+
+    })
+    //buscar ganacia por mes
+function buscarMes() {
+    const url = base_url + "Reportes/rangoFechaCompra";
+    const frm = document.getElementById("frmBuscarCompras");
+    const http = new XMLHttpRequest();
+    http.open("POST", url, true);
+    http.send(new FormData(frm));
+    http.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            const resp = JSON.parse(this.responseText);
+            console.log(resp);
+            let html = '';
+            const total = new Intl.NumberFormat().format(resp.reporte['total']);
+
+            html += `<tr>
+                        <td>${resp.reporte['id']}</td>
+                        <td>${resp.reporte['fecha_cierre']}</td>
+                        <td>${resp.reporte['caja']}</td>                       
+                        <td>${resp.reporte['ventas']}</td>
+                        <td>${total}</td>                             
+                        </tr>`
+
+            document.getElementById("tableReporteGanancias").innerHTML = html;
+        }
+    }
+
+}
+
+function Todoss() {
+    reporteCompras();
+}

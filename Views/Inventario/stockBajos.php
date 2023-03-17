@@ -9,7 +9,7 @@ include 'Views/Templates/body.php';
         <div>
             <h1><i class='fas fa-flag'></i>Inventario <small>Sistema de ventas</small>
                 <button class="btn btn-primary" type="button" onclick="volverInventario();" data-toggle="modal_arqueo"
-                    class="fa-solid fa-circle-plus">Volver</button> <small> Reporte de cierre</small></a></li>
+                    class="fa-solid fa-circle-plus">Volver</button> <small> Stock bajos</small></a></li>
               
 
             </h1>

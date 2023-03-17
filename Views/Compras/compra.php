@@ -37,7 +37,7 @@ include 'Views/Templates/body.php';
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="nombre">Buscar por Nombre <i class="fa fa-product-hunt"></i></label>
+                            <label for="nombre">Buscar por Nombre</i></label>
                             <input type="text" name="nombre" id="nombre" class="form-control valid validText"
                                 placeholder="Nombre del producto" onkeyup="buscarNombreC(event)"
                                 aria-describedby="helpId">
@@ -130,7 +130,7 @@ include 'Views/Templates/body.php';
                         </button>
                     </div>
                     <div class='modal-body'>
-                        <form id='frmCerrar'>
+                        <form id='frmCerrarC'>
                             <div class='form-group'>
                                 <label for='valor_pagar'>Valor a pagar</label>
                                 <input type='text' name='valor_pagar' id='valor_pagar' class='form-control'
@@ -140,8 +140,8 @@ include 'Views/Templates/body.php';
                                 <label for="pago">Tipo de pago</label>
                                 <select class="custom-select" name="pago" id="pago">
                                     <option selected>Selecionar..</option>
-                                    <option value="Debito">Decontado</option>
-                                    <option value="Credito">Crédito</option>                                
+                                    <option value="Debito">Debito</option>
+                                    <option value="Credito">Credito</option>                                
                                 </select>
                             </div>
                             <div class='form-group'>

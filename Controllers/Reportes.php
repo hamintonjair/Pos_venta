@@ -54,10 +54,11 @@ class Reportes extends Controller {
     //vista reporte ganancias por mes
     public function reporteGananciasMes(){
       
-        // $data = $this->model->getreporteGananciasMes();     
+       
         $this->views->getView($this, 'reporteGanancias'); 
         
     }
+   
     //listar reportes de ganacias
     public function listarGanancias(){
 
@@ -66,6 +67,7 @@ class Reportes extends Controller {
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
+    
     //buscar por rango de fecha
     public function rangoFecha(){
       
@@ -78,6 +80,20 @@ class Reportes extends Controller {
 
            echo json_encode($data, JSON_UNESCAPED_UNICODE);
            die();
+    }
+      //vista reporte compras por mes
+      public function reporteComprasMes(){      
+           
+        $this->views->getView($this, 'reporteCompras'); 
+        
+    }
+     //listar reportes de ganacias
+     public function listarCompras(){
+
+        $data = $this->model->getreporteComprasMes();    
+
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        die();
     }
 }
 ?>
