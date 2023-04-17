@@ -85,6 +85,40 @@ function buscarNombreC(e) {
     }
 
 }
+//buscar cliente 
+function buscarProveedor(e) {
+    e.preventDefault();
+    if (e.which == 13) {
+        const nit = document.getElementById("nit").value;
+        const url = base_url + "Compras/buscarProveedor/" + nit;
+        const http = new XMLHttpRequest();
+        http.open("GET", url, true);
+        http.send();
+        http.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                const resp = JSON.parse(this.responseText);
+
+                if (resp) {
+                    document.getElementById("proveedor").value = resp.nombre;
+                    document.getElementById("id_proveedor").value = resp.id;
+                } else {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'El proveedor no existe',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    document.getElementById("nit").value = "";
+                    document.getElementById("nit").focus();
+                    document.getElementById("proveedor").value = "";
+                }
+
+            }
+        }
+    }
+
+}
 //tipo de pago compra
 function pago(e) {
     e.preventDefault();
@@ -250,6 +284,7 @@ function deleteDetalleC(id) {
         }
     }
 }
+
 //generar compra
 function generarCompra() {
     compra();
@@ -269,15 +304,16 @@ function generarCompra() {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            const url = base_url + "Compras/registrarCompra/" + cod_producto;
+            const url = base_url + "Compras/registrarCompra";
+            const frm = document.getElementById("frmCompras");         
             const http = new XMLHttpRequest();
-            http.open("GET", url, true);
-            http.send();
+            http.open("POST", url, true);
+            http.send(new FormData(frm));
             http.onreadystatechange = function() {
 
                 if (this.readyState == 4 && this.status == 200) {
                     const resp = JSON.parse(this.responseText);
-
+                  console.log(resp);
                     if (resp.modificado == true) {
                         swalWithBootstrapButtons.fire(
                             'Compra generada!',
@@ -292,7 +328,7 @@ function generarCompra() {
                     } else {
                         swalWithBootstrapButtons.fire(
                             'Compra Cancelado!',
-                            resp.msg,
+                            resp.post,
                             'error'
                         );
                     }
@@ -322,11 +358,11 @@ function compra() {
     http.send(new FormData(frm));
     http.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            const resp = JSON.parse(this.responseText);
-            console.log(resp);
+           JSON.parse(this.responseText);           
         }
     }
 }
+//historial de compras
 document.addEventListener("DOMContentLoaded", function() {
     $('#tableHistorial').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
@@ -385,7 +421,7 @@ document.addEventListener("DOMContentLoaded", function() {
         ],
         "resonsieve": "true",
         "bDestroy": true,
-        "iDisplayLength": 5,
+        "iDisplayLength": 10,
         "order": [
             [0, "desc"]
         ]

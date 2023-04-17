@@ -8,8 +8,8 @@ include 'Views/Templates/body.php';
     <div class='app-title'>
         <div>
             <h1><i class='fas fa-flag'></i>Reportes <small>Sistema de ventas</small>
-                <button class="btn btn-primary" type="button" onclick="volverReportes();"
-                    class="fa-solid fa-circle-plus">Volver</button> <small>Compras por mes</small></a></li>
+                <button class="btn btn-primary" type="button" onclick="volverProveedor();"
+                    class="fa-solid fa-circle-plus">Volver</button> <small>Compras por proveedor</small></a></li>
 
             </h1>
         </div>
@@ -19,50 +19,49 @@ include 'Views/Templates/body.php';
                     <small>Sistema de ventas</small></a></li>
         </ul>
     </div>
-    <form id='frmBuscarCompras'>
+    <form id='frmBuscarC'>
         <div class="row">
-        <div class="col-md-2">
-                <div class="form-group">
-                    <label for="min">Desde</label>
-                    <input type="date" value="<?php echo date("Y-m-d"); ?>" name="desde" id="min">
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label for="hasta">Hasta</label>
-                    <input type="date" value="<?php echo date("Y-m-d"); ?>" name="hasta" id="hasta">
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label for='empleado'>Buscar Mes</label>
-                    <button type="button" onclick="buscarCompraMes()" class="btn btn-info">Buscar</button>
-                </div>
-           
+            <div class="col-md-3">
                 <div class="form-group">                   
-                    <button type="button" onclick="Todoss()" class="btn btn-warning">Todos.</button>
+                    <select class="form-control selectpicker" id="id_proveedor" name="id_proveedor">
+                        <option selected="selected">Seleccionar..</option>
+                        <?php foreach ($data['proveedor'] as $row){ ?>
+                        <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre']; ?>
+                        </option>
+                        <?php }; ?>
+
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for='proveedor'>Buscar Proveedor</label>
+                    <button type="button" onclick="frmBuscarCompras();" class="btn btn-info">Buscar</button>
                 </div>
             </div>
         </div>
 
     </form>
-
     <div class='row'>
         <div class='col-md-12'>
             <div class='tile'>
                 <div class='tile-body'>
                     <div class='table-responsive'>
-                        <table class='table  table-light table-hover table-bordered '  id="tableReporteComprasMes">
+                        <table class='table table-light table-hover table-bordered '  id="tableReporteCompras">
                             <thead class="thead-dark">
                                 <tr>
                                     <th>#</th>
-                                    <th>Fecha</th>
-                                    <th>Caja</th>                                
-                                    <th>Total ventas</th>
-                                    <th>Monto total</th>                                
+                                    <th>Nit</th>
+                                    <th>Razón social</th>                                
+                                    <th>Nombre</th>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>                                                             
+                                    <th>Método pago</th>
+                                    <th>Fecha</th>                                
                                 </tr>
                             </thead>
-                            <tbody  id="tableReporteCompras">
+                            <tbody id = "tableCompras" >
                             </tbody>
                         </table>
                     </div>

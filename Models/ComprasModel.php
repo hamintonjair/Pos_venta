@@ -243,6 +243,14 @@ class ComprasModel extends Query {
         $data = $this->selectAll( $sql );
         return $data;
     }
+    //buscar proveedor
+    
+    public function getProveedor( string $nit ) {
+        $sql = "SELECT * FROM proveedor WHERE nit = $nit AND estado = 1";
+        $data = $this->select( $sql );
+
+        return $data;
+    }
 
 }
 

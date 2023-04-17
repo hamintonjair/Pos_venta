@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
     })
-    //INVENTARIO
+ //INVENTARIO
 document.addEventListener("DOMContentLoaded", function() {
         $('#tableInventario').dataTable({
             "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
@@ -363,104 +363,111 @@ document.addEventListener("DOMContentLoaded", function() {
 
 })
 
-//reportes de compras a proveedores
-function reporteCompras() {
-    window.location = base_url + "Reportes/reporteCompas";
+//vista reporte
+function comprasProveedor() {
+
+    window.location = base_url + "Reportes/reporteProveedor";
 }
-
-//reporte por compra a proveedores por fecha
-document.addEventListener("DOMContentLoaded", function() {
-        $('#tableReporteComprasMes').dataTable({
-            "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
-            dom: 'lBfrtip',
-            "ajax": {
-                "url": " " + base_url + "Reportes/listarCompras",
-                "dataSrc": ""
-            },
-            "columns": [
-                { "data": "id" },
-                { "data": "fecha_cierre" },
-                { "data": "caja" },
-                { "data": "ventas" },
-                { "data": "total", render: $.fn.dataTable.render.number('.', ',', 2) },
-            ],
-            buttons: [{
-                    "extend": "copyHtml5",
-                    "text": "<i class='far fa-copy'></i> Copiar",
-                    "titleAttr": "Copiar",
-                    "className": "btn btn-secondary",
-                    "exportOptions": {
-                        "columns": [0, 1, 2, 3, 4]
-                    }
-                }, {
-                    "extend": "excelHtml5",
-                    "text": "<i class='fas fa-file-excel'></i> Excel",
-                    "titleAttr": "Expotar a Excel",
-                    "className": "btn btn-success",
-                    "exportOptions": {
-                        "columns": [0, 1, 2, 3, 4]
-                    }
-                }, {
-                    "extend": "pdfHtml5",
-                    "text": "<i class='fas fa-file-pdf'></i> PDF",
-                    "titleAttr": "Exportar a PDF",
-                    "className": "btn btn-danger",
-                    "exportOptions": {
-                        "columns": [0, 1, 2, 3, 4]
-                    }
-                }, {
-                    "extend": "csvHtml5",
-                    "text": "<i class='faa fa-file-csv'></i> CSV",
-                    "titleAttr": "Eportar",
-                    "className": "btn btn-secondary",
-                    "exportOptions": {
-                        "columns": [0, 1, 2, 3, 4]
-                    }
-                },
-
-            ],
-            "resonsieve": "true",
-            "bDestroy": true,
-            "iDisplayLength": 10,
-            "order": [
-                [0, "desc"]
-            ]
-        });
-        if (document.getElementById('stockMinimo')) {
-            reportStock();
-            productosVendidos();
-
-        }
-
-    })
-    //buscar ganacia por mes
-function buscarMes() {
-    const url = base_url + "Reportes/rangoFechaCompra";
-    const frm = document.getElementById("frmBuscarCompras");
+//volver a reportes
+function volverProveedor() {
+    window.location = base_url + "reportes";
+}
+//buscar compras proveedores
+function frmBuscarCompras() {
+    const url = base_url + "Reportes/buscarComprasProveedor";
+    const frm = document.getElementById("frmBuscarC");
     const http = new XMLHttpRequest();
     http.open("POST", url, true);
     http.send(new FormData(frm));
     http.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             const resp = JSON.parse(this.responseText);
-            console.log(resp);
+
             let html = '';
-            const total = new Intl.NumberFormat().format(resp.reporte['total']);
+            resp.empleado.forEach(row => {
 
-            html += `<tr>
-                        <td>${resp.reporte['id']}</td>
-                        <td>${resp.reporte['fecha_cierre']}</td>
-                        <td>${resp.reporte['caja']}</td>                       
-                        <td>${resp.reporte['ventas']}</td>
-                        <td>${total}</td>                             
+                const precio = new Intl.NumberFormat().format(row['precio']);
+                const total = new Intl.NumberFormat().format(row['total']);
+                html += `<tr>
+                        <td>${row['id']}</td>
+                        <td>${row['nit']}</td>
+                        <td>${row['razon_social']}</td>                       
+                        <td>${row['nombre']}</td>
+                        <td>${row['descripcion']}</td>
+                        <td>${row['cantidad']}</td>
+                        <td>${precio}</td>                   
+                        <td>${total}</td>     
+                        <td>${row['pago']}</td>
+                        <td>${row['fecha']}</td>         
                         </tr>`
-
-            document.getElementById("tableReporteGanancias").innerHTML = html;
+            });
+            document.getElementById("tableCompras").innerHTML = html;
         }
     }
 
 }
+document.addEventListener("DOMContentLoaded", function() {
+    $('#tableReporteCompras').dataTable({
 
-function Todoss() {
-    reporteCompras();
-}
+        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        dom: 'lBfrtip',
+        "ajax": {
+            "url": " " + base_url + "Reportes/listarCompras",
+            "dataSrc": ""
+        },
+        "columns": [
+            { "data": "id" },
+            { "data": "nit" },
+            { "data": "razon_social" },
+            { "data": "nombre" },
+            { "data": "descripcion" },
+            { "data": "cantidad" },
+            { "data": "precio", render: $.fn.dataTable.render.number('.', ',', 2) },
+            { "data": "total", render: $.fn.dataTable.render.number('.', ',', 2) },
+            { "data": "fecha" },
+        ],
+        buttons: [{
+                "extend": "copyHtml5",
+                "text": "<i class='far fa-copy'></i> Copiar",
+                "titleAttr": "Copiar",
+                "className": "btn btn-secondary",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                }
+            }, {
+                "extend": "excelHtml5",
+                "text": "<i class='fas fa-file-excel'></i> Excel",
+                "titleAttr": "Expotar a Excel",
+                "className": "btn btn-success",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                }
+            }, {
+                "extend": "pdfHtml5",
+                "text": "<i class='fas fa-file-pdf'></i> PDF",
+                "titleAttr": "Exportar a PDF",
+                "className": "btn btn-danger",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                }
+            }, {
+                "extend": "csvHtml5",
+                "text": "<i class='faa fa-file-csv'></i> CSV",
+                "titleAttr": "Eportar",
+                "className": "btn btn-secondary",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+                }
+            },
+
+        ],
+        "resonsieve": "true",
+        "bDestroy": true,
+        "iDisplayLength": 10,
+        "order": [
+            [0, "desc"]
+        ]
+
+    })
+});
+//reporte por empleado

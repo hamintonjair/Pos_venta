@@ -12,7 +12,7 @@ include 'Views/Templates/body.php';
                     class="fa-solid fa-circle-plus">R. Ventas por empleados</button></a>
                     <button class="btn btn-info" type="button" onclick="reporteGanacias();"
                     class="fa-solid fa-circle-plus">R. Ganancias por mes</button></a></li>
-                    <button class="btn btn-warning" type="button" onclick="reporteCompras();"
+                    <button class="btn btn-warning" type="button" onclick="comprasProveedor();"
                     class="fa-solid fa-circle-plus">R. Compras</button></a></li>
             </h1>
         </div>

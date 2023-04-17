@@ -109,7 +109,7 @@ include 'Views/Templates/body.php';
                             <button id='btnActionForm' type='button' class='btn btn-primary'
                                 onclick="registrarProveedor(event);"><span id='btnText'>
                                     Registrar</span></button>
-                            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Closed</button>
+                            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
                         </div>
                     </form>
                 </div>

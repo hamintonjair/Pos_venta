@@ -37,7 +37,7 @@ include 'Views/Templates/body.php';
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="nombre">Buscar por Nombre <i class="fa fa-product-hunt"></i></label>
+                            <label for="nombre">Buscar por Nombre</label>
                             <input type="text" name="nombre" id="nombre" class="form-control valid validText"
                                 placeholder="Nombre del producto" onkeyup="buscarNombre(event)"
                                 aria-describedby="helpId">
@@ -180,7 +180,7 @@ include 'Views/Templates/body.php';
                         <div class='modal-footer'>
                             <button id='btnActionForm' type='button' class='btn btn-primary'
                                 onclick="generarVenta();"><span id='btnText'>
-                                    Registrar</span></button>
+                                    Cobrar</span></button>
                             <button type='button' class='btn btn-secondary' data-dismiss='modal'>Closed</button>
                         </div>
                     </form>

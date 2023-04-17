@@ -21,26 +21,28 @@ include 'Views/Templates/body.php';
     </div>
     <form id='frmBuscarGanacias'>
         <div class="row">
-        <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="min">Desde</label>
                     <input type="date" value="<?php echo date("Y-m-d"); ?>" name="desde" id="min">
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="hasta">Hasta</label>
                     <input type="date" value="<?php echo date("Y-m-d"); ?>" name="hasta" id="hasta">
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for='empleado'>Buscar Mes</label>
                     <button type="button" onclick="buscarMes()" class="btn btn-info">Buscar</button>
                 </div>
-           
-                <div class="form-group">                   
-                    <button type="button" onclick="Todos()" class="btn btn-warning">Todos.</button>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="hasta">Buscar</label>
+                    <button type="button" onclick="Todos()" class="btn btn-warning">Todos</button>
                 </div>
             </div>
         </div>
@@ -52,17 +54,17 @@ include 'Views/Templates/body.php';
             <div class='tile'>
                 <div class='tile-body'>
                     <div class='table-responsive'>
-                        <table class='table  table-light table-hover table-bordered '  id="tableReporteGananciasMes">
+                        <table class='table  table-light table-hover table-bordered ' id="tableReporteGananciasMes">
                             <thead class="thead-dark">
                                 <tr>
                                     <th>#</th>
                                     <th>Fecha</th>
-                                    <th>Caja</th>                                
+                                    <th>Caja</th>
                                     <th>Total ventas</th>
-                                    <th>Monto total</th>                                
+                                    <th>Monto total</th>
                                 </tr>
                             </thead>
-                            <tbody  id="tableReporteGanancias">
+                            <tbody id="tableReporteGanancias">
                             </tbody>
                         </table>
                     </div>

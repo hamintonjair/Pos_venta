@@ -7,20 +7,18 @@ class VentasModel extends Query {
         parent::__construct();
     }
 
-
     //buscar producto por código
 
     public function getProCod( string $cod ) {
 
-     
-        if(is_numeric($cod) == true){
+        if ( is_numeric( $cod ) == true ) {
 
             $sql = "SELECT * FROM productos WHERE codigo = '$cod'";
-            
-        }else{
+
+        } else {
             $sql = "SELECT * FROM productos WHERE descripcion = '$cod'";
         }
-       
+
         $data = $this->select( $sql );
 
         if ( !empty( $data ) ) {
@@ -76,9 +74,10 @@ class VentasModel extends Query {
         return $data;
     }
     //seleccionar el total
+
     public function getDetalles() {
 
-        $sql = "SELECT SUM(sub_total) as total FROM detalle_temp";
+        $sql = 'SELECT SUM(sub_total) as total FROM detalle_temp';
         $data = $this->select( $sql );
 
         return $data;
@@ -136,11 +135,11 @@ class VentasModel extends Query {
     }
     //registrar venta
 
-    public function registrarVenta( int  $id_usuario, string $total, int $id_cliente, string $pago, string $cambio) {
+    public function registrarVenta( int  $id_usuario, string $total, int $id_cliente, string $pago, string $cambio ) {
 
         $sql = 'INSERT INTO ventas (id_usuario, total, id_cliente, pagado, cambio) VALUES(?,?,?,?,?)';
 
-        $datos = array( $id_usuario, $total, $id_cliente, $pago, $cambio);
+        $datos = array( $id_usuario, $total, $id_cliente, $pago, $cambio );
         $data = $this->save( $sql, $datos );
 
         if ( $data == 1 ) {
@@ -308,12 +307,13 @@ class VentasModel extends Query {
     //verificar permisos
 
     public function verificarPermisos( int $id_user, string $nombre )
-   {
+ {
         $sql = "SELECT p.id, p.permiso, d.id, d.id_usuario, d.id_permiso FROM permisos p INNER JOIN detalle_permisos d ON p.id = d.id_permiso WHERE d.id_usuario = $id_user AND p.permiso = '$nombre' ";
         $data = $this->selectAll( $sql );
         return $data;
     }
     //reporte fecha
+
     public function getRangoFechas( string $desde, string $hasta ) {
 
         $sql = "SELECT c.id, c.nombre, v.*, c.nombre FROM clientes c INNER JOIN ventas v ON c.id = v.id_cliente WHERE v.fecha BETWEEN '$desde' AND '$hasta'";
