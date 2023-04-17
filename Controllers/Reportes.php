@@ -57,17 +57,17 @@ class Reportes extends Controller {
     }
     //vista reporte ganancias por mes
 
-    public function reporteGananciasMes() {
+    public function reporteVentasMes() {
 
-        $this->views->getView( $this, 'reporteGanancias' );
+        $this->views->getView( $this, 'reporteVentas' );
 
     }
 
     //listar reportes de ganacias
 
-    public function listarGanancias() {
+    public function listarVentasMes() {
 
-        $data = $this->model->getreporteGananciasMes();
+        $data = $this->model->getreporteVentasMes();
 
         echo json_encode( $data, JSON_UNESCAPED_UNICODE );
         die();

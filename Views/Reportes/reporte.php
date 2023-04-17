@@ -10,7 +10,7 @@ include 'Views/Templates/body.php';
             <h1><i class='fas fa-flag'></i>Reportes <small>Sistema de ventas diario</small>                         
                 <button class="btn btn-primary" type="button" onclick="ventasEmpleados();"
                     class="fa-solid fa-circle-plus">R. Ventas por empleados</button></a>
-                    <button class="btn btn-info" type="button" onclick="reporteGanacias();"
+                    <button class="btn btn-info" type="button" onclick="reporteVentas();"
                     class="fa-solid fa-circle-plus">R. Ganancias por mes</button></a></li>
                     <button class="btn btn-warning" type="button" onclick="comprasProveedor();"
                     class="fa-solid fa-circle-plus">R. Compras</button></a></li>

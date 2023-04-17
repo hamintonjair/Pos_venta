@@ -101,7 +101,7 @@ include 'Views/Templates/body.php';
                                 <div class='form-group'>
                                     <label for='direccion'>Dirección</label>
                                     <input type='text' name='direccion' id='direccion' class='form-control'
-                                        placeholder='Contraseña' aria-describedby='helpId'>
+                                        placeholder='Dirección' aria-describedby='helpId'>
                                 </div>
                             </div>                          
                         </div>                        

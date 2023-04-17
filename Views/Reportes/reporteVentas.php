@@ -9,7 +9,7 @@ include 'Views/Templates/body.php';
         <div>
             <h1><i class='fas fa-flag'></i>Reportes <small>Sistema de ventas</small>
                 <button class="btn btn-primary" type="button" onclick="volverEmpleados();"
-                    class="fa-solid fa-circle-plus">Volver</button> <small>Ganancias por mes</small></a></li>
+                    class="fa-solid fa-circle-plus">Volver</button> <small>Ventas por mes</small></a></li>
 
             </h1>
         </div>
@@ -19,7 +19,7 @@ include 'Views/Templates/body.php';
                     <small>Sistema de ventas</small></a></li>
         </ul>
     </div>
-    <form id='frmBuscarGanacias'>
+    <form id='frmBuscarVentas'>
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
@@ -54,7 +54,7 @@ include 'Views/Templates/body.php';
             <div class='tile'>
                 <div class='tile-body'>
                     <div class='table-responsive'>
-                        <table class='table  table-light table-hover table-bordered ' id="tableReporteGananciasMes">
+                        <table class='table  table-light table-hover table-bordered ' id="tableReporteVentasMesaMes">
                             <thead class="thead-dark">
                                 <tr>
                                     <th>#</th>
@@ -64,7 +64,7 @@ include 'Views/Templates/body.php';
                                     <th>Monto total</th>
                                 </tr>
                             </thead>
-                            <tbody id="tableReporteGanancias">
+                            <tbody id="tableReporteVentas">
                             </tbody>
                         </table>
                     </div>

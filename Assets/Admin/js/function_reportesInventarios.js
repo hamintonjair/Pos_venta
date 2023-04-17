@@ -260,10 +260,10 @@ function buscarEmpleados() {
 
 }
 
-//buscar ganacia por mes
+//buscar ventas por mes
 function buscarMes() {
     const url = base_url + "Reportes/rangoFecha";
-    const frm = document.getElementById("frmBuscarGanacias");
+    const frm = document.getElementById("frmBuscarVentas");
     const http = new XMLHttpRequest();
     http.open("POST", url, true);
     http.send(new FormData(frm));
@@ -282,28 +282,28 @@ function buscarMes() {
                         <td>${total}</td>                             
                         </tr>`
 
-            document.getElementById("tableReporteGanancias").innerHTML = html;
+            document.getElementById("tableReporteVentas").innerHTML = html;
         }
     }
 
 }
 
 function Todos() {
-    reporteGanacias();
+    reporteVentas();
 }
 
 //reportes de ganancias por mes
-function reporteGanacias() {
-    window.location = base_url + "Reportes/reporteGananciasMes";
+function reporteVentas() {
+    window.location = base_url + "Reportes/reporteVentasMes";
 }
 
 //reporte por empleado
 document.addEventListener("DOMContentLoaded", function() {
-    $('#tableReporteGananciasMes').dataTable({
+    $('#tableReporteVentasMesaMes').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "ajax": {
-            "url": " " + base_url + "Reportes/listarGanancias",
+            "url": " " + base_url + "Reportes/listarVentasMes",
             "dataSrc": ""
         },
         "columns": [
@@ -424,6 +424,7 @@ document.addEventListener("DOMContentLoaded", function() {
             { "data": "cantidad" },
             { "data": "precio", render: $.fn.dataTable.render.number('.', ',', 2) },
             { "data": "total", render: $.fn.dataTable.render.number('.', ',', 2) },
+            { "data": "pago" },
             { "data": "fecha" },
         ],
         buttons: [{

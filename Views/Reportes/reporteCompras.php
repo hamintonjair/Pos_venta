@@ -56,7 +56,8 @@ include 'Views/Templates/body.php';
                                     <th>Nombre</th>
                                     <th>Producto</th>
                                     <th>Cantidad</th>
-                                    <th>Precio</th>                                                             
+                                    <th>Precio U.</th>     
+                                    <th>Precio Total</th>                                                        
                                     <th>Método pago</th>
                                     <th>Fecha</th>                                
                                 </tr>

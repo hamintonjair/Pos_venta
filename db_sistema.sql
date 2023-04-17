@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-03-2023 a las 03:00:21
+-- Tiempo de generación: 17-04-2023 a las 15:05:24
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.1.12
 
@@ -78,7 +78,7 @@ CREATE TABLE `cierre_caja` (
   `monto_inicial` decimal(10,2) NOT NULL,
   `monto_final` decimal(10,2) NOT NULL DEFAULT 0.00,
   `fecha_apertura` date NOT NULL,
-  `fecha_cierre` date NOT NULL DEFAULT '0000-00-00',
+  `fecha_cierre` date NOT NULL,
   `total_ventas` int(11) NOT NULL DEFAULT 0,
   `monto_total` decimal(10,2) NOT NULL DEFAULT 0.00,
   `estado` int(11) NOT NULL DEFAULT 1
@@ -132,22 +132,29 @@ CREATE TABLE `compras` (
   `total` decimal(10,2) NOT NULL,
   `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
   `estado` int(11) NOT NULL DEFAULT 1,
-  `id_proveedor` int(11) NOT NULL
+  `id_proveedor` int(11) NOT NULL,
+  `tipoPago` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `compras`
 --
 
-INSERT INTO `compras` (`id`, `total`, `fecha`, `estado`, `id_proveedor`) VALUES
-(1, '75000000.00', '2023-01-25 12:25:21', 0, 1),
-(2, '60000.00', '2023-01-25 12:47:49', 0, 1),
-(3, '30000.00', '2023-01-25 12:54:30', 1, 1),
-(4, '60000.00', '2023-01-25 12:56:31', 0, 1),
-(5, '60000.00', '2023-01-25 13:16:55', 0, 1),
-(6, '60000.00', '2023-02-08 12:03:41', 1, 1),
-(7, '15000.00', '2023-02-08 12:04:57', 1, 1),
-(8, '30000000.00', '2023-02-25 23:06:02', 1, 1);
+INSERT INTO `compras` (`id`, `total`, `fecha`, `estado`, `id_proveedor`, `tipoPago`) VALUES
+(1, '75000000.00', '2023-01-25 17:25:21', 0, 1, '2'),
+(2, '60000.00', '2023-01-25 17:47:49', 0, 1, '1'),
+(3, '30000.00', '2023-01-25 17:54:30', 1, 1, '1'),
+(4, '60000.00', '2023-01-25 17:56:31', 0, 1, '1'),
+(5, '60000.00', '2023-01-25 18:16:55', 0, 1, '1'),
+(6, '60000.00', '2023-02-08 17:03:41', 1, 1, '1'),
+(7, '15000.00', '2023-02-08 17:04:57', 1, 1, '1'),
+(8, '30000000.00', '2023-02-26 04:06:02', 1, 1, '2'),
+(9, '1500.00', '2023-03-17 02:48:38', 1, 1, '1'),
+(10, '22500.00', '2023-03-17 03:04:33', 1, 1, '2'),
+(11, '1500.00', '2023-03-20 00:59:08', 1, 1, '1'),
+(12, '3000.00', '2023-03-20 01:57:59', 1, 2, '1'),
+(13, '3000.00', '2023-03-20 02:31:03', 1, 2, '1'),
+(14, '3000.00', '2023-04-17 12:22:50', 1, 1, '1');
 
 -- --------------------------------------------------------
 
@@ -172,7 +179,7 @@ CREATE TABLE `configuracion` (
 --
 
 INSERT INTO `configuracion` (`id`, `nit`, `regimen`, `resolucion`, `nombre`, `telefono`, `direccion`, `ciudad`, `mensaje`) VALUES
-(1, '80772379-1', 'Común', 0, 'Jojama', '3124943527', 'carrera 112 # 46 - 136', 'Quibdó - Chocó', 'Gracias por preferirnos, somo papelería y multiservicios en general. ');
+(1, '80772379-1', 'Comun', 0, 'Jojama', '3124943527', 'carrera 112 # 46 - 136', 'Quibdo - Choco', 'Gracias por preferirnos, somo papeleria y multiservicios en general. ');
 
 -- --------------------------------------------------------
 
@@ -201,7 +208,13 @@ INSERT INTO `datella_compras` (`id`, `id_compra`, `id_producto`, `cantidad`, `pr
 (5, 5, 5, 20, '3000.00', '60000.00'),
 (6, 6, 5, 20, '3000.00', '60000.00'),
 (7, 7, 2, 10, '1500.00', '15000.00'),
-(8, 8, 3, 20, '1500000.00', '30000000.00');
+(8, 8, 3, 20, '1500000.00', '30000000.00'),
+(9, 9, 2, 1, '1500.00', '1500.00'),
+(10, 10, 8, 15, '1500.00', '22500.00'),
+(12, 11, 2, 1, '1500.00', '1500.00'),
+(13, 12, 2, 2, '1500.00', '3000.00'),
+(14, 13, 2, 2, '1500.00', '3000.00'),
+(15, 14, 2, 2, '1500.00', '3000.00');
 
 -- --------------------------------------------------------
 
@@ -223,8 +236,7 @@ CREATE TABLE `detalle` (
 --
 
 INSERT INTO `detalle` (`id`, `id_producto`, `id_usuario`, `precio`, `cantidad`, `sub_total`) VALUES
-(31, 3, 1, '1500000.00', 10, '15000000.00'),
-(32, 4, 1, '750000.00', 1, '750000.00');
+(43, 2, 1, '1500.00', 2, '3000.00');
 
 -- --------------------------------------------------------
 
@@ -357,6 +369,25 @@ INSERT INTO `medidas` (`id`, `nombre`, `nombre_corto`, `estado`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `pagos`
+--
+
+CREATE TABLE `pagos` (
+  `id_pago` int(11) NOT NULL,
+  `pago` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `pagos`
+--
+
+INSERT INTO `pagos` (`id_pago`, `pago`) VALUES
+(1, 'Debito'),
+(2, 'Credito');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `permisos`
 --
 
@@ -417,13 +448,13 @@ CREATE TABLE `productos` (
 
 INSERT INTO `productos` (`id`, `codigo`, `descripcion`, `precio_compra`, `precio_venta`, `cantidad`, `iva`, `descuento`, `id_medida`, `id_categoria`, `id_proveedor`, `foto`, `vencimiento`, `fecha_vencimiento`, `estado`) VALUES
 (1, '84566', 'lapiceros y colores', '1500.00', '1000.00', 14, 0, 10, 1, 2, 1, '20230303133643.jpg', 'No', '0000-00-00', 1),
-(2, '45265', 'lapicero', '1500.00', '1000.00', 0, 5, 10, 3, 2, 1, '20230303133618.jpg', 'No', '0000-00-00', 1),
+(2, '45265', 'lapicero', '1500.00', '1000.00', 8, 5, 10, 3, 2, 1, '20230303133618.jpg', 'No', '0000-00-00', 1),
 (3, '59652', 'Portatil', '1500000.00', '1000000.00', 15, 19, 20, 3, 5, 1, '20230303133552.jpg', 'No', '0000-00-00', 1),
 (4, '562566', 'Tablet', '750000.00', '700000.00', 29, 19, 15, 3, 5, 1, '20230303133415.jpg', 'No', '0000-00-00', 1),
 (5, '78545', 'Cuaderno rayado', '3000.00', '2500.00', 11, 19, 5, 3, 1, 1, '20230303134949.jpg', 'No', '0000-00-00', 1),
 (7, '270001', 'Combo de cuaderno y colores', '15000.00', '10000.00', 15, 0, 0, 1, 1, 1, '20230303135441.jpg', 'No', '0000-00-00', 1),
-(8, '2700025', 'prueba', '1500.00', '0.00', 0, 0, 0, 3, 2, 1, '20230303142736.jpg', 'No', '0000-00-00', 1),
-(9, '5465', 'pruebas', '0.00', '1000.00', 0, 0, 0, 1, 1, 1, 'default.png', 'No', '0000-00-00', 0);
+(8, '2700025', 'Cuaderno pasta dura', '1500.00', '0.00', 15, 0, 0, 3, 2, 1, '20230303142736.jpg', 'No', '0000-00-00', 1),
+(9, '5465', 'Gorra para hombre', '0.00', '55999.00', 15, 0, 0, 1, 1, 1, '20230317040126.jpg', 'No', '0000-00-00', 1);
 
 -- --------------------------------------------------------
 
@@ -446,7 +477,8 @@ CREATE TABLE `proveedor` (
 --
 
 INSERT INTO `proveedor` (`id`, `nit`, `razon_social`, `nombre`, `telefono`, `direccion`, `estado`) VALUES
-(1, '80772379', 'Jojama', 'Haminton Mena Mena', '3124943527', 'Carrera 12 #46-136 barrio Buenos Aires', 1);
+(1, '80772379', 'Jojama', 'Haminton Mena Mena', '3124943527', 'Carrera 12 #46-136 barrio Buenos Aires', 1),
+(2, '1003929901', 'Jojama', 'Luz Leiby Asprilla', '3124943527', 'Carrera 12 #46-136 barrio Buenos Aires', 1);
 
 -- --------------------------------------------------------
 
@@ -494,31 +526,31 @@ CREATE TABLE `ventas` (
 --
 
 INSERT INTO `ventas` (`id`, `id_usuario`, `total`, `fecha`, `estado`, `id_cliente`, `apertura`, `pagado`, `cambio`) VALUES
-(1, 1, '11875.00', '2023-01-30 12:49:30', 1, 3, 0, '0.00', '0.00'),
-(2, 1, '2373925.00', '2023-01-31 12:59:55', 1, 3, 0, '0.00', '0.00'),
-(3, 1, '5563250.00', '2023-02-22 13:47:55', 1, 2, 0, '0.00', '0.00'),
-(4, 1, '1190000.00', '2023-02-25 21:32:31', 1, 1, 0, '0.00', '0.00'),
-(5, 1, '1190000.00', '2023-02-25 21:36:19', 1, 1, 0, '0.00', '0.00'),
-(6, 1, '1190000.00', '2023-02-25 22:57:21', 1, 2, 0, '0.00', '0.00'),
-(7, 1, '1190000.00', '2023-02-25 23:09:45', 1, 2, 0, '0.00', '0.00'),
-(8, 1, '2023000.00', '2023-02-27 12:37:28', 1, 1, 0, '2030000.00', '7000.00'),
-(9, 1, '1505350.00', '2023-02-27 12:57:29', 1, 2, 0, '2.00', '1600000.00'),
-(10, 1, '1671950.00', '2023-02-27 12:59:10', 1, 1, 0, '1700000.00', '28050.00'),
-(11, 1, '835975.00', '2023-02-27 13:00:58', 1, 2, 0, '2.00', '836000.00'),
-(12, 1, '835975.00', '2023-02-27 13:05:05', 1, 1, 0, '836000.00', '25.00'),
-(13, 1, '835975.00', '2023-02-27 13:06:19', 1, 2, 0, '2.00', '836000.00'),
-(14, 1, '835975.00', '2023-02-27 13:08:40', 1, 1, 0, '836000.00', '25.00'),
-(15, 1, '835975.00', '2023-02-27 13:09:50', 1, 2, 0, '836000.00', '25.00'),
-(16, 1, '752675.00', '2023-02-27 13:15:14', 1, 2, 0, '836000.00', '83325.00'),
-(17, 1, '749700.00', '2023-02-27 13:19:18', 1, 2, 0, '750000.00', '300.00'),
-(18, 1, '708050.00', '2023-02-27 13:38:51', 1, 1, 0, '710000.00', '1950.00'),
-(19, 1, '708050.00', '2023-02-27 13:40:45', 1, 2, 0, '710000.00', '1950.00'),
-(20, 1, '1130500.00', '2023-02-28 12:10:42', 1, 2, 0, '1150000.00', '19500.00'),
-(21, 2, '2713200.00', '2023-03-05 02:31:44', 1, 2, 0, '2800000.00', '86800.00'),
-(22, 1, '1200500.00', '2023-03-05 17:30:10', 1, 2, 0, '1250000.00', '49500.00'),
-(23, 1, '2100.00', '2023-03-05 17:42:59', 1, 2, 0, '2500.00', '400.00'),
-(24, 1, '1050.00', '2023-03-05 17:45:50', 1, 1, 0, '1500.00', '450.00'),
-(25, 1, '1050.00', '2023-03-05 17:54:29', 1, 1, 0, '1100.00', '50.00');
+(1, 1, '11875.00', '2023-01-30 17:49:30', 1, 3, 0, '0.00', '0.00'),
+(2, 1, '2373925.00', '2023-01-31 17:59:55', 1, 3, 0, '0.00', '0.00'),
+(3, 1, '5563250.00', '2023-02-22 18:47:55', 1, 2, 0, '0.00', '0.00'),
+(4, 1, '1190000.00', '2023-02-26 02:32:31', 1, 1, 0, '0.00', '0.00'),
+(5, 1, '1190000.00', '2023-02-26 02:36:19', 1, 1, 0, '0.00', '0.00'),
+(6, 1, '1190000.00', '2023-02-26 03:57:21', 1, 2, 0, '0.00', '0.00'),
+(7, 1, '1190000.00', '2023-02-26 04:09:45', 1, 2, 0, '0.00', '0.00'),
+(8, 1, '2023000.00', '2023-02-27 17:37:28', 1, 1, 0, '2030000.00', '7000.00'),
+(9, 1, '1505350.00', '2023-02-27 17:57:29', 1, 2, 0, '2.00', '1600000.00'),
+(10, 1, '1671950.00', '2023-02-27 17:59:10', 1, 1, 0, '1700000.00', '28050.00'),
+(11, 1, '835975.00', '2023-02-27 18:00:58', 1, 2, 0, '2.00', '836000.00'),
+(12, 1, '835975.00', '2023-02-27 18:05:05', 1, 1, 0, '836000.00', '25.00'),
+(13, 1, '835975.00', '2023-02-27 18:06:19', 1, 2, 0, '2.00', '836000.00'),
+(14, 1, '835975.00', '2023-02-27 18:08:40', 1, 1, 0, '836000.00', '25.00'),
+(15, 1, '835975.00', '2023-02-27 18:09:50', 1, 2, 0, '836000.00', '25.00'),
+(16, 1, '752675.00', '2023-02-27 18:15:14', 1, 2, 0, '836000.00', '83325.00'),
+(17, 1, '749700.00', '2023-02-27 18:19:18', 1, 2, 0, '750000.00', '300.00'),
+(18, 1, '708050.00', '2023-02-27 18:38:51', 1, 1, 0, '710000.00', '1950.00'),
+(19, 1, '708050.00', '2023-02-27 18:40:45', 1, 2, 0, '710000.00', '1950.00'),
+(20, 1, '1130500.00', '2023-02-28 17:10:42', 1, 2, 0, '1150000.00', '19500.00'),
+(21, 2, '2713200.00', '2023-03-05 07:31:44', 1, 2, 0, '2800000.00', '86800.00'),
+(22, 1, '1200500.00', '2023-03-05 22:30:10', 1, 2, 0, '1250000.00', '49500.00'),
+(23, 1, '2100.00', '2023-03-05 22:42:59', 1, 2, 0, '2500.00', '400.00'),
+(24, 1, '1050.00', '2023-03-05 22:45:50', 1, 1, 0, '1500.00', '450.00'),
+(25, 1, '1050.00', '2023-03-05 22:54:29', 1, 1, 0, '1100.00', '50.00');
 
 --
 -- Índices para tablas volcadas
@@ -598,6 +630,160 @@ ALTER TABLE `detalle_ventas`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_producto` (`id_producto`),
   ADD KEY `id_venta` (`id_venta`);
+
+--
+-- Indices de la tabla `medidas`
+--
+ALTER TABLE `medidas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `pagos`
+--
+ALTER TABLE `pagos`
+  ADD PRIMARY KEY (`id_pago`);
+
+--
+-- Indices de la tabla `permisos`
+--
+ALTER TABLE `permisos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `productos`
+--
+ALTER TABLE `productos`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `proveedor`
+--
+ALTER TABLE `proveedor`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `ventas`
+--
+ALTER TABLE `ventas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `caja`
+--
+ALTER TABLE `caja`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `categorias`
+--
+ALTER TABLE `categorias`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT de la tabla `cierre_caja`
+--
+ALTER TABLE `cierre_caja`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `clientes`
+--
+ALTER TABLE `clientes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `compras`
+--
+ALTER TABLE `compras`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT de la tabla `configuracion`
+--
+ALTER TABLE `configuracion`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `datella_compras`
+--
+ALTER TABLE `datella_compras`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle`
+--
+ALTER TABLE `detalle`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_permisos`
+--
+ALTER TABLE `detalle_permisos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=161;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_temp`
+--
+ALTER TABLE `detalle_temp`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_ventas`
+--
+ALTER TABLE `detalle_ventas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+--
+-- AUTO_INCREMENT de la tabla `medidas`
+--
+ALTER TABLE `medidas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `pagos`
+--
+ALTER TABLE `pagos`
+  MODIFY `id_pago` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `permisos`
+--
+ALTER TABLE `permisos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT de la tabla `productos`
+--
+ALTER TABLE `productos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de la tabla `proveedor`
+--
+ALTER TABLE `proveedor`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `ventas`
+--
+ALTER TABLE `ventas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

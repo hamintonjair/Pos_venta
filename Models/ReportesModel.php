@@ -42,7 +42,7 @@ class ReportesModel extends Query {
     }
     //reportes de ganacias por mes
 
-    public function getreporteGananciasMes() {
+    public function getreporteVentasMes() {
 
         $sql = 'SELECT c.id, c.fecha_cierre, c.total_ventas AS ventas, c.monto_total AS total, ca.caja  FROM cierre_caja c INNER JOIN caja ca ON c.id_caja = ca.id
          WHERE c.estado = 0';
