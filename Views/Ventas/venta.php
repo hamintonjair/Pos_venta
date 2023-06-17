@@ -35,12 +35,17 @@ include 'Views/Templates/body.php';
                                 aria-describedby="helpId">
                         </div>
                     </div>
-                    <div class="col-md-2">
+                      <div class="col-md-2">
                         <div class="form-group">
                             <label for="nombre">Buscar por Nombre</label>
-                            <input type="text" name="nombre" id="nombre" class="form-control valid validText"
-                                placeholder="Nombre del producto" onkeyup="buscarNombre(event)"
-                                aria-describedby="helpId">
+                            <input type="text" id="buscador" class="form-control" placeholder="Buscar producto..."
+                                oninput="filtrarProductos()">
+                            <select id="nombre" name="nombre" class="form-control" onchange="buscarNombre()">
+                                <option value="">Seleccionar..</option>
+                                <?php foreach ($data['productos'] as $row) { ?>
+                                <option value="<?php echo $row['descripcion']; ?>"><?php echo $row['descripcion']; ?></option>
+                                <?php } ?>
+                            </select>
                         </div>
                     </div>
 
@@ -188,6 +193,12 @@ include 'Views/Templates/body.php';
             </div>
         </div>
     </div>
+        <style>
+        select {
+    display: none; /* Oculta el elemento select por defecto */
+}
+
+    </style>
 </main>
 <?php include 'Views/Templates/footer_admin.php';
 ?>
