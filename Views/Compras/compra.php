@@ -29,9 +29,9 @@ include 'Views/Templates/body.php';
                 <div class='row'>
                     <div class='col-md-2'>
                         <div class='form-group'>
-                            <label for='codigo'>Código de barra <i class='fas fa-barcode'></i></label>
+                            <label for='codigo2'>Código de barra <i class='fas fa-barcode'></i></label>
                             <input type='hidden' id='id' name='id'>
-                            <input type='text' name='codigo' id='codigo' class='form-control valid validNumber'
+                            <input type='text' name='codigo2' id='codigo2' class='form-control valid validNumber'
                                 placeholder='Código de barra' onkeyup='buscarCodigo(event)' aria-describedby='helpId'>
                         </div>
                     </div>
@@ -112,7 +112,7 @@ include 'Views/Templates/body.php';
                     <label for='nit'><i class='fas fa-users'></i>Buscar proveedor </label>
                     <input type='text' name='nit' id='nit' class='form-control valid validNumber'
                         aria-describedby='helpId' placeholder="Nit empresa
-                    " onkeyup='buscarProveedor(event)'>
+                    " onkeyup='buscarProveedor(event)' required="">
                     <input type='hidden' name='id_proveedor' id='id_proveedor' aria-describedby='helpId'>
                 </div>
             </div>
@@ -156,15 +156,15 @@ include 'Views/Templates/body.php';
                         </div>
                         <div class='form-group'>
                             <label for='pago'>Tipo de pago</label>
-                            <select class='custom-select' name='pago' id='pago'>
+                            <select class='custom-select' name='pago' id='pago' onchange="capturarValorSelect()">
                                 <option selected>Selecionar..</option>
                                 <option value='Debito'>Debito</option>
                                 <option value='Credito'>Credito</option>
                             </select>
                         </div>
                         <div class='form-group'>
-                            <label for='efectivos'>Valor a pagar</label>
-                            <input type='text' name='efectivos' id='efectivos' class='form-control valid validNumber'
+                            <label for='efectivos'>Pagar</label>
+                            <input type='number' name='efectivo' id='efectivo' class='form-control valid validNumber'
                                 placeholder='Pagar'aria-describedby='helpId'>
                         </div>
                         <div class='modal-footer'>

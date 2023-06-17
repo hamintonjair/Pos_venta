@@ -1,10 +1,10 @@
  <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
     <aside class="app-sidebar">
-      <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="<?php echo base_url; ?>Assets/Admin/images/admin.png" alt="User Image">
+      <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="<?php echo base_url; ?>Assets/Admin/images/logo.jpg" alt="User Image">
         <div>       
-          <?php if(!empty($_SESSION['nombre']) || !empty($_SESSION['usuario'])){ ?>
+          <?php if(!empty($_SESSION['nombre']) || !empty($_SESSION['rol'])){ ?>
           <p class="app-sidebar__user-name"><?= $_SESSION['nombre']?></p>
-          <p class="app-sidebar__user-designation"><?= $_SESSION['usuario'];?></p>
+          <p class="app-sidebar__user-designation"><?= $_SESSION['rol'];?></p>
           <?php }; ?>
         </div>
   

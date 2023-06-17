@@ -32,8 +32,12 @@ class Compras extends Controller {
         if ( is_numeric( $cod ) == true ) {
 
             $data = $this->model->getProCodi( $cod );
+            $_SESSION['proveedorid'] = $data['id_proveedor'];
+          
         } else {
-            $data = $this->model->getProCodi( $cod );
+            $data = $this->model->getProCodi( $cod );     
+            $_SESSION['proveedorid'] = $data['id_proveedor'];
+     
         }
         echo json_encode( $data, JSON_UNESCAPED_UNICODE );
         die();
@@ -47,8 +51,11 @@ class Compras extends Controller {
         $datos = $this->model->getProductos( $id );
         $id_producto = $datos[ 'id' ];
         $id_usuario = $_SESSION[ 'id_usuario' ];
-        $precio = $datos[ 'precio_compra' ];
+        // $precio = $datos[ 'precio_compra' ];
+        $precio = $_POST[ 'precio' ];
         $cantidad = $_POST[ 'cantidad' ];
+
+        // var_dump($precio2);exit();
 
         $comprobar = $this->model->consultarDetalleC( $id_producto, $id_usuario );
 
@@ -113,47 +120,59 @@ class Compras extends Controller {
     public function registrarCompra( ) {
 
         $id_usuario = $_SESSION[ 'id_usuario' ];
-        $TipoPago = $_SESSION[ 'compra' ];
+        $TipoPago = $_SESSION[ 'tipoPago' ];
+        $efectivo = $_SESSION[ 'pago' ];
+        $proveedorid = $_SESSION['proveedorid'];
 
         // $datos = $this->model->getProCodi( $cod );
         $pagos = $this->model->getidCompra();
-        $id_proveedor = $_POST[ 'id_proveedor' ];   
-
+        $id_proveedor = $_POST[ 'id_proveedor' ];  
+  
+      if($_SESSION['proveedorid'] == $id_proveedor){
 
         foreach ( $pagos as $row ) {
-            if ( $row[ 'pago' ] ==  $TipoPago ) {
-                $idcompra = $row[ 'id_pago' ];
+                if ( $row[ 'pago' ] ==  $TipoPago ) {
+                    $idcompra = $row[ 'id_pago' ];
+                }
+
+            }
+            $total = $this->model->calcularCompra( $id_usuario );
+        
+            if($total[ 'total' ] != $efectivo.'.00' && $TipoPago == "Debito"){
+                $msg = ( array( 'modificado'=>false, 'post' => 'El valor ingresado es diferente a la deuda.' ) );
+            }else{
+                $data = $this->model->registrarCompra( $total[ 'total' ], $id_proveedor, $idcompra, $id_usuario);
+
+            if ( $data == 'modificado' ) {
+                $detalle = $this->model->getDetalleC( $id_usuario );
+
+                //traer el id compra
+                $id_compra = $this->model->id_Compra();
+                foreach ( $detalle as $row ) {
+                    $cantidad = $row[ 'cantidad' ];
+                    $precio = $row[ 'precio' ];
+                    $id_prod = $row[ 'id_producto' ];
+                    $sub_total = $cantidad * $precio;
+                    $this->model->registrarDetalleCompra( $id_compra[ 'id' ], $id_prod, $cantidad, $precio, $sub_total );
+                    $stock_actual = $this->model->getProductos( $id_prod );
+                    $stock =  $stock_actual[ 'cantidad' ] + $cantidad;
+                    $this->model->actualizarStockC( $stock, $id_prod );
+                }
+                $vaciar = $this->model->vaciarDetalleC( $id_usuario );
+
+                if ( $vaciar == 'modificado' ) {
+                    $msg = ( array( 'modificado'=> true, 'post' => 'Compra realizada.',  'id_compra' => $id_compra[ 'id' ] ) );
+                }
+                } else {
+                    $msg = ( array( 'modificado'=>false, 'post' => 'Error al realizar la compra.' ) );
+                }
             }
 
+      }else{
+             $msg = ( array( 'modificado'=>false, 'post' => 'No puedes cambiar el proveedor de este producto, debes crear el proveedor, luego en el módulo de producto editarlo
+             y asignarlo al nuevo proveedor para poder hacer la compra.' ) );
         }
-
-        $total = $this->model->calcularCompra( $id_usuario );
-        $data = $this->model->registrarCompra( $total[ 'total' ], $id_proveedor, $idcompra );
-
-        if ( $data == 'modificado' ) {
-            $detalle = $this->model->getDetalleC( $id_usuario );
-
-            //traer el id compra
-            $id_compra = $this->model->id_Compra();
-            foreach ( $detalle as $row ) {
-                $cantidad = $row[ 'cantidad' ];
-                $precio = $row[ 'precio' ];
-                $id_prod = $row[ 'id_producto' ];
-                $sub_total = $cantidad * $precio;
-                $this->model->registrarDetalleCompra( $id_compra[ 'id' ], $id_prod, $cantidad, $precio, $sub_total );
-                $stock_actual = $this->model->getProductos( $id_prod );
-                $stock =  $stock_actual[ 'cantidad' ] + $cantidad;
-                $this->model->actualizarStockC( $stock, $id_prod );
-            }
-
-            $vaciar = $this->model->vaciarDetalleC( $id_usuario );
-
-            if ( $vaciar == 'modificado' ) {
-                $msg = ( array( 'modificado'=> true, 'post' => 'Compra realizada.',  'id_compra' => $id_compra[ 'id' ] ) );
-            }
-        } else {
-            $msg = ( array( 'modificado'=>false, 'post' => 'Error al realizar la compra.' ) );
-         }
+        
         echo json_encode( $msg, JSON_UNESCAPED_UNICODE );
         die();
     }
@@ -186,16 +205,17 @@ class Compras extends Controller {
 
         $pdf->SetFont( 'Arial', 'B', 14 );
         $pdf->Cell( 0, 5, 'Factura de Compra ', 0, 1, 'C' );
+       
 
         foreach ( $productos as $row ) {
 
             $fecha = $row[ 'fecha' ];
             $nombre = $row[ 'nombre' ];
             $estado = $row[ 'estado' ];
-
             $pago = $row[ 'pago' ];
 
         }
+        $pdf->Cell( 0, 5,   $empresa['ciudad'], 0, 1, 'C' );
         $pdf->Ln( 10 );
 
         $pdf->SetFont( 'Arial', 'B', 12 );
@@ -229,15 +249,16 @@ class Compras extends Controller {
         $pdf->Cell( 20, 5, utf8_decode( $usuario[ 'nombre' ] ), 0, 1, 'L' );
 
         $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 24, 5, 'Factura #: ', 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 12 );
-        $pdf->Cell( 20, 5, $id_compra, 0, 1, 'L' );
-     
-        $pdf->SetFont( 'Arial', 'B', 12 );
         $pdf->Cell( 24, 5, 'Proveedor: ', 0, 0, 'L' );
         $pdf->SetFont( 'Arial', '', 12 );
         $pdf->Cell( 20, 5, utf8_decode( $nombre ), 0, 1, 'L' );
 
+        $pdf->SetFont( 'Arial', 'B', 12 );
+        $pdf->Cell( 24, 5, 'Factura #: ', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 12 );
+        $pdf->Cell( 20, 5, $id_compra, 0, 1, 'L' );
+     
+    
         $pdf->SetFont( 'Arial', 'B', 12 );
 
         $pdf->Cell( 125, 5, 'Estado:', 0, 0, 'R' );
@@ -256,9 +277,11 @@ class Compras extends Controller {
         if ( $pago == 'Credito' ) {
 
             $pdf->Cell( 16, 5, $pago, 0, 1, 'R' );
+            $pagar = 'Total a pagar:';
 
         } else {
             $pdf->Cell( 15, 5, $pago, 0, 1, 'R' );
+            $pagar = 'Total pagado:';
 
         }
         $pdf->Ln();
@@ -314,7 +337,7 @@ class Compras extends Controller {
 
         $pdf->SetFont( 'Arial', 'B', 12 );
 
-        $pdf->Cell( 150, 5, 'Total a pagar:', 0, 0, 'R', 1 );
+        $pdf->Cell( 150, 5,  $pagar, 0, 0, 'R', 1 );
         $pdf->Cell( 35, 5, formatMoney( $total ), 0, 1, 'R', 1 );
 
         $pdf->Output();
@@ -345,17 +368,28 @@ class Compras extends Controller {
             if ( $data[ $i ][ 'estado' ] == 1 ) {
                 $data[ $i ][ 'estado' ] = '<span class="badge badge-success">Completado</span>';
 
-                $data[ $i ][ 'acciones' ] = '<div>  
-                <button class="btn btn-warning" title="Anular" onclick="btnAnularC('.$data[ $i ][ 'id' ].')"><i class="fas fa-ban"></i></button>          
-                <a type="button" class="btn btn-danger" href="'.base_url.'Compras/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
-               </div>';
-
+                if( $_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){
+                    $data[ $i ][ 'acciones' ] = '<div>  
+                    <button class="btn btn-warning" title="Anular" onclick="btnAnularC('.$data[ $i ][ 'id' ].')"><i class="fas fa-ban"></i></button>          
+                    <a type="button" class="btn btn-danger" href="'.base_url.'Compras/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
+                </div>';
+                }else{
+                    $data[ $i ][ 'acciones' ] = '<div>  
+                    <button class="btn btn-warning" disabled="" title="Anular" onclick="btnAnularC('.$data[ $i ][ 'id' ].')"><i class="fas fa-ban"></i></button>          
+                     <a type="button"  class="btn btn-danger" href="'.base_url.'Compras/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
+                  </div>';
+                }
+              
             } else {
-                $data[ $i ][ 'estado' ] = ' <span class="badge badge-danger">Anulado</span>';
+
+                if($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){
+                     $data[ $i ][ 'estado' ] = ' <span class="badge badge-danger">Anulado</span>';
 
                 $data[ $i ][ 'acciones' ] = '<div>                        
                 <a type="button" class="btn btn-danger" href="'.base_url.'Compras/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
                 </div>';
+                }
+               
 
             }
 
@@ -386,8 +420,9 @@ class Compras extends Controller {
 
     public function TipoPago() {
 
-        $_SESSION[ 'compra' ] = $_POST[ 'pago' ];
-        $msg =  $_SESSION[ 'compra' ] ;
+        $_SESSION[ 'tipoPago' ] = $_POST[ 'pago' ];
+        $_SESSION[ 'pago' ] = $_POST[ 'efectivo' ];
+        $msg =  $_SESSION[ 'tipoPago' ] ;
         echo json_encode( $msg, JSON_UNESCAPED_UNICODE );
     }
     //buscar proveedor

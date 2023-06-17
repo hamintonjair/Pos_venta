@@ -7,13 +7,15 @@ include 'Views/Templates/body.php';
 <main class='app-content'>
     <div class='app-title'>
         <div>
-            <h1><i class='fas fa-flag'></i>Reportes <small>Sistema de ventas diario</small>                         
+            <h1><i class='fas fa-flag'></i>Reportes <small>ventas diario</small>                         
                 <button class="btn btn-primary" type="button" onclick="ventasEmpleados();"
                     class="fa-solid fa-circle-plus">R. Ventas por empleados</button></a>
                     <button class="btn btn-info" type="button" onclick="reporteVentas();"
-                    class="fa-solid fa-circle-plus">R. Ganancias por mes</button></a></li>
+                    class="fa-solid fa-circle-plus">R. Ventas por mes</button></a></li>
                     <button class="btn btn-warning" type="button" onclick="comprasProveedor();"
-                    class="fa-solid fa-circle-plus">R. Compras</button></a></li>
+                    class="fa-solid fa-circle-plus">R. Compras a proveedores</button></a></li>
+                    <button class="btn btn-danger" type="button" onclick="irGanancias();"
+                    class="fa-solid fa-circle-plus">R. Ganancias</button></a></li>
             </h1>
         </div>
         <ul class='app-breadcrumb breadcrumb'>

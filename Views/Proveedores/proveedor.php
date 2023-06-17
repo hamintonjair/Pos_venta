@@ -65,14 +65,14 @@ include 'Views/Templates/body.php';
                         <div class='row'>
                             <div class='col-md-6'>
                                 <div class='form-group'>
-                                    <label for='nit'>Nit</label>
+                                    <label for='nit'>Nit(<font color="red">*</font>)</label>
                                     <input type='text' name='nit' id='nit' class='form-control valid validNumber'
                                         placeholder='Usuario' aria-describedby='helpId'>
                                 </div>
                             </div>
                             <div class='col-md-6'>
                                 <div class='form-group'>
-                                    <label for='razon_social'>Razón social</label>
+                                    <label for='razon_social'>Razón social(<font color="red">*</font>)</label>
                                     <input type='text' name='razon_social' id='razon_social'
                                         class='form-control valid validText' placeholder='Razón social'
                                         aria-describedby='helpId'>
@@ -82,14 +82,14 @@ include 'Views/Templates/body.php';
                         <div class='row'>
                             <div class='col-md-6'>
                                 <div class='form-group'>
-                                    <label for='nombre'>Nombre</label>
+                                    <label for='nombre'>Nombre(<font color="red">*</font>)</label>
                                     <input type='text' name='nombre' id='nombre' class='form-control valid validText'
                                         placeholder='Nombre' aria-describedby='helpId'>
                                 </div>
                             </div>
                             <div class='col-md-6'>
                                 <div class='form-group'>
-                                    <label for='telefono'>Teléfono</label>
+                                    <label for='telefono'>Teléfono(<font color="red">*</font>)</label>
                                     <input type='text' name='telefono' id='telefono'
                                         class='form-control valid validNumber' placeholder='Teléfono'
                                         aria-describedby='helpId'>
@@ -99,7 +99,7 @@ include 'Views/Templates/body.php';
                         <div class='row' id="claves">
                             <div class='col-md-12'>
                                 <div class='form-group'>
-                                    <label for='direccion'>Dirección</label>
+                                    <label for='direccion'>Dirección(<font color="red">*</font>)</label>
                                     <input type='text' name='direccion' id='direccion' class='form-control'
                                         placeholder='Dirección' aria-describedby='helpId'>
                                 </div>

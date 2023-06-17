@@ -63,16 +63,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 [0, "desc"]
             ]
         });
-        if (document.getElementById('stockMinimo')) {
-            reportStock();
-            productosVendidos();
-
-        }
 
     })
     //vista productos bajos
 function productosBajos() {
     window.location = base_url + "Inventario/stockBajos";
+}
+//entradas y salidas
+function EntradasSalidas() {
+    window.location = base_url + "Inventario/entradaSalida";
 }
 
 function volverInventario() {
@@ -140,14 +139,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 [0, "desc"]
             ]
         });
-        if (document.getElementById('stockMinimo')) {
-            reportStock();
-            productosVendidos();
-
-        }
 
     })
- //INVENTARIO
+    //INVENTARIO
 document.addEventListener("DOMContentLoaded", function() {
         $('#tableInventario').dataTable({
             "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
@@ -209,12 +203,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 [0, "desc"]
             ]
         });
-        if (document.getElementById('stockMinimo')) {
-            reportStock();
-            productosVendidos();
-
-        }
-
     })
     //vista reporte
 function ventasEmpleados() {
@@ -225,6 +213,108 @@ function ventasEmpleados() {
 function volverEmpleados() {
     window.location = base_url + "reportes";
 }
+//buscar entrada y salida de productos
+function buscarEntradas() {
+    const url = base_url + "Inventario/buscarEntradaSalida";
+    const frm = document.getElementById("frmBuscar2");
+    const http = new XMLHttpRequest();
+    http.open("POST", url, true);
+    http.send(new FormData(frm));
+    http.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            const resp = JSON.parse(this.responseText);
+            console.log(resp);
+            let html = '';
+
+            resp.entradaSalida.forEach(row => {
+
+                    const precio = new Intl.NumberFormat().format(row['total']);
+
+                    html += `<tr>
+                        <td>${row['id']}</td>
+                        <td>${row['usuario']}</td>
+                        <td>${row['provCliente']}</td>
+                        <td>${row['codigo']}</td>                       
+                        <td>${row['descripcion']}</td>
+                        <td>${row['cantidad']}</td>
+                        <td>${precio}</td>                                
+                        <td>${row['fecha']}</td>         
+                        </tr>`
+                }),
+
+                document.getElementById("tableReporteEntradaSalida").innerHTML = html;
+        }
+    }
+
+}
+
+//movimiento entradas y salidas
+
+document.addEventListener("DOMContentLoaded", function() {
+    $('#tableEntradaSalida').dataTable({
+        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        dom: 'lBfrtip',
+        "ajax": {
+            "url": " " + base_url + "Inventario/listarEntradaSalida",
+            "dataSrc": ""
+        },
+        "columns": [
+            { "data": null },
+            { "data": "usuario" },
+            { "data": "provCliente" },
+            { "data": "codigo" },
+            { "data": "descripcion" },
+            { "data": "cantidad" },
+            { "data": "total", render: $.fn.dataTable.render.number('.', ',', 2) },
+            { "data": "fecha" },
+        ],
+        "createdRow": function(row, data, index) {
+            $('td', row).eq(0).html(index + 1);
+        },
+        buttons: [{
+                "extend": "copyHtml5",
+                "text": "<i class='far fa-copy'></i> Copiar",
+                "titleAttr": "Copiar",
+                "className": "btn btn-secondary",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4, 5, 6, 7]
+                }
+            }, {
+                "extend": "excelHtml5",
+                "text": "<i class='fas fa-file-excel'></i> Excel",
+                "titleAttr": "Expotar a Excel",
+                "className": "btn btn-success",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4, 5, 6, 7]
+                }
+            }, {
+                "extend": "pdfHtml5",
+                "text": "<i class='fas fa-file-pdf'></i> PDF",
+                "titleAttr": "Exportar a PDF",
+                "className": "btn btn-danger",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4, 5, 6, 7]
+                }
+            }, {
+                "extend": "csvHtml5",
+                "text": "<i class='faa fa-file-csv'></i> CSV",
+                "titleAttr": "Eportar",
+                "className": "btn btn-secondary",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4, 5, 6, 7]
+                }
+            },
+
+        ],
+        "resonsieve": "true",
+        "bDestroy": true,
+        "iDisplayLength": 10,
+        "order": [
+            [0, "desc"]
+        ]
+    });
+
+})
 
 //buscar empleado
 function buscarEmpleados() {
@@ -259,6 +349,68 @@ function buscarEmpleados() {
     }
 
 }
+// reporte por empleado
+document.addEventListener("DOMContentLoaded", function() {
+    $('#tableReporteVentaEmpleado').dataTable({
+        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        dom: 'lBfrtip',
+        "ajax": {
+            "url": " " + base_url + "Reportes/listarEmpleados",
+            "dataSrc": ""
+        },
+        "columns": [
+            { "data": "id" },
+            { "data": "fecha_apertura" },
+            { "data": "caja" },
+            { "data": "nombre" },
+            { "data": "monto_inicial", render: $.fn.dataTable.render.number('.', ',', 2) },
+            { "data": "total_ventas" },
+            { "data": "monto_total", render: $.fn.dataTable.render.number('.', ',', 2) },
+            { "data": "fecha_cierre" },
+        ],
+        buttons: [{
+                "extend": "copyHtml5",
+                "text": "<i class='far fa-copy'></i> Copiar",
+                "titleAttr": "Copiar",
+                "className": "btn btn-secondary",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4]
+                }
+            }, {
+                "extend": "excelHtml5",
+                "text": "<i class='fas fa-file-excel'></i> Excel",
+                "titleAttr": "Expotar a Excel",
+                "className": "btn btn-success",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4]
+                }
+            }, {
+                "extend": "pdfHtml5",
+                "text": "<i class='fas fa-file-pdf'></i> PDF",
+                "titleAttr": "Exportar a PDF",
+                "className": "btn btn-danger",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4]
+                }
+            }, {
+                "extend": "csvHtml5",
+                "text": "<i class='faa fa-file-csv'></i> CSV",
+                "titleAttr": "Eportar",
+                "className": "btn btn-secondary",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3, 4]
+                }
+            },
+
+        ],
+        "resonsieve": "true",
+        "bDestroy": true,
+        "iDisplayLength": 10,
+        "order": [
+            [0, "desc"]
+        ]
+    });
+})
 
 //buscar ventas por mes
 function buscarMes() {
@@ -292,13 +444,14 @@ function Todos() {
     reporteVentas();
 }
 
-//reportes de ganancias por mes
+//reportes de ventas por mes
 function reporteVentas() {
     window.location = base_url + "Reportes/reporteVentasMes";
 }
 
-//reporte por empleado
+//reporte ventas por mes
 document.addEventListener("DOMContentLoaded", function() {
+
     $('#tableReporteVentasMesaMes').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
@@ -355,11 +508,6 @@ document.addEventListener("DOMContentLoaded", function() {
             [0, "desc"]
         ]
     });
-    if (document.getElementById('stockMinimo')) {
-        reportStock();
-        productosVendidos();
-
-    }
 
 })
 
@@ -471,4 +619,69 @@ document.addEventListener("DOMContentLoaded", function() {
 
     })
 });
-//reporte por empleado
+//ganacias
+function irGanancias() {
+    window.location = base_url + "Reportes/ganacias";
+}
+document.addEventListener("DOMContentLoaded", function() {
+    $('#tableGanancias').dataTable({
+
+        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        dom: 'lBfrtip',
+        "ajax": {
+            "url": " " + base_url + "Reportes/verGanancias",
+            "dataSrc": ""
+        },
+        "columns": [
+            { "data": null },
+            { "data": "mes" },
+            { "data": "año" },
+            { "data": "total_mes", render: $.fn.dataTable.render.number('.', ',', 2) },
+        ],
+        "createdRow": function(row, data, index) {
+            $('td', row).eq(0).html(index + 1);
+        },
+        buttons: [{
+                "extend": "copyHtml5",
+                "text": "<i class='far fa-copy'></i> Copiar",
+                "titleAttr": "Copiar",
+                "className": "btn btn-secondary",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3]
+                }
+            }, {
+                "extend": "excelHtml5",
+                "text": "<i class='fas fa-file-excel'></i> Excel",
+                "titleAttr": "Expotar a Excel",
+                "className": "btn btn-success",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3]
+                }
+            }, {
+                "extend": "pdfHtml5",
+                "text": "<i class='fas fa-file-pdf'></i> PDF",
+                "titleAttr": "Exportar a PDF",
+                "className": "btn btn-danger",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3]
+                }
+            }, {
+                "extend": "csvHtml5",
+                "text": "<i class='faa fa-file-csv'></i> CSV",
+                "titleAttr": "Eportar",
+                "className": "btn btn-secondary",
+                "exportOptions": {
+                    "columns": [0, 1, 2, 3]
+                }
+            },
+
+        ],
+        "resonsieve": "true",
+        "bDestroy": true,
+        "iDisplayLength": 10,
+        "order": [
+            [0, "desc"]
+        ]
+
+    })
+});

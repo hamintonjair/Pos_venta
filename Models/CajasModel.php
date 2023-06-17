@@ -137,7 +137,7 @@ class CajasModel extends Query {
         return $data;
     }
     //cierre caja
-    public function actualizarArqueoCaja( string $final, string $cierre, string $total_ventas, string $general, int $id ) {
+    public function actualizarArqueoCaja($final, string $cierre, string $total_ventas, string $general, int $id ) {
 
         $sql = "UPDATE cierre_caja SET monto_final = ?, fecha_cierre = ?, total_ventas = ?, monto_total = ?, estado = ? WHERE id = ?";
         $data = array( $final, $cierre, $total_ventas, $general, 0, $id  );

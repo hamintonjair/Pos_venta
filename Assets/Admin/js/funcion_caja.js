@@ -76,7 +76,7 @@ function registrarCaja(e) {
             icon: 'info',
             title: 'Todos los campos son obligatorios',
             showConfirmButton: false,
-            timer: 1500
+            timer: 2200
         })
 
     } else {
@@ -95,7 +95,7 @@ function registrarCaja(e) {
                         icon: 'success',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     $('#nueva_caja').modal('hide');
                     window.location.reload();
@@ -106,7 +106,7 @@ function registrarCaja(e) {
                         icon: 'success',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     $('#nueva_caja').modal('hide');
                     window.location.reload();
@@ -117,7 +117,7 @@ function registrarCaja(e) {
                         icon: 'error',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                 }
 
@@ -281,15 +281,17 @@ function arqueoCaja() {
 function abrirArqueo(e) {
     e.preventDefault();
     const monto_inicial = document.getElementById("monto_inicial").value;
+    const id_caja = document.getElementById("id_caja").value;
 
-    if (monto_inicial == "" || id_caja == "") {
+
+    if (monto_inicial == "" || id_caja == "" || id_caja == "") {
 
         Swal.fire({
             position: 'top-end',
             icon: 'info',
             title: 'Todos los campos son obligatorios',
             showConfirmButton: false,
-            timer: 1500
+            timer: 2200
         })
     } else {
         const frmAbrirCaja = document.getElementById("frmAbrirCaja");
@@ -307,7 +309,7 @@ function abrirArqueo(e) {
                         icon: 'success',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     $('#abrir_caja').modal('hide');
                     window.location.reload();
@@ -318,7 +320,7 @@ function abrirArqueo(e) {
                         icon: 'warning',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                 }
 
@@ -415,7 +417,7 @@ function cerrarArqueo() {
                     icon: 'error',
                     title: resp.post,
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 2200
                 })
 
             } else {

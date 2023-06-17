@@ -30,7 +30,7 @@ include 'Views/Templates/body.php';
                         <div class="form-group">
                             <label for="codigo">Buscar por Código<i class="fas fa-barcode"></i></label>
                             <input type="hidden" id="id" name="id">
-                            <input type="text" name="codigo" id="codigo" class="form-control valid validNumber"
+                            <input type="text" name="codigo2" id="codigo2" class="form-control valid validNumber"
                                 placeholder="Código de barra" onkeyup="buscarCodigoVenta(event)"
                                 aria-describedby="helpId">
                         </div>
@@ -181,7 +181,7 @@ include 'Views/Templates/body.php';
                             <button id='btnActionForm' type='button' class='btn btn-primary'
                                 onclick="generarVenta();"><span id='btnText'>
                                     Cobrar</span></button>
-                            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Closed</button>
+                            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
                         </div>
                     </form>
                 </div>

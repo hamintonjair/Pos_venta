@@ -11,6 +11,7 @@ const charset = "charset=utf8";
 
 const SPD = ',';
 const SPM = '.';
+
 function formatMoney($cantidad, $signo = '$'){
     $cantidad = $signo.number_format($cantidad,2,SPD,SPM);
     return $cantidad;

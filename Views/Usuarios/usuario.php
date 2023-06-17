@@ -8,10 +8,19 @@ include 'Views/Templates/body.php';
     <div class='app-title'>
         <div>
             <h1><i class='fas fa-box'></i> Usuarios <small>Sistema de ventas</small>
-                <button class="btn btn-primary" type="button" onclick="openModalUsuarios();" data-toggle="modal"
+            <?php if( $_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){ ?>
+                <button class="btn btn-primary" type="button" onclick="openModalUsuarios();" data-toggle="modal"            
                     class="fa-solid fa-circle-plus">Nuevo</button>
-                    <button class="btn btn-danger" type="button" onclick="usuarioEliminado();" class="fa-solid fa-circle-plus">Eliminados</button>
+                    <?php }else{?>
+                      <button class="btn btn-primary" type="button" onclick="openModalUsuarios();" data-toggle="modal"            
+                      class="fa-solid fa-circle-plus" disabled="">Nuevo</button> 
+                      <?php     } ?>
+                    <?php if( $_SESSION['rol'] == 'Administrador'){ ?>
+                    <button class="btn btn-warning" type="button" onclick="usuarioEliminado();" class="fa-solid fa-circle-plus">Eliminados</button>
+           <?php }else if( $_SESSION['rol'] == 'Supervisor'){ ?>
+            <button class="btn btn-warning" disabled="" type="button" onclick="usuarioEliminado();" class="fa-solid fa-circle-plus">Eliminados</button>
 
+            <?php }; ?>
             </h1>
         </div>
         <ul class='app-breadcrumb breadcrumb'>
@@ -33,6 +42,7 @@ include 'Views/Templates/body.php';
                                     <th>Usuario</th>
                                     <th>Nombre</th>
                                     <th>Caja</th>
+                                    <th>Rol</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>
@@ -62,33 +72,33 @@ include 'Views/Templates/body.php';
                     <form method='post' id='frmUsuarios'>
                         <input type='hidden' id='idUsuario' name='idUsuario' value=''>
                         <div class='form-group'>
-                            <label for='usuario'>Usuario</label>
+                            <label for='usuario'>Usuario(<font color="red">*</font>)</label>
                             <input type='text' name='usuario' id='usuario' class='form-control valid validText'
                                 placeholder='Usuario' aria-describedby='helpId'>
                         </div>
                         <div class='form-group'>
-                            <label for='usuario'>Nombre</label>
+                            <label for='usuario'>Nombre(<font color="red">*</font>)</label>
                             <input type='text' name='nombre' id='nombre' class='form-control valid validText'
                                 placeholder='Nombre del usuario' aria-describedby='helpId'>
                         </div>
                         <div class='row' id="claves">
                             <div class='col-md-6'>
                                 <div class='form-group'>
-                                    <label for='clave'>Contraseña</label>
+                                    <label for='clave'>Contraseña(<font color="red">*</font>)</label>
                                     <input type='password' name='clave' id='clave' class='form-control'
                                         placeholder='Contraseña' aria-describedby='helpId'>
                                 </div>
                             </div>
                             <div class='col-md-6'>
                                 <div class='form-group'>
-                                    <label for='confirmar'>Confirmar contraseña</label>
+                                    <label for='confirmar'>Confirmar contraseña(<font color="red">*</font>)</label>
                                     <input type='password' name='confirmar' id='confirmar' class='form-control'
                                         placeholder='Confirmar contraseña' aria-describedby='helpId'>
                                 </div>
                             </div>
                         </div>
                         <div class='form-group'>
-                            <label for='caja'>Caja</label>
+                            <label for='caja'>Caja(<font color="red">*</font>)</label>
                             <select class='form-control selectpicker' name='caja' id='caja'>
 
                                 <option selected="selected">Seleccionar..</option>
@@ -96,6 +106,16 @@ include 'Views/Templates/body.php';
                                 <option value="<?php echo $row['id']; ?>"><?php echo $row['caja']; ?>
                                 </option>
                                 <?php }; ?>
+                            </select>
+                        </div>
+                        <div class='form-group'>
+                            <label for='rol'>Rol(<font color="red">*</font>)</label>
+                            <select class='form-control selectpicker' name='rol' id='rol'>
+                                <option selected="selected">Seleccionar..</option>                              
+                                <option value="Administrador">Administrador</option>
+                                <option value="Supervisor">Supervisor</option>
+                                <option value="Vendedor">Vendedor</option>
+                          
                             </select>
                         </div>
                         <div class='modal-footer'>
@@ -111,5 +131,13 @@ include 'Views/Templates/body.php';
     </div>
 </main>
 
+<style>
+    #miEnlace {
+    pointer-events: none;
+    color: gray;
+    cursor: default;
+    }
+
+</style>
 <?php include 'Views/Templates/footer_admin.php';
 ?>

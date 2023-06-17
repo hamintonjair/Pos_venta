@@ -10,7 +10,7 @@ include 'Views/Templates/body.php';
             <h1><i class='fas fa-box'></i> Medida <small>Sistema de ventas</small>
                 <button class="btn btn-primary" type="button" onclick="openModalMedida();" data-toggle="modal"
                     class="fa-solid fa-circle-plus">Nuevo</button>
-                    <button class="btn btn-danger" type="button" onclick="medidasEliminado();" class="fa-solid fa-circle-plus">Eliminados</button>
+                    <button class="btn btn-warning" type="button" onclick="medidasEliminado();" class="fa-solid fa-circle-plus">Eliminados</button>
 
 
             </h1>
@@ -62,12 +62,12 @@ include 'Views/Templates/body.php';
                     <form method='post' id='frmMedida'>
                         <input type='hidden' id='idMedida' name='idMedida' value=''>                        
                         <div class='form-group'>
-                            <label for='nombre'>Nombre</label>
+                            <label for='nombre'>Nombre(<font color="red">*</font>)</label>
                             <input type='text' name='nombre' id='nombre' class='form-control valid validText'
                                 placeholder='Nombre medida' aria-describedby='helpId'>
                         </div>       
                         <div class='form-group'>
-                            <label for='nombre_corto'>Nombre corto</label>
+                            <label for='nombre_corto'>Nombre corto(<font color="red">*</font>)</label>
                             <input type='text' name='nombre_corto' id='nombre_corto' class='form-control valid validText'
                                 placeholder='Nombre corto medida' aria-describedby='helpId'>
                         </div>                                                                                                

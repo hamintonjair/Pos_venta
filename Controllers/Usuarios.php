@@ -14,6 +14,8 @@ class Usuarios extends Controller{
 
         $id_user = $_SESSION[ 'id_usuario' ];
         $verificar = $this->model->verificarPermisos( $id_user, 'usuarios' );
+
+      
         if ( !empty( $verificar ) || $id_user == 1 ) {
             if( empty($_SESSION['activo'])){
                 header("location:".base_url);
@@ -39,16 +41,35 @@ class Usuarios extends Controller{
                     '<div>   
                 </div>';
                }else{
-              
-                $data[$i]['acciones'] = '<div>   
-                <a type="button" class="btn btn-dark" href="'.base_url.'usuarios/permisos/'.$data[$i]['id'].'" title="Permisos"><i class="fas fa-key"></i></a>          
-                <button type="button" class="btn btn-primary" onclick="editarUsuario('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
-                <button type="button" class="btn btn-danger" onclick="eliminarUsuario('.$data[$i]['id'].');" title="Eliminar"><i class="far   
-                fa-trash-alt"></i></button>    
-               </div>';
-               }
+
+                    if($_SESSION['rol'] == 'Administrador'){
+                        $data[$i]['acciones'] = '<div>   
+                        <a type="button" class="btn btn-dark" href="'.base_url.'usuarios/permisos/'.$data[$i]['id'].'" title="Permisos"><i class="fas fa-key"></i></a>          
+                        <button type="button" class="btn btn-primary" onclick="editarUsuario('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
+                        <button type="button" class="btn btn-danger" onclick="eliminarUsuario('.$data[$i]['id'].');" title="Eliminar"><i class="far   
+                        fa-trash-alt"></i></button>    
+                    </div>';
+                    }else if( $_SESSION['rol'] == 'Supervisor'){
+                        $data[$i]['acciones'] = '<div>   
+                        <a type="button" class="btn btn-dark" href="'.base_url.'usuarios/permisos/'.$data[$i]['id'].'" title="Permisos"><i class="fas fa-key"></i></a>          
+                        <button type="button" class="btn btn-primary" onclick="editarUsuario('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
+                        <button type="button" disabled="" class="btn btn-danger" onclick="eliminarUsuario('.$data[$i]['id'].');" title="Eliminar"><i class="far   
+                        fa-trash-alt"></i></button>    
+                       </div>';
+                    }else{
+
+                        $data[$i]['acciones'] = '<div>   
+                        <a type="button"id="miEnlace" class="btn btn-dark" href="'.base_url.'usuarios/permisos/'.$data[$i]['id'].'" title="Permisos"><i class="fas fa-key"></i></a>          
+                        <button type="button" disabled="" class="btn btn-primary" onclick="editarUsuario('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
+                        <button type="button" disabled="" class="btn btn-danger" onclick="eliminarUsuario('.$data[$i]['id'].');" title="Eliminar"><i class="far   
+                        fa-trash-alt"></i></button>  
+                        </div>';  
+                    }
+                
+                }
+              }
        
-        }
+        
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
@@ -79,6 +100,7 @@ class Usuarios extends Controller{
         $clave = $_POST['clave'];
         $confirmar = $_POST['confirmar'];
         $caja = $_POST['caja'];
+        $rol = $_POST['rol'];
         $id = $_POST['idUsuario'];
         $hash = hash("SHA256", $clave);
 
@@ -92,7 +114,7 @@ class Usuarios extends Controller{
                 if($clave != $confirmar){
                     $msg = (array('ok'=>false, 'post' => 'La contraseñas no coinciden.'));	
                 }else{
-                    $data = $this->model->registrarUsuario($usuario,$nombre, $hash ,$caja);
+                    $data = $this->model->registrarUsuario($usuario,$nombre, $hash ,$caja, $rol);
                     if($data == 'ok'){
                         $msg = (array('ok'=>true, 'post' => 'Usuario registrado con éxito.'));
 
@@ -107,7 +129,12 @@ class Usuarios extends Controller{
                 if($clave != $confirmar){
                     $msg = (array('ok'=>false, 'post' => 'La contraseñas no coinciden.'));	
                 }
-                $data = $this->model->updateUsuario($usuario,$nombre,$caja, $hash,$id);
+                if($confirmar == ""){
+                 
+                   $data = $this->model->updateUsuario($usuario,$nombre,$caja, $rol, $clave,$id);
+                }else{
+                    $data = $this->model->updateUsuario($usuario,$nombre,$caja, $rol, $hash,$id);
+                }
                 if($data == 'modificado'){
                     $msg = (array('modificado'=>true, 'post' => 'El Usuario fue actualizado con éxito.'));
 
@@ -155,6 +182,19 @@ class Usuarios extends Controller{
         die();
     }
 
+    //vaciar usuarios
+    public function vaciarUsuarios(){
+        $data = $this->model->vaciarUsuarios();  
+
+        if($data == 1){
+            $msg = (array('reingresado'=>true, 'post' => 'Los Usuario fueron vaciados con éxito.'));
+        }else{
+            $msg = (array('reingresado'=>false, 'msg' => 'Error al vaciar los Usuarios.'));
+        }
+        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+        die();
+    }
+    //validar 
     public function validar(){
 
         if(empty($_POST['usuario']) || empty($_POST['clave']) ){
@@ -173,6 +213,7 @@ class Usuarios extends Controller{
                      $_SESSION['id_usuario'] = $data['id'];
                      $_SESSION['usuario'] = $data['usuario'];
                      $_SESSION['nombre'] = $data['nombre'];
+                     $_SESSION['rol'] = $data['rol'];
                      $_SESSION['activo'] = true;
       
                      $msg = (array('ok'=> true, 'post' => 'Iniciando sesión'));		

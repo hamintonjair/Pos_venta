@@ -35,9 +35,33 @@ class Inventario extends Controller {
     }
     //reporte cierre
     public function stockBajos(){
+
         $this->views->getView($this, 'stockBajos');
     }
+    //movimientos entradas y salidas
+    public function entradaSalida(){
+
+        $this->views->getView($this, 'entrada_y_salida');
+    }
+    //listar movimientos esntradas y salidas
+    public function listarEntradaSalida(){
+        $data = $this->model->listarEntradaSalida();
+    
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        die();
+    }
+
+   //buscar por entrada o salida
    
+   public function buscarEntradaSalida() {
+
+    $EntradaSalida = $_POST[ 'id_entrada' ];        
+    $data = array(
+        'entradaSalida' =>  $this->model->buscarEntradaSalida( $EntradaSalida )
+    );
+    echo json_encode( $data, JSON_UNESCAPED_UNICODE );
+    die();
+}
     //listar inventario de lios productos
     public function listarInventario(){
 

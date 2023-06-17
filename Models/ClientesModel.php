@@ -94,6 +94,13 @@ class ClientesModel extends Query {
         return $data;
 
     }
+        //vaciar productos eliminados
+     public function vaciarCliente(){
+        
+            $sql = 'DELETE FROM clientes WHERE estado = 0';   
+            $data = $this->delete( $sql); 
+            return $data;
+     }
     //verificar permisos
 
     public function verificarPermisos( int $id_user, string $nombre )

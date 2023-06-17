@@ -85,16 +85,27 @@ class Cajas extends Controller {
 
             if ( $data[ $i ][ 'estado' ] == 1 ) {
                 $data[ $i ][ 'estado' ] = '<span class="badge badge-success">Activo</span>';
-                $data[ $i ][ 'acciones' ] = '<div>            
-                <button type="button" class="btn btn-primary" onclick="editarCaja('.$data[ $i ][ 'id' ].');" title="Editar"><i class="fas fa-edit"></i></button>   
-                <button type="button" class="btn btn-danger" onclick="eliminarCaja('.$data[ $i ][ 'id' ].');" title="Eliminar"><i class="far fa-trash-alt"></i></button>            
-               </div>';
+                if(  $_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){
+                     $data[ $i ][ 'acciones' ] = '<div>            
+                            <button type="button" class="btn btn-primary" onclick="editarCaja('.$data[ $i ][ 'id' ].');" title="Editar"><i class="fas fa-edit"></i></button>   
+                            <button type="button" class="btn btn-danger" onclick="eliminarCaja('.$data[ $i ][ 'id' ].');" title="Eliminar"><i class="far fa-trash-alt"></i></button>            
+                        </div>';
+                }else{
+                    $data[ $i ][ 'acciones' ] = '<div>            
+                    <button type="button" disabled="" class="btn btn-primary" onclick="editarCaja('.$data[ $i ][ 'id' ].');" title="Editar"><i class="fas fa-edit"></i></button>   
+                    <button type="button"  disabled="" class="btn btn-danger" onclick="eliminarCaja('.$data[ $i ][ 'id' ].');" title="Eliminar"><i class="far fa-trash-alt"></i></button>            
+                   </div>';
+                }
+               
 
             } else {
-                $data[ $i ][ 'estado' ] = ' <span class="badge badge-danger">Inactivo</span>';
+                if($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){
+                     $data[ $i ][ 'estado' ] = ' <span class="badge badge-danger">Inactivo</span>';
                 $data[ $i ][ 'acciones' ] = '<div>               
                     <button type="button" class="btn btn-success" onclick="reingresarCaja('.$data[ $i ][ 'id' ].');" title="Reingresar"><i class="fa fa-undo" aria-hidden="true"></i></button>      
                 </div>';
+                }
+               
             }
 
         }
@@ -124,7 +135,7 @@ class Cajas extends Controller {
         echo json_encode( $msg, JSON_UNESCAPED_UNICODE );
         die();
     }
-    //reingresar caj
+    //reingresar caja
 
     public function reingresarCaja( int $id ) {
 
@@ -143,10 +154,10 @@ class Cajas extends Controller {
     public function abrirArqueo() {
 
         $monto_inicial = $_POST[ 'monto_inicial' ];
-
-        $fecha_apertura = date('Y-m-d' );
+        date_default_timezone_set('America/Bogota');
+        $fecha_apertura = date('Y-m-d H:i:s' );
         $id_usuario = $_SESSION['id_usuario'];
-      
+ 
         $id = $_POST['id'];
 
         if ( empty( $monto_inicial ) || empty( $fecha_apertura ) ) {
@@ -155,7 +166,7 @@ class Cajas extends Controller {
             if($id == ""){
                 $id_caja = $_POST['id_caja'];
                  //registrar
-                $data = $this->model->registrarArqueoCaja($id_usuario, $id_caja, $monto_inicial,    $fecha_apertura);
+                $data = $this->model->registrarArqueoCaja($id_usuario, $id_caja, $monto_inicial, $fecha_apertura);
                 if ( $data == 'ok' ) {
                     $msg = ( array( 'ok'=>true, 'post' => 'Caja abierta con éxito.' ) );
 
@@ -170,8 +181,13 @@ class Cajas extends Controller {
                 $total_ventas = $this->model->getTotalVentas(  $id_usuario );           
                 $inicial = $this->model->getMontoInicial( $id_usuario );
                 $general = $monto_final['total'] + $inicial['monto_inicial'];
+                $mtoFinal = $monto_final['total'];
 
-                $data = $this->model->actualizarArqueoCaja($monto_final['total'], $fecha_apertura, $total_ventas['total'],$general, $inicial['id']);
+                if($mtoFinal== NULL){
+
+                   $mtoFinal = 0;
+                }
+                $data = $this->model->actualizarArqueoCaja($mtoFinal, $fecha_apertura, $total_ventas['total'],$general, $inicial['id']);
                 if ( $data == 'ok' ) {
                     $this->model->actualizarApertura($id_usuario);
                     $msg = ( array( 'ok'=>true, 'post' => 'Caja cerrada con éxito.' ) );
@@ -213,7 +229,7 @@ class Cajas extends Controller {
         if($data['inicial'] == false){            
             $data = ( array( 'ok'=>false, 'post' => 'No hay caja abierta.' ) ); 
         }else{           
-            $data['monto_total'] = $this->model->getVentas( $id_usuario );           
+            $data['monto_total'] = $this->model->getVentas( $id_usuario );        
             $data['total_ventas'] = $this->model->getTotalVentas(  $id_usuario ); 
             $data['monto_general'] = $data['monto_total']['total'] + $data['inicial']['monto_inicial'] ;
             $data['caja'] = $data['inicial']['caja'] ;

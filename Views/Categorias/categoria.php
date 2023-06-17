@@ -10,8 +10,12 @@ include 'Views/Templates/body.php';
             <h1><i class='fas fa-box'></i> Categoria <small>Sistema de ventas</small>
                 <button class="btn btn-primary" type="button" onclick="openModalCategoria();" data-toggle="modal"
                     class="fa-solid fa-circle-plus">Nuevo</button>
-                    <button class="btn btn-danger" type="button" onclick="categoriaEliminado();" class="fa-solid fa-circle-plus">Eliminados</button>
+                    <?php if( $_SESSION['rol'] == 'Administrador' ){?>
+                    <button class="btn btn-warning" type="button" onclick="categoriaEliminado();" class="fa-solid fa-circle-plus">Eliminados</button>
+                    <?php }else if($_SESSION['rol'] == 'Supervisor'){ ?>
+                        <button class="btn btn-warning" disabled="" type="button" onclick="categoriaEliminado();" class="fa-solid fa-circle-plus">Eliminados</button>
 
+                     <?php }; ?>
             </h1>
         </div>  
         <ul class='app-breadcrumb breadcrumb'>
@@ -60,7 +64,7 @@ include 'Views/Templates/body.php';
                     <form method='post' id='frmCategoria'>
                         <input type='hidden' id='idCategoria' name='idCategoria' value=''>                        
                         <div class='form-group'>
-                            <label for='categoria'>Categoria</label>
+                            <label for='categoria'>Categoria(<font color="red">*</font>)</label>
                             <input type='text' name='categoria' id='categoria' class='form-control valid validText'
                                 placeholder='Categoria' aria-describedby='helpId'>
                         </div>                                                                              

@@ -6,8 +6,8 @@ function buscarCodigo(e) {
     e.preventDefault();
 
     if (e.which == 13) {
-        const cod = document.getElementById("codigo").value;
-        cod_producto = document.getElementById("codigo").value;
+        const cod = document.getElementById("codigo2").value;
+        cod_producto = document.getElementById("codigo2").value;
         const url = base_url + "Compras/buscarCompra/" + cod;
         const http = new XMLHttpRequest();
         http.open("GET", url, true);
@@ -20,6 +20,9 @@ function buscarCodigo(e) {
                     document.getElementById("descripcion").value = resp.descripcion;
                     document.getElementById("precio").value = resp.precio_compra;
                     document.getElementById("id").value = resp.id;
+                    document.getElementById("nit").value = resp.nit;
+                    document.getElementById("id_proveedor").value = resp.id_proveedor;
+                    document.getElementById("proveedor").value = resp.nombre;
                     document.getElementById("cantidad").focus();
                 } else {
                     Swal.fire({
@@ -27,12 +30,14 @@ function buscarCodigo(e) {
                         icon: 'error',
                         title: 'Producto no existe',
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     document.getElementById("descripcion").value = "Descripcion del producto";
                     document.getElementById("cantidad").value = "0.00";
                     document.getElementById("precio").value = "0.00";
                     document.getElementById("sub_total").value = "0.00";
+                    document.getElementById("nit").value = "";
+                    document.getElementById("proveedor").value = "";
                     document.getElementById("precio").focus()
                 }
 
@@ -49,8 +54,9 @@ function buscarNombreC(e) {
 
     if (e.which == 13) {
         const nomb = document.getElementById("nombre").value;
-        cod_producto = nomb;
-        const url = base_url + "Compras/buscarCompra/" + nomb;
+        const valorCodificado = nomb.replace(/ /g, '+');
+        cod_producto = valorCodificado;
+        const url = base_url + "Compras/buscarCompra/" + valorCodificado;
         const http = new XMLHttpRequest();
         http.open("GET", url, true);
         http.send();
@@ -63,6 +69,9 @@ function buscarNombreC(e) {
                     document.getElementById("descripcion").value = resp.descripcion;
                     document.getElementById("precio").value = resp.precio_compra;
                     document.getElementById("id").value = resp.id;
+                    document.getElementById("nit").value = resp.nit;
+                    document.getElementById("id_proveedor").value = resp.id_proveedor;
+                    document.getElementById("proveedor").value = resp.nombre;
                     document.getElementById("cantidad").focus();
                 } else {
                     Swal.fire({
@@ -70,12 +79,14 @@ function buscarNombreC(e) {
                         icon: 'error',
                         title: 'Producto no existe',
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     document.getElementById("descripcion").value = "Descripcion del producto";
                     document.getElementById("cantidad").value = "0.00";
                     document.getElementById("precio").value = "0.00";
                     document.getElementById("sub_total").value = "0.00";
+                    document.getElementById("nit").value = "";
+                    document.getElementById("proveedor").value = "";
                     document.getElementById("precio").focus()
                 }
 
@@ -107,7 +118,7 @@ function buscarProveedor(e) {
                         icon: 'error',
                         title: 'El proveedor no existe',
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     document.getElementById("nit").value = "";
                     document.getElementById("nit").focus();
@@ -120,49 +131,77 @@ function buscarProveedor(e) {
 
 }
 //tipo de pago compra
-function pago(e) {
-    e.preventDefault();
+// function pago(e) {
+//     e.preventDefault();
 
-    if (e.which == 13) {
-        efectivos = document.getElementById("efectivos").value;
-        cambio = efectivos - Pagar;
-        document.getElementById("devolver").value = new Intl.NumberFormat().format(cambio);
+//     if (e.which == 13) {
+//         efectivo = document.getElementById("efectivo").value;
+//         cambio = efectivo - Pagar;
+//         document.getElementById("devolver").value = new Intl.NumberFormat().format(cambio);
 
-        const url = base_url + "Ventas/ingresarCambio";
-        const frm = document.getElementById("frmCerrar");
-        const http = new XMLHttpRequest();
-        http.open("POST", url, true);
-        http.send(new FormData(frm));
-        http.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                const resp = JSON.parse(this.responseText);
-                if (resp.modificado == true) {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: resp.post,
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                } else {
-                    alert(resp.msg, "error");
-                    document.getElementById("efectivos").focus();
-                    document.getElementById("efectivos").value = "";
-                    cambio = document.getElementById("devolver").value = "";
-                }
+//         const url = base_url + "Ventas/ingresarCambio";
+//         const frm = document.getElementById("frmCerrar");
+//         const http = new XMLHttpRequest();
+//         http.open("POST", url, true);
+//         http.send(new FormData(frm));
+//         http.onreadystatechange = function() {
+//             if (this.readyState == 4 && this.status == 200) {
+//                 const resp = JSON.parse(this.responseText);
+//                 if (resp.modificado == true) {
+//                     Swal.fire({
+//                         position: 'top-end',
+//                         icon: 'success',
+//                         title: resp.post,
+//                         showConfirmButton: false,
+//                         timer: 2200
+//                     })
+//                 } else {
+//                     alert(resp.msg, "error");
+//                     document.getElementById("efectivo").focus();
+//                     document.getElementById("efectivo").value = "";
+//                     cambio = document.getElementById("devolver").value = "";
+//                 }
 
-            }
-        }
-    }
-}
+//             }
+//         }
+//     }
+// }
 let totalPagar = 0;
 //cerrar
 function cerrarCompra() {
 
-    $('#cerrarCompra').modal('show');
-    document.getElementById("valor_pagar").value = totalPagar;
+    let nit = document.querySelector('#nit').value;
+    if (nit == '') {
+        Swal.fire({
+            position: 'top-end',
+            icon: 'info',
+            title: 'Todos los campos son obligatorios',
+            showConfirmButton: false,
+            timer: 2200
+        })
+        return false;
+    } else {
+        $('#cerrarCompra').modal('show');
+        document.getElementById("valor_pagar").value = totalPagar;
+        document.getElementById("efectivo").focus();
+    }
+
+
 }
 
+// deshabilitar el combo box si el pago es a credito
+function capturarValorSelect() {
+    // Obtener el valor seleccionado
+    var selectedValue = $('#pago').val();
+    if (selectedValue == "Credito") {
+        document.getElementById("efectivo").setAttribute('disabled', 'disabled');
+    } else {
+        var efectivo = document.getElementById("efectivo");
+        efectivo.disabled = false;
+    }
+
+
+}
 //calcular cantidad
 function calcularPrecioC(e) {
     e.preventDefault();
@@ -187,7 +226,7 @@ function calcularPrecioC(e) {
                             icon: 'success',
                             title: resp.post,
                             showConfirmButton: false,
-                            timer: 1500
+                            timer: 2200
                         })
                         frm.reset();
                         cargarDetalleC();
@@ -198,7 +237,7 @@ function calcularPrecioC(e) {
                             icon: 'success',
                             title: resp.post,
                             showConfirmButton: false,
-                            timer: 1500
+                            timer: 2200
                         })
                         frm.reset();
                         cargarDetalleC();
@@ -209,10 +248,11 @@ function calcularPrecioC(e) {
                             icon: 'error',
                             title: resp.post,
                             showConfirmButton: false,
-                            timer: 1500
+                            timer: 2200
                         })
                     }
-                    document.getElementById("codigo").focus()
+                    document.getElementById("codigo2").focus()
+
                 }
             }
         }
@@ -269,7 +309,7 @@ function deleteDetalleC(id) {
                     icon: 'success',
                     title: resp.post,
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 2200
                 })
                 cargarDetalleC();
             } else {
@@ -278,7 +318,7 @@ function deleteDetalleC(id) {
                     icon: 'error',
                     title: resp.post,
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 2200
                 })
             }
         }
@@ -287,6 +327,20 @@ function deleteDetalleC(id) {
 
 //generar compra
 function generarCompra() {
+
+    let efectivo = document.querySelector('#efectivo').value;
+    let pago = document.querySelector('#pago').value;
+
+    if (efectivo == '' && pago != "Credito") {
+        Swal.fire({
+            position: 'top-end',
+            icon: 'info',
+            title: 'El campo efectivo no puede estar vacío',
+            showConfirmButton: false,
+            timer: 2200
+        })
+        return false;
+    }
     compra();
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -305,7 +359,7 @@ function generarCompra() {
     }).then((result) => {
         if (result.isConfirmed) {
             const url = base_url + "Compras/registrarCompra";
-            const frm = document.getElementById("frmCompras");         
+            const frm = document.getElementById("frmCompras");
             const http = new XMLHttpRequest();
             http.open("POST", url, true);
             http.send(new FormData(frm));
@@ -313,7 +367,7 @@ function generarCompra() {
 
                 if (this.readyState == 4 && this.status == 200) {
                     const resp = JSON.parse(this.responseText);
-                  console.log(resp);
+                    console.log(resp);
                     if (resp.modificado == true) {
                         swalWithBootstrapButtons.fire(
                             'Compra generada!',
@@ -358,7 +412,7 @@ function compra() {
     http.send(new FormData(frm));
     http.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-           JSON.parse(this.responseText);           
+            JSON.parse(this.responseText);
         }
     }
 }
@@ -390,7 +444,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Copiar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1, 2]
+                    "columns": [0, 1, 2, 3, 4]
                 }
             }, {
                 "extend": "excelHtml5",
@@ -398,7 +452,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Expotar a Excel",
                 "className": "btn btn-success",
                 "exportOptions": {
-                    "columns": [0, 1, 2]
+                    "columns": [0, 1, 2, 3, 4]
                 }
             }, {
                 "extend": "pdfHtml5",
@@ -406,7 +460,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Exportar a PDF",
                 "className": "btn btn-danger",
                 "exportOptions": {
-                    "columns": [0, 1, 2]
+                    "columns": [0, 1, 2, 3, 4]
                 }
             }, {
                 "extend": "csvHtml5",
@@ -414,7 +468,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Eportar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1, 2]
+                    "columns": [0, 1, 2, 3, 4]
                 }
             },
 

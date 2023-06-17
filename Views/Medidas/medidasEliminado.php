@@ -7,9 +7,11 @@ include 'Views/Templates/body.php';
 <main class='app-content'>
     <div class='app-title'>
         <div>
-            <h1><i class='fas fa-box'></i> Medida <small>Sistema de ventas</small>
+            <h1><i class='fas fa-box'></i> Medida <small> Medidas eliminadas</small>
                 <button class="btn btn-primary" type="button" onclick="volverMedidas();" data-toggle="modal"
-                    class="fa-solid fa-circle-plus">Volver </button><small> Medidas eliminadas</small></a></li>
+                    class="fa-solid fa-circle-plus">Volver </button></a></li>
+                    <button class="btn btn-danger" type="button" onclick="medidasVaciar();" class="fa-solid fa-circle-plus">Vaciar</button>
+
 
             </h1>
         </div>  

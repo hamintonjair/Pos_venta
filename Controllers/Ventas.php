@@ -253,8 +253,14 @@ class Ventas extends Controller {
             $estado = $row[ 'estado' ]; 
              
         }
+        $pdf->Cell( 0, 5,   $empresa['ciudad'], 0, 1, 'C' );
         $pdf->Ln( 10 );       
 
+        $pdf->SetFont( 'Arial', 'B', 12 );
+        $pdf->Cell( 35, 5, 'Fecha de venta: ', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 12 );
+        $pdf->Cell( 20, 5, Ymd_dmY( $fecha ), 0, 1, 'L' );
+        
         $pdf->SetFont( 'Arial', 'B', 12 );
         $pdf->Cell( 26, 5, 'Empresa: ', 0, 0, 'L' );
         $pdf->SetFont( 'Arial', '', 12 );
@@ -291,19 +297,15 @@ class Ventas extends Controller {
         $pdf->Cell( 20, 5, utf8_decode( $usuario[ 'nombre' ] ), 0, 1, 'L' );
 
         $pdf->SetFont( 'Arial', 'B', 12 );
+        $pdf->Cell( 26, 5, 'Cliente: ', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 12 );
+        $pdf->Cell( 20, 5, utf8_decode( $nombre ), 0, 1, 'L' );
+
+        $pdf->SetFont( 'Arial', 'B', 12 );
         $pdf->Cell( 26, 5, 'Factura #: ', 0, 0, 'L' );
         $pdf->SetFont( 'Arial', '', 12 );
         $pdf->Cell( 20, 5, $id_venta, 0, 1, 'L' );
 
-        $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 35, 5, 'Fecha de venta: ', 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 12 );
-        $pdf->Cell( 20, 5, Ymd_dmY( $fecha ), 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 24, 5, 'Cliente: ', 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 12 );
-        $pdf->Cell( 20, 5, utf8_decode( $nombre ), 0, 0, 'L' );
 
         $pdf->SetFont( 'Arial', 'B', 12 );
 
@@ -426,17 +428,29 @@ class Ventas extends Controller {
             if ( $data[ $i ][ 'estado' ] == 1 ) {
                 $data[ $i ][ 'estado' ] = '<span class="badge badge-success">Completado</span>';
 
-                $data[ $i ][ 'acciones' ] = '<div>  
-                <button class="btn btn-warning" title="Anular" onclick="btnAnularV('.$data[ $i ][ 'id' ].')"><i class="fas fa-ban"></i></button>          
-                <a type="button" class="btn btn-danger" href="'.base_url.'ventas/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
-               </div>';
+                if($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){
+                    $data[ $i ][ 'acciones' ] = '<div>  
+                    <button class="btn btn-warning" title="Anular" onclick="btnAnularV('.$data[ $i ][ 'id' ].')"><i class="fas fa-ban"></i></button>          
+                    <a type="button" class="btn btn-danger" href="'.base_url.'ventas/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
+                </div>';
+                }else{
+                    $data[ $i ][ 'acciones' ] = '<div>  
+                    <button class="btn btn-warning" disabled="" title="Anular" onclick="btnAnularV('.$data[ $i ][ 'id' ].')"><i class="fas fa-ban"></i></button>          
+                    <a type="button" class="btn btn-danger" disabled="" href="'.base_url.'ventas/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
+                   </div>';
+
+                }
+              
 
             } else {
-                $data[ $i ][ 'estado' ] = ' <span class="badge badge-danger">Anulado</span>';
+                if($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){
+                    $data[ $i ][ 'estado' ] = ' <span class="badge badge-danger">Anulado</span>';
 
-                $data[ $i ][ 'acciones' ] = '<div>                        
-                <a type="button" class="btn btn-danger" href="'.base_url.'ventas/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
-                </div>';
+                    $data[ $i ][ 'acciones' ] = '<div>                        
+                    <a type="button" class="btn btn-danger" href="'.base_url.'ventas/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
+                    </div>';
+                }
+                
 
             }
 

@@ -10,7 +10,7 @@ include 'Views/Templates/body.php';
             <h1><i class='fas fa-box'></i> Clientes <small>Sistema de ventas</small>
                 <button class="btn btn-primary" type="button" onclick="openModalCliente();" data-toggle="modal"
                     class="fa-solid fa-circle-plus">Nuevo</button>
-                    <button class="btn btn-danger" type="button" onclick="clienteEliminado();" class="fa-solid fa-circle-plus">Eliminados</button>
+                    <button class="btn btn-warning" type="button" onclick="clienteEliminado();" class="fa-solid fa-circle-plus">Eliminados</button>
                   
 
             </h1>
@@ -64,22 +64,22 @@ include 'Views/Templates/body.php';
                     <form method='post' id='frmCliente'>
                         <input type='hidden' id='idCliente' name='idCliente' value=''>
                         <div class='form-group'>
-                            <label for='cliente'>DNI</label>
+                            <label for='cliente'>Cédula(<font color="red">*</font>)</label>
                             <input type='text' name='dni' id='dni' class='form-control valid validNumber' placeholder='Identificación'
                                 aria-describedby='helpId'>
                         </div>
                         <div class='form-group'>
-                            <label for='nombre'>Nombre</label>
+                            <label for='nombre'>Nombre(<font color="red">*</font>)</label>
                             <input type='text' name='nombre' id='nombre' class='form-control valid validText'
                                 placeholder='Nombre del cliente' aria-describedby='helpId'>
                         </div>                    
                         <div class='form-group'>
-                                <label for='telefono'>Teléfono</label>
+                                <label for='telefono'>Teléfono(<font color="red">*</font>)</label>
                              <input type='number' name='telefono' id='telefono' class='form-control valid validNumber'
                                        placeholder='Teléfono' aria-describedby='helpId'>
                         </div>                         
                          <div class='form-group'>
-                             <label for='confirmar'>Dirección</label>
+                             <label for='confirmar'>Dirección(<font color="red">*</font>)</label>
                                 <input type='direccion' name='direccion' id='direccion' class='form-control'
                                    placeholder='Dirección' aria-describedby='helpId'>
                             </div>

@@ -92,6 +92,12 @@ class MedidasModel extends Query {
         return $data;
 
     }
+    //vaciar medidas
+    public function vaciarMedidas(){
+        $sql = 'DELETE FROM medidas WHERE estado = 0';   
+        $data = $this->delete( $sql); 
+        return $data;
+    }
     //verificar permisos
     public function verificarPermisos( int $id_user, string $nombre )
     {

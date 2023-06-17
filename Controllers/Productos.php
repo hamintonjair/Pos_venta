@@ -22,6 +22,7 @@ class Productos extends Controller{
                 'categorias' =>  $this->model->getCategorias(),
                 'medidas'   =>  $this->model->getMedidas(),
            );  
+    
             $this->views->getView($this, "producto", $data );
         } else {
             header( 'location:'.base_url.'Errors/permisos' );
@@ -41,23 +42,36 @@ class Productos extends Controller{
                 $data[$i]['imagen'] = '<img class="img-thumbnail" src ="'.base_url."Assets/img/".$data[$i]['foto'].'"
                 width = "50px"; height: 100px>';
                 $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
-                $data[$i]['acciones'] = '<div>            
-                <button type="button" class="btn btn-primary" onclick="editarProducto('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
-                <button type="button" class="btn btn-danger" onclick="eliminarProducto('.$data[$i]['id'].');" title="Eliminar"><i class="far   
-                fa-trash-alt"></i></button>    
-               </div>';
+                if( $_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){
+                    $data[$i]['acciones'] = '<div>            
+                    <button type="button" class="btn btn-primary" onclick="editarProducto('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
+                    <button type="button" class="btn btn-danger" onclick="eliminarProducto('.$data[$i]['id'].');" title="Eliminar"><i class="far   
+                    fa-trash-alt"></i></button>    
+                   </div>';
+                }else{
+                    $data[$i]['acciones'] = '<div>            
+                    <button type="button" class="btn btn-primary" disabled="" onclick="editarProducto('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
+                    <button type="button" class="btn btn-danger" disabled="" onclick="eliminarProducto('.$data[$i]['id'].');" title="Eliminar"><i class="far   
+                    fa-trash-alt"></i></button>    
+                   </div>';
+                }
+                
                 
             }else{
-                $data[$i]['estado'] = ' <span class="badge badge-danger">Inactivo</span>';
+                if($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){
+                      $data[$i]['estado'] = ' <span class="badge badge-danger">Inactivo</span>';
                 $data[$i]['acciones'] = '<div>                     
                 <button type="button" class="btn btn-success" onclick="reingresarProducto('.$data[$i]['id'].');" title="Reingresar"><i class="fa fa-undo" aria-hidden="true"></i></button>      
                </div>';
+                }
+              
             }
            
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
+    //listar productos eliminados
     public function listarEliminados(){
         
         $data = $this->model->getProductosEliminados();
@@ -76,6 +90,7 @@ class Productos extends Controller{
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         die();
     }
+    //vista productos eliminados
     public function productosEliminados(){ 
            
         $this->views->getView($this, "productosEliminados");
@@ -88,11 +103,11 @@ class Productos extends Controller{
         $descripcion = $_POST['descripcion'];
         $precio_compra = $_POST['precio_compra'];
         $precio_venta = $_POST['precio_venta'];  
-        $descuento = $_POST['descuento'];     
         $id_medida = $_POST['id_medida'];
         $vencimiento = $_POST['vencimiento'];  
         $id_categoria = $_POST['id_categoria'];
-        $id_proveedor = $_POST['id_proveedor'];      
+        $id_proveedor = $_POST['id_proveedor'];  
+       
         $id = $_POST['idProducto'];
         $img = $_FILES['imagen'];
         $name = $img['name'];
@@ -138,11 +153,10 @@ class Productos extends Controller{
                 if(empty( $precio_compra)){
                     $precio_compra = "0";
                 }
-                if(empty($_POST['cantidad'])){
-                    $cantidad = "0";
-                }                    
+              
+                $cantidad = $_POST['cantidad'];                     
                 //registrar               
-                    $data = $this->model->registrarProducto($codigo , $descripcion, $precio_compra , $precio_venta, $cantidad, $iva, $descuento,
+                    $data = $this->model->registrarProducto($codigo , $descripcion, $precio_compra , $precio_venta, $cantidad, $iva,
                     $id_medida,$id_categoria,$id_proveedor, $imgNombre, $vencimiento, $fecha_vencimiento  );
 
                     if($data == 'ok'){
@@ -150,9 +164,10 @@ class Productos extends Controller{
                      //eliminar la imagen
                       if(!empty($name)){
                         move_uploaded_file($tpmName, $destino);
-                      }
-                    }else if($data == "existe"){
-                        $msg = (array('ok'=>false, 'post' => 'El Producto ya existe.'));	
+                       }
+                    }else if($data['existe'] == "existe" && $data['id_proveedor']){
+                        $msg = (array('ok'=>false, 'post' => 'El producto ya existe y está asociado a otro proveedor.'));	
+                        
                     }else{
                         $msg = (array('ok'=>false, 'post' => 'Error al registrar el Producto.'));
                     }
@@ -167,8 +182,9 @@ class Productos extends Controller{
                     if(file_exists("Assets/img/".$imgDelete['foto'])){
                         unlink("Assets/img/".$imgDelete['foto']);
                     }
-                }              
-                $data = $this->model->updateProducto($codigo , $descripcion, $precio_compra , $precio_venta, $iva, $descuento ,
+                }        
+                  
+                $data = $this->model->updateProducto($codigo , $descripcion, $precio_compra , $precio_venta, $iva ,
                 $id_medida,$id_categoria,$id_proveedor, $imgNombre, $vencimiento, $fecha_vencimiento,$id);
 
                     if($data == 'modificado'){
@@ -206,6 +222,19 @@ class Productos extends Controller{
             $msg = (array('eliminado'=>true, 'post' => 'El Producto fue eliminado con éxito.'));
         }else{
             $msg = (array('eliminado'=>false, 'msg' => 'Error al eliminar el Producto.'));
+        }
+        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+        die();
+    }
+    //vaciar productos eliminados
+    public function vaciarProducto(){
+        
+        $data = $this->model->vaciarProducto();  
+
+        if($data == 1){
+            $msg = (array('eliminado'=>true, 'post' => 'Los Producto fueron vaciados con éxito.'));
+        }else{
+            $msg = (array('eliminado'=>false, 'msg' => 'Error al vaciar los Productos.'));
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();

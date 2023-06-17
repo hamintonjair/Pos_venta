@@ -8,8 +8,13 @@ include 'Views/Templates/body.php';
     <div class='app-title'>
         <div>
             <h1><i class='fas fa-box'></i> Caja <small>Sistema de ventas</small>
+            <?php if($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){ ?>
                 <button class="btn btn-primary" type="button" onclick="openModalCaja();" data-toggle="modal"
                     class="fa-solid fa-circle-plus">Nuevo</button>
+                 <?php }else{; ?>
+                    <button class="btn btn-primary" disabled="" type="button" onclick="openModalCaja();" data-toggle="modal"
+                    class="fa-solid fa-circle-plus">Nuevo</button>
+                    <?php }; ?>
                 <button class="btn btn-success" type="button" onclick="openArqueo();"
                     class="fa-solid fa-circle-plus">Abrir caja</button>
 
@@ -61,7 +66,7 @@ include 'Views/Templates/body.php';
                     <form method='post' id='frmCaja'>
                         <input type='hidden' id='idCaja' name='idCaja' value=''>                        
                         <div class='form-group'>
-                            <label for='caja'>Caja</label>
+                            <label for='caja'>Caja(<font color="red">*</font>)</label>
                             <input type='text' name='caja' id='caja' class='form-control valid validText'
                                 placeholder='Caja' aria-describedby='helpId'>
                         </div>                                                                              

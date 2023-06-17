@@ -71,7 +71,7 @@ include 'Views/Templates/body.php';
                         <div class='form-group' id="ocultar_campos2">
                             <label for='caja'>Cajas</label>
                             <select class="form-control selectpicker" id="id_caja" name="id_caja">
-                                        <!-- <option selected="selected">Seleccionar..</option> -->
+                                        <option selected="selected">Seleccionar..</option>
                                         <?php foreach ($data['cajas'] as $row){ ?>
                                         <option value="<?php echo $row['id']; ?>"><?php echo $row['caja']; ?>
                                         </option>

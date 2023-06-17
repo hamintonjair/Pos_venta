@@ -13,10 +13,10 @@ class ComprasModel extends Query {
       
         if(is_numeric($cod) == true){
 
-            $sql = "SELECT * FROM productos WHERE codigo = '$cod'";
+            $sql = "SELECT p.*, pro.nombre, pro.nit FROM productos p INNER JOIN proveedor pro ON P.id_proveedor = pro.id WHERE codigo = '$cod'";
             
         }else{
-            $sql = "SELECT * FROM productos WHERE descripcion = '$cod'";
+            $sql = "SELECT p.*, pro.nombre, pro.nit FROM productos p INNER JOIN proveedor pro ON P.id_proveedor = pro.id WHERE descripcion = '$cod'";
         }
        
         $data = $this->select( $sql );
@@ -110,10 +110,10 @@ class ComprasModel extends Query {
     }
     //registrar compra
 
-    public function registrarCompra( string $total, int $id_proveedor, int $tipoPago) {
+    public function registrarCompra( string $total, int $id_proveedor, int $tipoPago, int $id_usuario) {
 
-        $sql = 'INSERT INTO  compras (total, id_proveedor, tipoPago) VALUES(?,?,?)';
-        $datos = array( $total, $id_proveedor, $tipoPago );
+        $sql = 'INSERT INTO  compras (total, id_proveedor, tipoPago, id_usuario) VALUES(?,?,?,?)';
+        $datos = array( $total, $id_proveedor, $tipoPago, $id_usuario);
         $data = $this->save( $sql, $datos );
 
         if ( $data == 1 ) {

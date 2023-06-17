@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Copiar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5]
+                    "columns": [0, 1, 2, 3, 4, 5, 6]
                 }
             }, {
                 "extend": "excelHtml5",
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Expotar a Excel",
                 "className": "btn btn-success",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5]
+                    "columns": [0, 1, 2, 3, 4, 5, 6]
                 }
             }, {
                 "extend": "pdfHtml5",
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Exportar a PDF",
                 "className": "btn btn-danger",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5]
+                    "columns": [0, 1, 2, 3, 4, 5, 6]
                 }
             }, {
                 "extend": "csvHtml5",
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Eportar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4, 5]
+                    "columns": [0, 1, 2, 3, 4, 5, 6]
                 }
             },
 
@@ -85,7 +85,7 @@ function registrarProveedor(e) {
             icon: 'info',
             title: 'Todos los campos son obligatorios',
             showConfirmButton: false,
-            timer: 1500
+            timer: 2200
         })
 
     } else {
@@ -105,7 +105,7 @@ function registrarProveedor(e) {
                         icon: 'success',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     $('#nuevo_proveedor').modal('hide');
                     window.location.reload();
@@ -117,7 +117,7 @@ function registrarProveedor(e) {
                         icon: 'success',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     $('#nuevo_proveedor').modal('hide');
                     window.location.reload();
@@ -129,7 +129,7 @@ function registrarProveedor(e) {
                         icon: 'error',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                 }
 

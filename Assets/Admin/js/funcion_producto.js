@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", function() {
             { "data": "precio_venta", render: $.fn.dataTable.render.number('.', ',', 2) },
             { "data": "cantidad" },
             { "data": "iva" },
-            { "data": "descuento" },
             { "data": "vencimiento" },
             { "data": "fecha_vencimiento" },
             { "data": "estado" },
@@ -33,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Copiar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 2, 3, 4, 5, 6, 7]
+                    "columns": [0, 2, 3, 4, 5, 6, 7, 8, 9]
                 }
             }, {
                 "extend": "excelHtml5",
@@ -41,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Expotar a Excel",
                 "className": "btn btn-success",
                 "exportOptions": {
-                    "columns": [0, 2, 3, 4, 5, 6, 7]
+                    "columns": [0, 2, 3, 4, 5, 6, 7, 8, 9]
                 }
             }, {
                 "extend": "pdfHtml5",
@@ -49,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Exportar a PDF",
                 "className": "btn btn-danger",
                 "exportOptions": {
-                    "columns": [0, 2, 3, 4, 5, 6, 7]
+                    "columns": [0, 2, 3, 4, 5, 6, 7, 8, 9]
                 }
             }, {
                 "extend": "csvHtml5",
@@ -57,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Eportar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 2, 3, 4, 5, 6, 7]
+                    "columns": [0, 2, 3, 4, 5, 6, 7, 8, 9]
                 }
             },
 
@@ -72,6 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (document.getElementById('stockMinimo')) {
         reportStock();
         productosVendidos();
+
 
     }
 
@@ -100,7 +100,6 @@ document.addEventListener("DOMContentLoaded", function() {
             { "data": "precio_venta", render: $.fn.dataTable.render.number('.', ',', 2) },
             { "data": "cantidad" },
             { "data": "iva" },
-            { "data": "descuento" },
             { "data": "vencimiento" },
             { "data": "fecha_vencimiento" },
             { "data": "estado" },
@@ -113,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Copiar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 2, 3, 4, 5, 6, 7]
+                    "columns": [0, 2, 3, 4, 5, 6]
                 }
             }, {
                 "extend": "excelHtml5",
@@ -121,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Expotar a Excel",
                 "className": "btn btn-success",
                 "exportOptions": {
-                    "columns": [0, 2, 3, 4, 5, 6, 7]
+                    "columns": [0, 2, 3, 4, 5, 6]
                 }
             }, {
                 "extend": "pdfHtml5",
@@ -129,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Exportar a PDF",
                 "className": "btn btn-danger",
                 "exportOptions": {
-                    "columns": [0, 2, 3, 4, 5, 6, 7]
+                    "columns": [0, 2, 3, 4, 5, 6]
                 }
             }, {
                 "extend": "csvHtml5",
@@ -137,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Eportar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 2, 3, 4, 5, 6, 7]
+                    "columns": [0, 2, 3, 4, 5, 6]
                 }
             },
 
@@ -152,6 +151,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (document.getElementById('stockMinimo')) {
         reportStock();
         productosVendidos();
+
 
     }
 
@@ -174,7 +174,6 @@ function registrarProducto(e) {
     const codigo = document.getElementById("codigo");
     const descripcion = document.getElementById("descripcion");
     const precio_venta = document.getElementById("precio_venta");
-    const descuento = document.getElementById("descuento");
     const medida = document.getElementById("id_medida");
     const categoria = document.getElementById("id_categoria");
     const proveedor = document.getElementById("id_proveedor");
@@ -183,8 +182,8 @@ function registrarProducto(e) {
 
 
 
-    if (codigo.value == "" || descripcion.value == "" || precio_venta.value == "" || descuento.value == "" ||
-        medida.value == "" || categoria.value == "" || proveedor.value == "" || vencimiento.value == "" || iva.value == "") {
+    if (codigo.value == "" || descripcion.value == "" || precio_venta.value == "" || medida.value == "" ||
+        categoria.value == "" || proveedor.value == "" || vencimiento.value == "" || iva.value == "") {
 
 
         Swal.fire({
@@ -192,7 +191,7 @@ function registrarProducto(e) {
                 icon: 'info',
                 title: 'Todos los campos son obligatorios',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 2200
             })
             // alert("Todos los campos son obligatorios", "info");
 
@@ -213,7 +212,7 @@ function registrarProducto(e) {
                         icon: 'success',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
 
                     $('#nuevo_producto').modal('hide');
@@ -225,7 +224,7 @@ function registrarProducto(e) {
                         icon: 'success',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
 
                     $('#nuevo_producto').modal('hide');
@@ -237,7 +236,7 @@ function registrarProducto(e) {
                         icon: 'error',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
 
                 }
@@ -275,7 +274,6 @@ function editarProducto(id) {
             document.getElementById("iva").value = resp.iva;
             document.getElementById("vencimiento").value = resp.vencimiento;
             document.getElementById("fecha").value = resp.fecha_vencimiento;
-            document.getElementById("descuento").value = resp.descuento;
             document.getElementById("id_medida").value = resp.id_medida;
             document.getElementById("id_categoria").value = resp.id_categoria;
             document.getElementById("id_proveedor").value = resp.id_proveedor;
@@ -284,11 +282,39 @@ function editarProducto(id) {
           onclick="deletImg()"><i class="fas fa-times"></i></button>`;
             document.getElementById("icon-image").classList.add("d-none");
             document.getElementById("foto_actual").value = resp.foto;
+            fntBarcode();
+            document.querySelector("#divBarcode").classList.remove("notblock");
             $('#nuevo_producto').modal('show');
         }
     }
 }
 
+//Barcode
+if (document.querySelector("#codigo")) {
+    let inputCodigo = document.querySelector("#codigo");
+    inputCodigo.onkeyup = function() {
+        if (inputCodigo.value.length >= 5) {
+            document.querySelector('#divBarcode').classList.remove("notblock");
+            fntBarcode();
+        } else {
+            document.querySelector('#divBarcode').classList.add("notblock");
+        }
+    }
+}
+
+function fntBarcode() {
+    let codigo = document.querySelector('#codigo').value;
+    JsBarcode("#barcode", codigo);
+}
+
+function printBarcode(area) {
+    let elementArea = document.querySelector(area);
+    let vprint = window.open(' ', 'popimpr', 'height=400,width=600');
+    vprint.document.write(elementArea.innerHTML);
+    vprint.document.close();
+    vprint.print();
+    vprint.close();
+}
 //eliminar
 function eliminarProducto(id) {
 
@@ -342,6 +368,63 @@ function eliminarProducto(id) {
             swalWithBootstrapButtons.fire(
                 'Cancelado!',
                 'El producto no fue eliminado',
+                'error'
+            )
+        }
+    })
+}
+
+function productosVaciar() {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+    })
+    swalWithBootstrapButtons.fire({
+        title: '¿Realmente quiere vaciar los productos?',
+        text: "Los productos se eliminarán permanentemente.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, Eliminar!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const url = base_url + "Productos/vaciarProducto/";
+            const http = new XMLHttpRequest();
+            http.open("GET", url, true);
+            http.send();
+            http.onreadystatechange = function() {
+
+                if (this.readyState == 4 && this.status == 200) {
+                    const resp = JSON.parse(this.responseText);
+
+                    if (resp.eliminado == true) {
+                        swalWithBootstrapButtons.fire(
+                            'Eliminado!',
+                            resp.post,
+                            'success',
+                            location.reload()
+                        );
+                    } else {
+                        swalWithBootstrapButtons.fire(
+                            'Cancelado!',
+                            resp.msg,
+                            'error'
+                        );
+                    }
+                }
+            }
+
+        } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+        ) {
+            swalWithBootstrapButtons.fire(
+                'Cancelado!',
+                'Los productos no fueron vaciado',
                 'error'
             )
         }
@@ -429,7 +512,7 @@ function alert(msm, icon) {
         icon: icon,
         title: msm,
         showConfirmButton: false,
-        timer: 1500
+        timer: 2200
     })
 }
 
@@ -510,6 +593,80 @@ function productosVendidos() {
         }
     }
 }
+//grafica
+function ganancias() {
+
+    const yearInput = document.getElementById('id');
+    const year = yearInput.value;
+
+
+    // Verificar que se haya ingresado un año válido
+    if (year < 1900 || year > 2099) {
+        alert('Por favor, ingresa un año válido.');
+        return;
+    }
+
+    const canvas = document.getElementById('gananciasMes');
+    const context = canvas.getContext('2d');
+
+    // Destruir la instancia de la gráfica anterior si existe
+    if (window.myChart !== undefined) {
+        window.myChart.destroy();
+    }
+
+    const url = base_url + "Reportes/verGanancia/" + year;
+    const http = new XMLHttpRequest();
+    http.open("GET", url, true);
+    http.send();
+    http.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            const resp = JSON.parse(this.responseText);
+
+            let mes = [];
+            let total = [];
+            for (let i = 0; i < resp.length; i++) {
+                mes.push(resp[i]['mes']);
+                total.push(resp[i]['total_mes']);
+            }
+
+            // Configuración de la gráfica
+            const data = {
+                labels: mes,
+                datasets: [{
+                    label: 'Total de ventas por mes',
+                    data: total,
+                    borderColor: 'blue',
+                    backgroundColor: 'red',
+                    fill: false,
+                }],
+            };
+
+            // Configuración de la gráfica
+            const chartConfig = {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Total de ventas por mes',
+                        },
+                    },
+                },
+            };
+
+            // Crear la gráfica
+            window.myChart = new Chart(context, chartConfig);
+        }
+    }
+}
+
+
+
+
+
+
 
 function openModalProductos() {
 

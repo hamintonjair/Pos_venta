@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
             { "data": "usuario" },
             { "data": "nombre" },
             { "data": "caja" },
+            { "data": "rol" },
             { "data": "estado" },
             { "data": "acciones" },
 
@@ -25,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Copiar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             }, {
                 "extend": "excelHtml5",
@@ -33,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Expotar a Excel",
                 "className": "btn btn-success",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             }, {
                 "extend": "pdfHtml5",
@@ -41,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Exportar a PDF",
                 "className": "btn btn-danger",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             }, {
                 "extend": "csvHtml5",
@@ -49,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Eportar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             },
 
@@ -82,6 +83,7 @@ document.addEventListener("DOMContentLoaded", function() {
             { "data": "usuario" },
             { "data": "nombre" },
             { "data": "caja" },
+            { "data": "rol" },
             { "data": "estado" },
             { "data": "acciones" },
 
@@ -92,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Copiar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             }, {
                 "extend": "excelHtml5",
@@ -100,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Expotar a Excel",
                 "className": "btn btn-success",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             }, {
                 "extend": "pdfHtml5",
@@ -108,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Exportar a PDF",
                 "className": "btn btn-danger",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             }, {
                 "extend": "csvHtml5",
@@ -116,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Eportar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             },
 
@@ -141,15 +143,16 @@ function registrarUsuario(e) {
     const clave = document.getElementById("clave");
     const confirmar = document.getElementById("confirmar");
     const caja = document.getElementById("caja");
+    const rol = document.getElementById("rol");
 
-    if (usuario.value == "" || nombre.value == "" || caja.value == "") {
+    if (usuario.value == "" || nombre.value == "" || caja.value == "" || clave == "" || confirmar == "" || rol == "") {
 
         Swal.fire({
             position: 'top-end',
             icon: 'info',
             title: 'Todos los campos son obligatorios',
             showConfirmButton: false,
-            timer: 1500
+            timer: 2200
         })
 
     } else {
@@ -168,7 +171,7 @@ function registrarUsuario(e) {
                         icon: 'success',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     $('#nuevo_usuario').modal('hide');
                     window.location.reload();
@@ -180,7 +183,7 @@ function registrarUsuario(e) {
                         icon: 'success',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     $('#nuevo_usuario').modal('hide');
                     window.location.reload();
@@ -190,7 +193,7 @@ function registrarUsuario(e) {
                         icon: 'error',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
 
                 }
@@ -221,6 +224,7 @@ function editarUsuario(id) {
             document.getElementById("usuario").value = resp.usuario;
             document.getElementById("nombre").value = resp.nombre;
             document.getElementById("caja").value = resp.id_caja;
+            document.getElementById("rol").value = resp.rol;
             document.getElementById("clave").value = resp.clave;
             $('#nuevo_usuario').modal('show');
         }
@@ -231,6 +235,63 @@ function editarUsuario(id) {
 function usuarioEliminado() {
 
     window.location = base_url + "Usuarios/usuarioEliminado";
+}
+//vaciar usuario
+function usuarioVaciar() {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+    })
+    swalWithBootstrapButtons.fire({
+        title: '¿Realmente quiere vaciar los productos?',
+        text: "Los usuarios se eliminarán permanentemente.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, Eliminar!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const url = base_url + "Usuarios/vaciarUsuarios/";
+            const http = new XMLHttpRequest();
+            http.open("GET", url, true);
+            http.send();
+            http.onreadystatechange = function() {
+
+                if (this.readyState == 4 && this.status == 200) {
+                    const resp = JSON.parse(this.responseText);
+
+                    if (resp.eliminado == true) {
+                        swalWithBootstrapButtons.fire(
+                            'Eliminado!',
+                            resp.post,
+                            'success',
+                            location.reload()
+                        );
+                    } else {
+                        swalWithBootstrapButtons.fire(
+                            'Cancelado!',
+                            resp.msg,
+                            'error'
+                        );
+                    }
+                }
+            }
+
+        } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+        ) {
+            swalWithBootstrapButtons.fire(
+                'Cancelado!',
+                'Los usuarios no fueron vaciado',
+                'error'
+            )
+        }
+    })
 }
 //volver
 function volverUsuarios() {
@@ -365,7 +426,7 @@ function frmPass(e) {
             icon: 'info',
             title: 'Todos los campos son obligatorios',
             showConfirmButton: false,
-            timer: 1500
+            timer: 2200
         })
     } else {
         if (nueva != confirmar) {
@@ -375,7 +436,7 @@ function frmPass(e) {
                 icon: 'error',
                 title: 'Las contraseñas no coinciden.',
                 showConfirmButton: false,
-                timer: 1500
+                timer: 2200
             })
         } else {
             const url = base_url + "Usuarios/cambiarPass";
@@ -393,7 +454,7 @@ function frmPass(e) {
                             icon: 'success',
                             title: resp.post,
                             showConfirmButton: false,
-                            timer: 1500
+                            timer: 2200
                         })
                         $('#pass').modal('hide');
                         window.location.reload();
@@ -404,7 +465,7 @@ function frmPass(e) {
                             icon: 'error',
                             title: resp.post,
                             showConfirmButton: false,
-                            timer: 1500
+                            timer: 2200
                         })
 
                     }
@@ -434,7 +495,7 @@ function registrarPermisos(e) {
                     icon: 'success',
                     title: resp.post,
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 2200
                 })
             } else {
                 Swal.fire({
@@ -442,7 +503,7 @@ function registrarPermisos(e) {
                     icon: 'error',
                     title: resp.post,
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 2200
                 })
             }
         }

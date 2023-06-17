@@ -26,13 +26,17 @@ class Configuracion extends Controller {
         }
 
     }
-
+//mostrar la cantidad de acuerdo a la tabla
     public function dashboard() {
-
-        $data[ 'usuarios' ] = $this->model->getDatos( 'usuarios' );
-        $data[ 'clientes' ] = $this->model->getDatos( 'clientes' );
-        $data[ 'productos' ] = $this->model->getDatos( 'productos' );
-        $data[ 'ventas' ] = $this->model->getVentas();
+    
+        $data['categorias'] =  $this->model->getDatos( 'categorias' );
+        $data['proveedores'] =  $this->model->getDatos( 'proveedor' );
+        $data['salidas'] =  $this->model->getDatos( 'ventas' );
+        $data['entrada'] =  $this->model->getDatos( 'compras' );
+        $data['usuarios'] = $this->model->getDatos( 'usuarios' );
+        $data['clientes'] = $this->model->getDatos( 'clientes' );
+        $data['productos'] = $this->model->getDatos( 'productos' );
+        $data['ventas'] = $this->model->getVentas();
 
         $this->views->getView( $this, 'dashboard', $data );
     }

@@ -55,6 +55,14 @@ class Reportes extends Controller {
         echo json_encode( $data, JSON_UNESCAPED_UNICODE );
         die();
     }
+    // listar empleados
+    public function listarEmpleados() {
+
+        $data = $this->model->getreporteEmpleados();
+
+        echo json_encode( $data, JSON_UNESCAPED_UNICODE );
+        die();
+    }
     //vista reporte ganancias por mes
 
     public function reporteVentasMes() {
@@ -107,11 +115,12 @@ class Reportes extends Controller {
 
     public function buscarComprasProveedor() {
 
-        $id_proveedor = $_POST[ 'id_proveedor' ];   
+        $id_proveedor = $_POST[ 'id_proveedor' ];  
+      
         $data = array(
             'empleado' =>  $this->model->getreporteCompraProveedores( $id_proveedor )
         );
-
+   
         echo json_encode( $data, JSON_UNESCAPED_UNICODE );
         die();
     }
@@ -123,6 +132,28 @@ class Reportes extends Controller {
         echo json_encode( $data, JSON_UNESCAPED_UNICODE );
         die();
     }
+    //grafica ganancias
+    public function verGanancia($año){
+    
+        $data = $this->model->gananciaMes($año);
+
+        echo json_encode( $data, JSON_UNESCAPED_UNICODE );
+        die();
+    }
+    //listar ganancias
+    public function verGanancias(){
+    
+        $data = $this->model->listargananciaMes();
+
+        echo json_encode( $data, JSON_UNESCAPED_UNICODE );
+        die();
+    }
+    //vista ganacias
+        //vista reporte por proveedor
+    public function ganacias() {
+      
+          $this->views->getView( $this, 'ganancias' );
+      }
 
 }
 ?>

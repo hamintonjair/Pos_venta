@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Copiar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             }, {
                 "extend": "excelHtml5",
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Expotar a Excel",
                 "className": "btn btn-success",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             }, {
                 "extend": "pdfHtml5",
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Exportar a PDF",
                 "className": "btn btn-danger",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             }, {
                 "extend": "csvHtml5",
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Eportar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3, 4]
+                    "columns": [0, 1, 2, 3, 4, 5]
                 }
             },
 
@@ -83,7 +83,7 @@ function registrarCliente(e) {
             icon: 'info',
             title: 'Todos los campos son obligatorios',
             showConfirmButton: false,
-            timer: 1500
+            timer: 2200
         })
 
     } else {
@@ -102,7 +102,7 @@ function registrarCliente(e) {
                         icon: 'info',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     $('#nuevo_cliente').modal('hide');
                     window.location.reload();
@@ -113,7 +113,7 @@ function registrarCliente(e) {
                         icon: 'info',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     $('#nuevo_cliente').modal('hide');
                     window.location.reload();
@@ -123,7 +123,7 @@ function registrarCliente(e) {
                         icon: 'error',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                 }
 
@@ -203,6 +203,63 @@ document.addEventListener("DOMContentLoaded", function() {
 function clienteEliminado() {
 
     window.location = base_url + "Clientes/clienteEliminado";
+}
+//vaciar cliente
+function clienteVaciar() {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+    })
+    swalWithBootstrapButtons.fire({
+        title: '¿Realmente quiere vaciar los productos?',
+        text: "Los clientes se eliminarán permanentemente.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, Eliminar!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const url = base_url + "Clientes/vaciarCliente/";
+            const http = new XMLHttpRequest();
+            http.open("GET", url, true);
+            http.send();
+            http.onreadystatechange = function() {
+
+                if (this.readyState == 4 && this.status == 200) {
+                    const resp = JSON.parse(this.responseText);
+
+                    if (resp.eliminado == true) {
+                        swalWithBootstrapButtons.fire(
+                            'Eliminado!',
+                            resp.post,
+                            'success',
+                            location.reload()
+                        );
+                    } else {
+                        swalWithBootstrapButtons.fire(
+                            'Cancelado!',
+                            resp.msg,
+                            'error'
+                        );
+                    }
+                }
+            }
+
+        } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+        ) {
+            swalWithBootstrapButtons.fire(
+                'Cancelado!',
+                'Los clientes no fueron vaciado',
+                'error'
+            )
+        }
+    })
 }
 //volver
 function volverCliente() {

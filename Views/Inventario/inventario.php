@@ -8,8 +8,10 @@ include 'Views/Templates/body.php';
     <div class='app-title'>
         <div>
             <h1><i class='fas fa-flag'></i>Inventario <small>Sistema de ventas</small>               
-            <button class="btn btn-danger" type="button" onclick="productosBajos();" data-toggle="modal_arqueo"
-                    class="fa-solid fa-circle-plus">R. Stock bajos</button>               
+            <button class="btn btn-warning" type="button" onclick="productosBajos();" data-toggle="modal_arqueo"
+                    class="fa-solid fa-circle-plus">R. Stock bajos</button>  
+             <button class="btn btn-primary" type="button" onclick="EntradasSalidas();"
+                    class="fa-solid fa-circle-plus">Movimientos entradas & salidas </button></a>             
 
             </h1>
         </div>

@@ -67,10 +67,18 @@ class Medidas extends Controller{
         for($i=0; $i < count($data); $i++){
                 
                 $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
-                $data[$i]['acciones'] = '<div>            
-                <button type="button" class="btn btn-primary" onclick="editarMedida('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
-                <button type="button" class="btn btn-danger" onclick="eliminarMedida('.$data[$i]['id'].');" title="Eliminar"><i class="far fa-trash-alt"></i></button>            
-               </div>';       
+                if( $_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){
+                    $data[$i]['acciones'] = '<div>            
+                    <button type="button" class="btn btn-primary" onclick="editarMedida('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
+                    <button type="button" class="btn btn-danger" onclick="eliminarMedida('.$data[$i]['id'].');" title="Eliminar"><i class="far fa-trash-alt"></i></button>            
+                   </div>';       
+                }else{
+                    $data[$i]['acciones'] = '<div>            
+                    <button type="button" disabled="" class="btn btn-primary" onclick="editarMedida('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
+                    <button type="button" disabled="" class="btn btn-danger" onclick="eliminarMedida('.$data[$i]['id'].');" title="Eliminar"><i class="far fa-trash-alt"></i></button>            
+                   </div>';       
+                }
+
            
         }      
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
@@ -109,6 +117,18 @@ class Medidas extends Controller{
             $msg = (array('eliminado'=>true, 'post' => 'El Medida fue eliminada con éxito.'));
         }else{
             $msg = (array('eliminado'=>false, 'msg' => 'Error al eliminar la Medida.'));
+        }
+        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+        die();
+    }
+    //vaciar medidas
+    public function vaciarMedidas(){
+        $data = $this->model->vaciarMedidas();  
+
+        if($data == 1){
+            $msg = (array('eliminado'=>true, 'post' => 'Las  Medida fueron vaciados con éxito.'));
+        }else{
+            $msg = (array('eliminado'=>false, 'msg' => 'Error al vaciar las Medida.'));
         }
         echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();

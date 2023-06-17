@@ -88,6 +88,12 @@ class CategoriasModel extends Query {
         return $data;
 
     }
+    //vaciar categorías
+    public function vaciarCategorias(){
+        $sql = 'DELETE FROM categorias WHERE estado = 0';   
+        $data = $this->delete( $sql); 
+        return $data;
+    }
     //verificar permisos
 
     public function verificarPermisos( int $id_user, string $nombre )

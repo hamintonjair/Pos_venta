@@ -10,7 +10,7 @@ include 'Views/Templates/body.php';
             <h1><i class='fas fa-box'></i> Productos <small>Sistema de ventas</small>
                 <button class="btn btn-primary" type="button" onclick="openModalProductos();" data-toggle="modal"
                     class="fa-solid fa-circle-plus">Nuevo</button>
-                    <button class="btn btn-danger" type="button" onclick="productosEliminados();" class="fa-solid fa-circle-plus">Eliminados</button>
+                    <button class="btn btn-warning" type="button" onclick="productosEliminados();" class="fa-solid fa-circle-plus">Eliminados</button>
 
             </h1>
         </div>
@@ -32,11 +32,10 @@ include 'Views/Templates/body.php';
                                     <th>#</th>
                                     <th>Imagen</th>
                                     <th>Código</th>
-                                    <th>Descripción</th>
+                                    <th>Producto</th>
                                     <th>Precio</th>
                                     <th>Stock</th>
                                     <th>Iva</th>
-                                    <th>Descuento</th>
                                     <th>vence</th>
                                     <th>vencimiento</th>
                                     <th>Estado</th>
@@ -75,11 +74,18 @@ include 'Views/Templates/body.php';
                                     <label for='codigo'>Código de Barra(<font color="red">*</font>)</label>
                                     <input type='text' name='codigo' id='codigo' class='form-control valid validNumber'
                                         placeholder='Código de barra' aria-describedby='helpId'>
+                                        <br>
+                    <div id="divBarcode" class="notblock textcenter">
+                        <div id="printCode">
+                          <svg id="barcode"></svg>
+                        </div>
+                        <button class="btn btn-success btn-sm" type="button" onClick="printBarcode('#printCode')"><i class="fas fa-print"> Imprimir</i></button></button>
+                    </div>
                                 </div>
                             </div>
                             <div class='col-md-6'>
                                 <div class='form-group'>
-                                    <label for='descripcion'>Descripción(<font color="red">*</font>)</label>
+                                    <label for='descripcion'>Producto(<font color="red">*</font>)</label>
                                     <input type='text' name='descripcion' id='descripcion'
                                         class='form-control valid validText' placeholder='Descripción'
                                         aria-describedby='helpId'>
@@ -88,7 +94,7 @@ include 'Views/Templates/body.php';
                             </div>
                         </div>
                         <div class='row'>
-                            <div class='col-md-3'>
+                            <div class='col-md-4'>
                                 <div class='form-group'>
                                     <label for='precio_venta'>Precio de venta(<font color="red">*</font>)</label>
                                     <input type='text' name='precio_venta' id='precio_venta'
@@ -96,7 +102,7 @@ include 'Views/Templates/body.php';
                                         aria-describedby='helpId'>
                                 </div>
                             </div>
-                            <div class='col-md-3'>
+                            <div class='col-md-4'>
                                 <div class='form-group'>
                                     <label for='precio_compra'>Precio de compra</label>
                                     <input type='text' name='precio_compra' id='precio_compra'
@@ -105,41 +111,13 @@ include 'Views/Templates/body.php';
 
                                 </div>
                             </div>
-                            <div class='col-md-3'>
+                          
+                            <div class='col-md-4'>
                                 <div class='form-group'>
-                                    <label for='descuento'>Descuentos(<font color="red">*</font>)</label>
-                                    <select class='form-control selectpicker' name='descuento' id='descuento'>
-                                        <option selected="selected">Seleccionar..</option>                           
-                                        <option value="0"><?php echo 0 ?>
-                                        <option value="5"><?php echo 5 ?>
-                                        <option value="10"><?php echo 10 ?>
-                                        <option value="15"><?php echo 15 ?>
-                                        <option value="20"><?php echo 20 ?>
-                                        <option value="25"><?php echo 25 ?>
-                                        <option value="30"><?php echo 30 ?>
-                                        <option value="35"><?php echo 35 ?>
-                                        <option value="40"><?php echo 40 ?>
-                                        <option value="45"><?php echo 45 ?>
-                                        <option value="50"><?php echo 50 ?>
-                                        <option value="55"><?php echo 55 ?>
-                                        <option value="60"><?php echo 60 ?>
-                                        <option value="65"><?php echo 65 ?>
-                                        <option value="70"><?php echo 70 ?>
-                                        <option value="75"><?php echo 75 ?>
-                                        <option value="80"><?php echo 80 ?>
-                                        <option value="85"><?php echo 85 ?>
-                                        <option value="90"><?php echo 90 ?>
-                                        </option>
-
-                                    </select>
-                                </div>
-                            </div>
-                            <div class='col-md-3'>
-                                <div class='form-group'>
-                                    <label for='cantidad'>Cantidad</label>
+                                    <label for='cantidad'>Cantidad(<font color="red">*</font>)</label>
                                     <input type='text' name='cantidad' id='cantidad'
                                         class='form-control valid validNumber' placeholder='Cantidad'
-                                        aria-describedby='helpId' disabled>
+                                        aria-describedby='helpId'>
 
                                 </div>
                             </div>

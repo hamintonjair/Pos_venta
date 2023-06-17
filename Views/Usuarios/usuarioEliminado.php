@@ -7,9 +7,15 @@ include 'Views/Templates/body.php';
 <main class='app-content'>
     <div class='app-title'>
         <div>
-            <h1><i class='fas fa-box'></i> Usuarios <small>Sistema de ventas</small>
+            <h1><i class='fas fa-box'></i> Usuarios <small> Usuarios eliminados</small>
                 <button class="btn btn-primary" type="button"  onclick="volverUsuarios();" data-toggle="modal"
-                    class="fa-solid fa-circle-plus">Volver</button> <small> Usuarios eliminados</small></a></li>
+                    class="fa-solid fa-circle-plus">Volver</button></a></li>
+                    <?php if($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){ ?>
+                    <button class="btn btn-danger" type="button" onclick="usuarioVaciar();" class="fa-solid fa-circle-plus">Vaciar</button>
+            <?php }else{; ?>
+            <button class="btn btn-danger" disabled="" type="button" onclick="usuarioVaciar();" class="fa-solid fa-circle-plus">Vaciar</button>
+
+            <?php }; ?>
             
             </h1>
         </div>
@@ -32,6 +38,7 @@ include 'Views/Templates/body.php';
                                     <th>Usuario</th>
                                     <th>Nombre</th>
                                     <th>Caja</th>
+                                    <th>Rol</th>
                                     <th>Estado</th>
                                     <th>Acciones</th>
                                 </tr>

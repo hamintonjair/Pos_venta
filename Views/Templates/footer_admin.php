@@ -11,17 +11,17 @@
             <div class="modal-body">
                 <form id="frmPass">
                     <div class="form-group">
-                        <label for="clave_actual">Contraseña actual</label>
+                        <label for="clave_actual">Contraseña actual(<font color="red">*</font>)</label>
                         <input type="password" name="clave_actual" id="clave_actual" class="form-control"
                             placeholder="Contraseña Actual" aria-describedby="helpId">
                     </div>
                     <div class="form-group">
-                        <label for="clave_nueva">Contraseña Nueva</label>
+                        <label for="clave_nueva">Contraseña Nueva(<font color="red">*</font>)</label>
                         <input type="password" name="clave_nueva" id="clave_nueva" class="form-control"
                             placeholder="Contraseña Nueva" aria-describedby="helpId">
                     </div>
                     <div class="form-group">
-                        <label for="confirmar_clave">Confirmar Contraseña</label>
+                        <label for="confirmar_clave">Confirmar Contraseña(<font color="red">*</font>)</label>
                         <input type="password" name="confirmar_clave" id="confirmar_clave"
                             placeholder="Confirmar Contraseña" class="form-control" aria-describedby="helpId">
                     </div>

@@ -1,8 +1,11 @@
 function actualizarEmpresa(e) {
     e.preventDefault();
 
+    // const id = document.getElementById("id");
+    // const valorCodificado = nomb.replace(/ /g, '+');
+    // cod_producto = valorCodificado;
     const frm = document.getElementById("frmEmpresa")
-    const url = base_url + "Configuracion/editar/" + id;
+    const url = base_url + "Configuracion/editar/";
     const http = new XMLHttpRequest();
     http.open("POST", url, true);
     http.send(new FormData(frm));
@@ -16,7 +19,7 @@ function actualizarEmpresa(e) {
                     icon: 'success',
                     title: resp.post,
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 2200
                 })
                 window.location.reload();
 
@@ -27,7 +30,7 @@ function actualizarEmpresa(e) {
                     icon: 'error',
                     title: resp.post,
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 2200
                 })
             }
 

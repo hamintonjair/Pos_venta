@@ -31,17 +31,34 @@ class Proveedores extends Controller{
           
             if($data[$i]['estado'] == 1){
                 $data[$i]['estado'] = '<span class="badge badge-success">Activo</span>';
-                $data[$i]['acciones'] = '<div>            
-                <button type="button" class="btn btn-primary" onclick="editarProveedor('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
-                <button type="button" class="btn btn-danger" onclick="eliminarProveedor('.$data[$i]['id'].');" title="Eliminar"><i class="far   
-                fa-trash-alt"></i></button>    
-               </div>';
+                if($data[$i]['id'] == 1){
+                    $data[$i]['acciones'] = '<div>                     
+                       <span class="badge bg-primary">Genérico</span>';
+                    '<div>   
+                </div>';
+                }else if(  $_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){
+                    $data[$i]['acciones'] = '<div>            
+                    <button type="button" class="btn btn-primary" onclick="editarProveedor('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
+                    <button type="button" class="btn btn-danger" onclick="eliminarProveedor('.$data[$i]['id'].');" title="Eliminar"><i class="far   
+                    fa-trash-alt"></i></button>    
+                    </div>';
+                }else{
+                    $data[$i]['acciones'] = '<div>            
+                    <button type="button" disabled="" class="btn btn-primary" onclick="editarProveedor('.$data[$i]['id'].');" title="Editar"><i class="fas fa-edit"></i></button>   
+                    <button type="button" disabled="" class="btn btn-danger" onclick="eliminarProveedor('.$data[$i]['id'].');" title="Eliminar"><i class="far   
+                    fa-trash-alt"></i></button>    
+                   </div>';
+                }
+              
                 
             }else{
-                $data[$i]['estado'] = ' <span class="badge badge-danger">Inactivo</span>';
+                if($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){
+                       $data[$i]['estado'] = ' <span class="badge badge-danger">Inactivo</span>';
                 $data[$i]['acciones'] = '<div>                     
                 <button type="button" class="btn btn-success" onclick="reingresarProveedor('.$data[$i]['id'].');" title="Reingresar"><i class="fa fa-undo" aria-hidden="true"></i></button>      
                </div>';
+                }
+             
             }
            
         }

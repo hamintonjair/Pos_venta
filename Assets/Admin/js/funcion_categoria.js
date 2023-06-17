@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Copiar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1]
+                    "columns": [0, 1, 2]
                 }
             }, {
                 "extend": "excelHtml5",
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Expotar a Excel",
                 "className": "btn btn-success",
                 "exportOptions": {
-                    "columns": [0, 1]
+                    "columns": [0, 1, 2]
                 }
             }, {
                 "extend": "pdfHtml5",
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Exportar a PDF",
                 "className": "btn btn-danger",
                 "exportOptions": {
-                    "columns": [0, 1]
+                    "columns": [0, 1, 2]
                 }
             }, {
                 "extend": "csvHtml5",
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Eportar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1]
+                    "columns": [0, 1, 2]
                 }
             },
 
@@ -132,6 +132,63 @@ function categoriaEliminado() {
 
     window.location = base_url + "Categorias/categoriaEliminado";
 }
+//vaciar categorias
+function categoriaVaciar() {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+    })
+    swalWithBootstrapButtons.fire({
+        title: '¿Realmente quiere vaciar los productos?',
+        text: "Las categorías se eliminarán permanentemente.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, Eliminar!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const url = base_url + "Categorias/vaciarCategorias/";
+            const http = new XMLHttpRequest();
+            http.open("GET", url, true);
+            http.send();
+            http.onreadystatechange = function() {
+
+                if (this.readyState == 4 && this.status == 200) {
+                    const resp = JSON.parse(this.responseText);
+
+                    if (resp.eliminado == true) {
+                        swalWithBootstrapButtons.fire(
+                            'Eliminado!',
+                            resp.post,
+                            'success',
+                            location.reload()
+                        );
+                    } else {
+                        swalWithBootstrapButtons.fire(
+                            'Cancelado!',
+                            resp.msg,
+                            'error'
+                        );
+                    }
+                }
+            }
+
+        } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+        ) {
+            swalWithBootstrapButtons.fire(
+                'Cancelado!',
+                'Las categorías no fueron vaciado',
+                'error'
+            )
+        }
+    })
+}
 //volver
 function volverCategoria() {
 
@@ -150,7 +207,7 @@ function registrarCategoria(e) {
             icon: 'info',
             title: 'Todos los campos son obligatorios',
             showConfirmButton: false,
-            timer: 1500
+            timer: 2200
         })
     } else {
         const url = base_url + "Categorias/registrarCategoria";
@@ -168,7 +225,7 @@ function registrarCategoria(e) {
                         icon: 'success',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     $('#nueva_categoria').modal('hide');
                     window.location.reload();
@@ -179,7 +236,7 @@ function registrarCategoria(e) {
                         icon: 'success',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     $('#nueva_categoria').modal('hide');
                     window.location.reload();
@@ -189,7 +246,7 @@ function registrarCategoria(e) {
                         icon: 'error',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                 }
 

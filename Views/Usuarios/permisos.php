@@ -7,9 +7,7 @@ include 'Views/Templates/body.php';
     <div class='app-title'>
         <div>
             <h1><i class='fas fa-box'></i> Permisos <small>Sistema de ventas</small>
-                <button class="btn btn-primary" type="button" onclick="openModalMedida();" data-toggle="modal"
-                    class="fa-solid fa-circle-plus">Nuevo</button>
-            </h1>
+                           </h1>
         </div>
         <ul class='app-breadcrumb breadcrumb'>
             <li class='breadcrumb-item'><i class='fa fa-home fa-lg'></i></li>
@@ -36,7 +34,7 @@ include 'Views/Templates/body.php';
                     </div>
                     <div class="d-grid gap-2">
                          <button class="btn btn-outline-primary" type="button" onclick="registrarPermisos(event);" ><i class="fa fa-registered" aria-hidden="true"></i>Asignar permisos</button>   
-                    <a class="btn btn-outline-danger" href="<?php echo base_url; ?>Usuarios"></i>Close</a>   
+                    <a class="btn btn-outline-danger" href="<?php echo base_url; ?>Usuarios"></i>Volver atras</a>   
                     </div>
                    
                 </form>

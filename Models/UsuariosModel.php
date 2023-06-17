@@ -30,18 +30,26 @@ class UsuariosModel extends Query {
         $data = $this->selectAll( $sql );
         return $data;
     }
+
+    //vaciar usuarios
+    public function vaciarUsuarios(){
+        $sql = 'DELETE FROM clientes WHERE estado = 0';   
+        $data = $this->delete( $sql); 
+        return $data;
+    }
     //registrar usuarios
 
-    public function registrarUsuario( string $usuario, string $nombre, string $clave, int $id_caja ) {
+    public function registrarUsuario( string $usuario, string $nombre, string $clave, int $id_caja, string $rol ) {
         $this->usuario = $usuario;
         $this->nombre = $nombre;
         $this->clave = $clave;
         $this->id_caja = $id_caja;
+        $this->rol = $rol;
         $verificar = "SELECT * FROM usuarios WHERE usuario = '$this->usuario'";
         $existe = $this->select( $verificar );
         if ( empty( $existe ) ) {
-            $sql = 'INSERT INTO usuarios(usuario,nombre,clave,id_caja) VALUES (?,?,?,?)';
-            $data = array( $this->usuario, $this->nombre, $this->clave, $this->id_caja );
+            $sql = 'INSERT INTO usuarios(usuario,nombre,clave,id_caja, rol) VALUES (?,?,?,?,?)';
+            $data = array( $this->usuario, $this->nombre, $this->clave, $this->id_caja, $this->rol );
             $datos = $this->save( $sql, $data );
 
             if ( $datos == 1 ) {
@@ -67,15 +75,16 @@ class UsuariosModel extends Query {
     }
     //update usuario
 
-    public function updateUsuario( string $usuario, string $nombre, int $id_caja, string $clave, int $id ) {
+    public function updateUsuario( string $usuario, string $nombre, int $id_caja, string $rol, string $clave, int $id ) {
         $this->usuario = $usuario;
         $this->nombre = $nombre;
         $this->id = $id;
         $this->clave = $clave;
         $this->id_caja = $id_caja;
+        $this->rol = $rol;
     
-        $sql = 'UPDATE usuarios SET usuario = ?, nombre = ?, clave = ?, id_caja = ? WHERE id = ? ';
-        $data = array( $this->usuario, $this->nombre, $this->clave, $this->id_caja, $this->id );
+        $sql = 'UPDATE usuarios SET usuario = ?, nombre = ?, clave = ?, id_caja = ?, rol = ? WHERE id = ? ';
+        $data = array( $this->usuario, $this->nombre, $this->clave, $this->id_caja, $this->rol, $this->id );
         $datos = $this->save( $sql, $data );
 
         if ( $datos == 1 ) {

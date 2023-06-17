@@ -91,17 +91,26 @@ class Clientes extends Controller {
                         <span class="badge bg-primary">Genérico</span>';
                      '<div>   
                  </div>';
-                }else{               
-                    $data[ $i ][ 'acciones' ] = '<div>            
-                    <button type="button" class="btn btn-primary" onclick="editarCliente('.$data[ $i ][ 'id' ].');" title="Editar"><i class="fas fa-edit"></i></button>   
-                    <button type="button" class="btn btn-danger" onclick="eliminarCliente('.$data[ $i ][ 'id' ].');" title="Eliminar"><i class="far fa-trash-alt"></i></button>            
-                   </div>';
+                }else{       
+                    if($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){
+                                $data[ $i ][ 'acciones' ] = '<div>            
+                            <button type="button" class="btn btn-primary" onclick="editarCliente('.$data[ $i ][ 'id' ].');" title="Editar"><i class="fas fa-edit"></i></button>   
+                            <button type="button" class="btn btn-danger" onclick="eliminarCliente('.$data[ $i ][ 'id' ].');" title="Eliminar"><i class="far fa-trash-alt"></i></button>            
+                        </div>';
+                    }else{
+                        $data[ $i ][ 'acciones' ] = '<div>            
+                        <button type="button" disabled="" class="btn btn-primary" onclick="editarCliente('.$data[ $i ][ 'id' ].');" title="Editar"><i class="fas fa-edit"></i></button>   
+                        <button type="button" disabled="" class="btn btn-danger" onclick="eliminarCliente('.$data[ $i ][ 'id' ].');" title="Eliminar"><i class="far fa-trash-alt"></i></button>            
+                       </div>';
+                    }        
+                  
                 }                
 
         }
         echo json_encode( $data, JSON_UNESCAPED_UNICODE );
         die();
     }
+    //listar los clientes eliminados
     public function listarEliminados() {
 
         $data = $this->model->getClientesEliminados();
@@ -116,11 +125,12 @@ class Clientes extends Controller {
         echo json_encode( $data, JSON_UNESCAPED_UNICODE );
         die();
     }
+    //vista cliente eliminados
     public function clienteEliminado(){ 
            
         $this->views->getView($this, "clienteEliminado");
     }
-   
+ 
     //Editar cliente
     public function editar( int $id ) {
 
@@ -149,6 +159,19 @@ class Clientes extends Controller {
          echo json_encode( $msg, JSON_UNESCAPED_UNICODE );
         die();
     }
+       //vaciar clientes
+     public function vaciarCliente(){
+        $data = $this->model->vaciarCliente();  
+
+        if($data == 1){
+            $msg = (array('eliminado'=>true, 'post' => 'Los Clientes fueron vaciados con éxito.'));
+        }else{
+            $msg = (array('eliminado'=>false, 'msg' => 'Error al vaciar los Clientes.'));
+        }
+        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+        die();
+    }
+   
     //reingresar cliente
 
     public function reingresarCliente( int $id ) {

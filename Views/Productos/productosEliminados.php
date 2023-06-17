@@ -7,9 +7,15 @@ include 'Views/Templates/body.php';
 <main class='app-content'>
     <div class='app-title'>
         <div>
-            <h1><i class='fas fa-box'></i> Productos <small>Sistema de ventas</small>
-                <button class="btn btn-primary" type="button" onclick="volver();" data-toggle="modal"
-                    class="fa-solid fa fa-product-hunt">Volver</button><small> Productos eliminados</small></a></li>
+            <h1><i class='fas fa-box'></i> Productos <small> Productos eliminados</small>
+                <button class="btn btn-primary" type="button" onclick="volver();" data-toggle="modal"                
+                    class="fa-solid fa fa-product-hunt">Volver</button></a></li>
+                    <?php if( $_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){ ?>
+                    <button class="btn btn-danger" type="button" onclick="productosVaciar();" class="fa-solid fa-circle-plus">Vaciar</button>
+                     <?php }else{?>
+                      <button class="btn btn-danger" disabled="" type="button" onclick="productosVaciar();" class="fa-solid fa-circle-plus">Vaciar</button>
+
+                   <?php }; ?>
                
             </h1>
         </div>
@@ -35,7 +41,6 @@ include 'Views/Templates/body.php';
                                     <th>Precio</th>
                                     <th>Stock</th>
                                     <th>Iva</th>
-                                    <th>Descuento</th>
                                     <th>vence</th>
                                     <th>vencimiento</th>
                                     <th>Estado</th>

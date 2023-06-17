@@ -44,8 +44,15 @@ class Query extends Conexion{
       }
       return $res;
   }
+  //eliminar
+  public function delete(string $sql){
+    $this->sql = $sql;
+    $result = $this->con->prepare($this->sql);
+    $result->execute();
+    $rowCount = $result->rowCount();
+    return $rowCount;
 
-
+  }
 
 }
 

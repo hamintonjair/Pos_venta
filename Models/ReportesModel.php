@@ -32,6 +32,14 @@ class ReportesModel extends Query {
         $data = $this->selectAll( $sql );
         return $data;
     }
+    // listar las ventas por usuario
+    public function getreporteEmpleados( ) {
+
+        $sql = "SELECT c.id, c.monto_inicial, c.monto_total, c.fecha_apertura, c.fecha_cierre, c.total_ventas, u.nombre, ca.caja FROM cierre_caja c 
+        INNER JOIN usuarios u ON c.id_usuario = u.id INNER JOIN  caja ca ON c.id_caja = ca.id WHERE c.estado = 0";
+        $data = $this->selectAll( $sql );
+        return $data;
+    }
     //usaurios
 
     public function getUsuarios() {
@@ -40,7 +48,7 @@ class ReportesModel extends Query {
         $data = $this->selectAll( $sql );
         return $data;
     }
-    //reportes de ganacias por mes
+    //reportes de ventas por mes
 
     public function getreporteVentasMes() {
 
@@ -49,7 +57,7 @@ class ReportesModel extends Query {
         $data = $this->selectAll( $sql );
         return $data;
     }
-    //reporte ganacia por fecha
+    //reporte ventas por fecha
 
     public function getRangoFechas( string $desde, string $hasta ) {
 
@@ -69,7 +77,7 @@ class ReportesModel extends Query {
         return $data;
 
     }
-    //buscar compras proveedores
+    //buscar compras a proveedores
     public function getreporteCompraProveedores( int $id_proveedor ) {
 
         $sql = "SELECT c.id, p.nit, p.razon_social, p.nombre, pro.descripcion, d.cantidad, d.precio, c.total,c.fecha,
@@ -89,6 +97,34 @@ class ReportesModel extends Query {
         ON d.id_producto = pro.id INNER JOIN compras c  ON c.id = d.id_compra INNER JOIN pagos pa ON pa.id_pago = c.tipoPago WHERE c.estado = 1";
 
         $data = $this->selectAll( $sql );
+        return $data;
+    }
+    // ganacias mes a mes
+    public function gananciaMes($año){
+
+        $sql = "SELECT m.mes_nombre AS mes, YEAR(v.fecha) AS año, SUM(p.precio_venta * dv.cantidad - p.precio_compra * dv.cantidad) AS total_mes
+        FROM ventas v
+        JOIN detalle_ventas dv ON v.id = dv.id_venta
+        JOIN productos p ON dv.id_producto = p.id
+        JOIN meses m ON MONTH(v.fecha) = m.mes_numero
+        WHERE YEAR(v.fecha) = $año
+        GROUP BY m.mes_nombre, YEAR(fecha)
+        ORDER BY YEAR(v.fecha), MONTH(v.fecha)   
+        ";
+          $data = $this->selectAll( $sql );
+        return $data;
+    }
+    //listar ganacias mes a mes
+    public function listargananciaMes(){
+        $sql = "SELECT m.mes_nombre AS mes, YEAR(v.fecha) AS año, SUM(p.precio_venta * dv.cantidad - p.precio_compra * dv.cantidad) AS total_mes
+        FROM ventas v
+        JOIN detalle_ventas dv ON v.id = dv.id_venta
+        JOIN productos p ON dv.id_producto = p.id
+        JOIN meses m ON MONTH(v.fecha) = m.mes_numero
+        GROUP BY m.mes_nombre, YEAR(fecha)
+        ORDER BY YEAR(v.fecha), MONTH(v.fecha)   
+        ";
+          $data = $this->selectAll( $sql );
         return $data;
     }
 }

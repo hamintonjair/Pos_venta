@@ -5,7 +5,7 @@ function buscarCodigoVenta(e) {
     e.preventDefault();
 
     if (e.which == 13) {
-        const cod = document.getElementById("codigo").value;
+        const cod = document.getElementById("codigo2").value;
         cod_productoV = cod;
         const url = base_url + "Ventas/buscarVenta/" + cod;
         const http = new XMLHttpRequest();
@@ -22,7 +22,7 @@ function buscarCodigoVenta(e) {
                         icon: 'error',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
 
                     document.getElementById("descripcion").value = "Descripcion del producto";
@@ -54,8 +54,9 @@ function buscarNombre(e) {
 
     if (e.which == 13) {
         const nomb = document.getElementById("nombre").value;
-        cod_productoV = nomb;
-        const url = base_url + "Ventas/buscarVenta/" + nomb;
+        const valorCodificado = nomb.replace(/ /g, '+');
+        cod_producto = valorCodificado;
+        const url = base_url + "Ventas/buscarVenta/" + valorCodificado;
         const http = new XMLHttpRequest();
         http.open("GET", url, true);
         http.send();
@@ -71,7 +72,7 @@ function buscarNombre(e) {
                         icon: 'error',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
 
                     document.getElementById("descripcion").value = "Descripcion del producto";
@@ -81,7 +82,7 @@ function buscarNombre(e) {
                     document.getElementById("iva").value = "0.00";
                     document.getElementById("precio").focus()
                 } else {
-                    document.getElementById("codigo").value = "";
+                    document.getElementById("codigo2").value = "";
                     document.getElementById("descripcion").value = resp.descripcion;
                     document.getElementById("precio").value = resp.precio_venta;
                     document.getElementById("iva").value = resp.iva;
@@ -119,7 +120,7 @@ function buscarCliente(e) {
                         icon: 'error',
                         title: 'El cliente no existe',
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                     document.getElementById("cedula").value = "";
                     document.getElementById("cedula").focus();
@@ -160,12 +161,12 @@ function calcularPrecioVenta(e) {
                             icon: 'success',
                             title: resp.post,
                             showConfirmButton: false,
-                            timer: 1500
+                            timer: 2200
                         })
                         frm.reset();
                         cargarDetalle();
                         document.getElementById("cantidad").setAttribute('disabled', 'disabled');
-                        document.getElementById("codigo").focus()
+                        document.getElementById("codigo2").focus()
 
                     } else if (resp.actualizado == true) {
 
@@ -174,12 +175,12 @@ function calcularPrecioVenta(e) {
                             icon: 'success',
                             title: resp.post,
                             showConfirmButton: false,
-                            timer: 1500
+                            timer: 2200
                         })
                         frm.reset();
                         cargarDetalle();
                         document.getElementById("cantidad").setAttribute('disabled', 'disabled');
-                        document.getElementById("codigo").focus()
+                        document.getElementById("codigo2").focus()
 
                     } else {
                         Swal.fire({
@@ -187,7 +188,7 @@ function calcularPrecioVenta(e) {
                             icon: 'error',
                             title: resp.post,
                             showConfirmButton: false,
-                            timer: 1500
+                            timer: 2200
                         })
                         document.getElementById("cantidad").value = "";
                     }
@@ -244,7 +245,7 @@ function calcularDescuento(e, id) {
             icon: 'error',
             title: 'Ingrese el descuento ',
             showConfirmButton: false,
-            timer: 1500
+            timer: 2200
         })
     } else {
 
@@ -262,7 +263,7 @@ function calcularDescuento(e, id) {
                             icon: 'success',
                             title: resp.post,
                             showConfirmButton: false,
-                            timer: 1500
+                            timer: 2200
                         })
                         cargarDetalle();
                     } else {
@@ -271,7 +272,7 @@ function calcularDescuento(e, id) {
                             icon: 'error',
                             title: resp.post,
                             showConfirmButton: false,
-                            timer: 1500
+                            timer: 2200
                         })
 
                     }
@@ -296,7 +297,7 @@ function deleteDetalle(id) {
                     icon: 'success',
                     title: resp.post,
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 2200
                 })
                 cargarDetalle();
             } else {
@@ -305,7 +306,7 @@ function deleteDetalle(id) {
                     icon: 'error',
                     title: resp.post,
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 2200
                 })
             }
         }
@@ -338,7 +339,7 @@ function efectivo(e) {
                         icon: 'success',
                         title: resp.post,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2200
                     })
                 } else {
                     alert(resp.msg, "error");
@@ -361,13 +362,13 @@ function cerrarVenta() {
 //generar venta
 function generarVenta() {
 
-    if (cambio == "") {
+    if (efectivos == "") {
         Swal.fire({
             position: 'top-end',
             icon: 'info',
-            title: 'No es posible generar la venta ',
+            title: 'El campo efectivo no puede estar vacío ',
             showConfirmButton: false,
-            timer: 1500
+            timer: 2200
         })
 
     } else {
@@ -494,7 +495,7 @@ function btnAnularV(id) {
         }
     })
 }
-//hoa
+//hostorial ventas
 document.addEventListener("DOMContentLoaded", function() {
 
     $('#tableHistorialVentas').dataTable({
@@ -523,7 +524,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Copiar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3]
+                    "columns": [0, 1, 2, 3, 4]
                 }
             }, {
                 "extend": "excelHtml5",
@@ -531,7 +532,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Expotar a Excel",
                 "className": "btn btn-success",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3]
+                    "columns": [0, 1, 2, 3, 4]
                 }
             }, {
                 "extend": "pdfHtml5",
@@ -539,7 +540,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Exportar a PDF",
                 "className": "btn btn-danger",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3]
+                    "columns": [0, 1, 2, 3, 4]
                 }
             }, {
                 "extend": "csvHtml5",
@@ -547,7 +548,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 "titleAttr": "Eportar",
                 "className": "btn btn-secondary",
                 "exportOptions": {
-                    "columns": [0, 1, 2, 3]
+                    "columns": [0, 1, 2, 3, 4]
                 }
             },
 
