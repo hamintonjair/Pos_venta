@@ -142,7 +142,7 @@ function categoriaVaciar() {
         buttonsStyling: false
     })
     swalWithBootstrapButtons.fire({
-        title: '¿Realmente quiere vaciar los productos?',
+        title: '¿Realmente quiere vaciar las categorías?',
         text: "Las categorías se eliminarán permanentemente.",
         icon: 'warning',
         showCancelButton: true,
