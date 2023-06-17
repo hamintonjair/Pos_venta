@@ -20,7 +20,8 @@ class Ventas extends Controller {
         $id_user = $_SESSION[ 'id_usuario' ];
         $verificar = $this->model->verificarPermisos( $id_user, 'nueva_venta' );
         if ( !empty( $verificar ) || $id_user == 1 ) {
-            $this->views->getView( $this, 'venta' );
+                 $data['productos'] = $this->model->getProducto();    
+            $this->views->getView( $this, 'venta', $data );
         } else {
             header( 'location:'.base_url.'Errors/permisos' );
         }
