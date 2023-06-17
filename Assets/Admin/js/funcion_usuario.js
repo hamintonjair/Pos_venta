@@ -246,7 +246,7 @@ function usuarioVaciar() {
         buttonsStyling: false
     })
     swalWithBootstrapButtons.fire({
-        title: '¿Realmente quiere vaciar los productos?',
+        title: '¿Realmente quiere vaciar los usuarios?',
         text: "Los usuarios se eliminarán permanentemente.",
         icon: 'warning',
         showCancelButton: true,
