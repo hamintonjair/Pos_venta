@@ -87,7 +87,7 @@ include 'Views/Templates/body.php';
                                 <div class='form-group'>
                                     <label for='descripcion'>Producto(<font color="red">*</font>)</label>
                                     <input type='text' name='descripcion' id='descripcion'
-                                        class='form-control valid validText' placeholder='Descripción'
+                                        class='form-control' placeholder='Descripción'
                                         aria-describedby='helpId'>
 
                                 </div>
