@@ -21,7 +21,7 @@ Manual de usuario</a></li>
 <li><a class="dropdown-item"  href="https://fb.watch/ld_qLC6KIl/" target="_blank" rel="noopener"><i class="fa fa-info-circle" aria-hidden="true"></i>
 Ayuda</a></li>
           
-            <li><a class="dropdown-item"  href="<?php echo base_url; ?>Usuarios/logout"><i class="fa fa-sign-out fa-lg"></i>Cerrear sesión</a></li>
+            <li><a class="dropdown-item"  href="<?php echo base_url; ?>Usuarios/logout"><i class="fa fa-sign-out fa-lg"></i>Cerrar sesión</a></li>
           </ul>
         </li>
       </ul>
