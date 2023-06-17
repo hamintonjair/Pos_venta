@@ -351,7 +351,7 @@ function medidasVaciar() {
         buttonsStyling: false
     })
     swalWithBootstrapButtons.fire({
-        title: '¿Realmente quiere vaciar los productos?',
+        title: '¿Realmente quiere vaciar las unidades de medidas?',
         text: "Las medidas se eliminarán permanentemente.",
         icon: 'warning',
         showCancelButton: true,
