@@ -49,54 +49,70 @@ function buscarCodigoVenta(e) {
 
 }
 //buscar por nombre
-function buscarNombre(e) {
-    e.preventDefault();
+function buscarNombre() {
 
-    if (e.which == 13) {
-        const nomb = document.getElementById("nombre").value;
-        const valorCodificado = nomb.replace(/ /g, '+');
-        cod_producto = valorCodificado;
-        const url = base_url + "Ventas/buscarVenta/" + valorCodificado;
-        const http = new XMLHttpRequest();
-        http.open("GET", url, true);
-        http.send();
-        http.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                const resp = JSON.parse(this.responseText);
-
-
-                if (resp.post == "Producto agotado." || resp.post == "Producto no existe.") {
-
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'error',
-                        title: resp.post,
-                        showConfirmButton: false,
-                        timer: 2200
-                    })
-
-                    document.getElementById("descripcion").value = "Descripcion del producto";
-                    document.getElementById("cantidad").value = "0.00";
-                    document.getElementById("precio").value = "0.00";
-                    document.getElementById("sub_total").value = "0.00";
-                    document.getElementById("iva").value = "0.00";
-                    document.getElementById("precio").focus()
-                } else {
-                    document.getElementById("codigo2").value = "";
-                    document.getElementById("descripcion").value = resp.descripcion;
-                    document.getElementById("precio").value = resp.precio_venta;
-                    document.getElementById("iva").value = resp.iva;
-                    document.getElementById("id").value = resp.id;
-                    document.getElementById("cantidad").removeAttribute('disabled');
-                    document.getElementById("cantidad").value = "";
-                    document.getElementById("cantidad").focus();
-                }
+    // const nomb = document.getElementById("nombre").value;
+    const select = document.getElementById("nombre");
+    const nomb = select.options[select.selectedIndex].value;
+    const valorCodificado = nomb.replace(/ /g, '+');
+    cod_producto = valorCodificado;
+    const url = base_url + "Ventas/buscarVenta/" + valorCodificado;
+    const http = new XMLHttpRequest();
+    http.open("GET", url, true);
+    http.send();
+    http.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            const resp = JSON.parse(this.responseText);
 
 
+            if (resp.post == "Producto agotado." || resp.post == "Producto no existe.") {
+
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'error',
+                    title: resp.post,
+                    showConfirmButton: false,
+                    timer: 2200
+                })
+
+                document.getElementById("descripcion").value = "Descripcion del producto";
+                document.getElementById("cantidad").value = "0.00";
+                document.getElementById("precio").value = "0.00";
+                document.getElementById("sub_total").value = "0.00";
+                document.getElementById("iva").value = "0.00";
+                document.getElementById("precio").focus()
+            } else {
+                document.getElementById("codigo2").value = "";
+                document.getElementById("descripcion").value = resp.descripcion;
+                document.getElementById("precio").value = resp.precio_venta;
+                document.getElementById("iva").value = resp.iva;
+                document.getElementById("id").value = resp.id;
+                document.getElementById("cantidad").removeAttribute('disabled');
+                document.getElementById("cantidad").value = "";
+                document.getElementById("cantidad").focus();
             }
+
+
         }
+
     }
 
+}
+//filtro
+function filtrarProductos() {
+    const input = document.getElementById("buscador");
+    const filter = input.value.toUpperCase();
+    const select = document.getElementById("nombre");
+    const options = select.getElementsByTagName("option");
+
+    for (let i = 0; i < options.length; i++) {
+        const text = options[i].textContent || options[i].innerText;
+        if (text.toUpperCase().indexOf(filter) > -1) {
+            options[i].style.display = "";
+        } else {
+            options[i].style.display = "none";
+        }
+    }
 }
 //buscar cliente 
 function buscarCliente(e) {
