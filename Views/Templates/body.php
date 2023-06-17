@@ -18,7 +18,7 @@
            
             <li><a class="dropdown-item"  href="https://drive.google.com/file/d/1rWD1ZMnmXgOTWyrI2Iz3gsxw1fqyG4TT/view?usp=sharing" target="_blank" rel="noopener"><i class="fa fa-address-book" aria-hidden="true"></i>
 Manual de usuario</a></li>
-<li><a class="dropdown-item"  href="#" target="_blank" rel="noopener"><i class="fa fa-info-circle" aria-hidden="true"></i>
+<li><a class="dropdown-item"  href="https://fb.watch/ld_qLC6KIl/" target="_blank" rel="noopener"><i class="fa fa-info-circle" aria-hidden="true"></i>
 Ayuda</a></li>
           
             <li><a class="dropdown-item"  href="<?php echo base_url; ?>Usuarios/logout"><i class="fa fa-sign-out fa-lg"></i>Cerrear sesión</a></li>
