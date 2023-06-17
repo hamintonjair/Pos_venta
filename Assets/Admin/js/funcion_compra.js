@@ -49,53 +49,69 @@ function buscarCodigo(e) {
 }
 
 // //buscar por nombre
-function buscarNombreC(e) {
-    e.preventDefault();
+function buscarNombreC() {
 
-    if (e.which == 13) {
-        const nomb = document.getElementById("nombre").value;
-        const valorCodificado = nomb.replace(/ /g, '+');
-        cod_producto = valorCodificado;
-        const url = base_url + "Compras/buscarCompra/" + valorCodificado;
-        const http = new XMLHttpRequest();
-        http.open("GET", url, true);
-        http.send();
-        http.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                const resp = JSON.parse(this.responseText);
-
-
-                if (resp) {
-                    document.getElementById("descripcion").value = resp.descripcion;
-                    document.getElementById("precio").value = resp.precio_compra;
-                    document.getElementById("id").value = resp.id;
-                    document.getElementById("nit").value = resp.nit;
-                    document.getElementById("id_proveedor").value = resp.id_proveedor;
-                    document.getElementById("proveedor").value = resp.nombre;
-                    document.getElementById("cantidad").focus();
-                } else {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'error',
-                        title: 'Producto no existe',
-                        showConfirmButton: false,
-                        timer: 2200
-                    })
-                    document.getElementById("descripcion").value = "Descripcion del producto";
-                    document.getElementById("cantidad").value = "0.00";
-                    document.getElementById("precio").value = "0.00";
-                    document.getElementById("sub_total").value = "0.00";
-                    document.getElementById("nit").value = "";
-                    document.getElementById("proveedor").value = "";
-                    document.getElementById("precio").focus()
-                }
+    const select = document.getElementById("nombre");
+    const nomb = select.options[select.selectedIndex].value;
+    const valorCodificado = nomb.replace(/ /g, '+');
+    cod_producto = valorCodificado;
+    const url = base_url + "Compras/buscarCompra/" + valorCodificado;
+    const http = new XMLHttpRequest();
+    http.open("GET", url, true);
+    http.send();
+    http.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            const resp = JSON.parse(this.responseText);
 
 
+            if (resp) {
+                document.getElementById("descripcion").value = resp.descripcion;
+                document.getElementById("precio").value = resp.precio_compra;
+                document.getElementById("id").value = resp.id;
+                document.getElementById("nit").value = resp.nit;
+                document.getElementById("id_proveedor").value = resp.id_proveedor;
+                document.getElementById("proveedor").value = resp.nombre;
+                document.getElementById("cantidad").focus();
+            } else {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Producto no existe',
+                    showConfirmButton: false,
+                    timer: 2200
+                })
+                document.getElementById("descripcion").value = "Descripcion del producto";
+                document.getElementById("cantidad").value = "0.00";
+                document.getElementById("precio").value = "0.00";
+                document.getElementById("sub_total").value = "0.00";
+                document.getElementById("nit").value = "";
+                document.getElementById("proveedor").value = "";
+                document.getElementById("precio").focus()
             }
+
+
         }
+
     }
 
 }
+//filtro
+function filtrarProductosC() {
+    const input = document.getElementById("buscador");
+    const filter = input.value.toUpperCase();
+    const select = document.getElementById("nombre");
+    const options = select.getElementsByTagName("option");
+
+    for (let i = 0; i < options.length; i++) {
+        const text = options[i].textContent || options[i].innerText;
+        if (text.toUpperCase().indexOf(filter) > -1) {
+            options[i].style.display = "";
+        } else {
+            options[i].style.display = "none";
+        }
+    }
+}
+
 //buscar cliente 
 function buscarProveedor(e) {
     e.preventDefault();
