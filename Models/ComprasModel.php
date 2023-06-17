@@ -32,6 +32,13 @@ class ComprasModel extends Query {
 
         return $data;
     }
+           //listar productos
+       public function getProducto(){
+        $sql = "SELECT descripcion FROM productos";
+        $data = $this->selectAll( $sql );
+
+        return $data;
+    }
     //registrar datalles
 
     public function registrarDetallesC( int $id_producto, int $id_usuario, string $precio, int $cantidad, string $sub_total ) {
