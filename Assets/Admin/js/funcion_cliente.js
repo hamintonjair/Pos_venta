@@ -214,7 +214,7 @@ function clienteVaciar() {
         buttonsStyling: false
     })
     swalWithBootstrapButtons.fire({
-        title: '¿Realmente quiere vaciar los productos?',
+        title: '¿Realmente quiere vaciar los clientes?',
         text: "Los clientes se eliminarán permanentemente.",
         icon: 'warning',
         showCancelButton: true,
