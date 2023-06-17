@@ -30,6 +30,13 @@ class VentasModel extends Query {
         return $result;
 
     }
+        //listar productos
+    public function getProducto(){
+        $sql = "SELECT descripcion FROM productos";
+        $data = $this->selectAll( $sql );
+
+        return $data;
+    }
     //registrar detalles ventas
 
     public function getProductos( string $id ) {
