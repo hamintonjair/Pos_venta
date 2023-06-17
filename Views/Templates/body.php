@@ -16,7 +16,7 @@
           <ul class="dropdown-menu settings-menu dropdown-menu-right">          
             <li><a class="dropdown-item"  href="#"data-toggle="modal" data-target="#pass"><i class="fa fa-key fa-lg"></i>Contraseña</a></li>     
            
-            <li><a class="dropdown-item"  href="https://drive.google.com/file/d/1WFtdgpP9AdvCVPAzCtUMJiMJbiwKG8sF/view?usp=sharing" target="_blank" rel="noopener"><i class="fa fa-address-book" aria-hidden="true"></i>
+            <li><a class="dropdown-item"  href="https://drive.google.com/file/d/1kdH5BqrYIZWnIWWqZ5LvXI9Ntm2JsKaQ/view?usp=sharing" target="_blank" rel="noopener"><i class="fa fa-address-book" aria-hidden="true"></i>
 Manual de usuario</a></li>
 <li><a class="dropdown-item"  href="#" target="_blank" rel="noopener"><i class="fa fa-info-circle" aria-hidden="true"></i>
 Ayuda</a></li>
