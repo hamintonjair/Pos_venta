@@ -127,7 +127,8 @@ CREATE TABLE `configuracion` (
   `telefono` varchar(15) NOT NULL,
   `direccion` varchar(200) NOT NULL,
   `ciudad` varchar(50) NOT NULL,
-  `mensaje` varchar(200) NOT NULL
+  `mensaje` varchar(200) NOT NULL,
+  `tipo_Impresora` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --

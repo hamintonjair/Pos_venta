@@ -421,7 +421,7 @@ function generarVenta() {
                                 resp.post,
                                 'success',
                             );
-                            const ruta = base_url + 'Ventas/generarPDF/' + resp.id_venta;
+                            const ruta = base_url + 'Ventas/imprimirPDF/' + resp.id_venta;
                             window.open(ruta);
                             setTimeout(() => {
                                 window.location.reload();
@@ -519,7 +519,8 @@ document.addEventListener("DOMContentLoaded", function() {
         dom: 'lBfrtip',
         "columnDefs": [
 
-            { 'className': "textcenter", "targets": [4] }, //status           
+            { 'className': "textcenter", "targets": [4] }, //status  
+            { 'className': "textcenter", "targets": [5] }, //status           
         ],
         "ajax": {
             "url": " " + base_url + "Ventas/listar_historial",

@@ -390,7 +390,7 @@ function generarCompra() {
                             resp.post,
                             'success',
                         );
-                        const ruta = base_url + 'Compras/generarPDF/' + resp.id_compra;
+                        const ruta = base_url + 'Compras/imprimirPDF/' + resp.id_compra;
                         window.open(ruta);
                         setTimeout(() => {
                             window.location.reload();
@@ -438,7 +438,8 @@ document.addEventListener("DOMContentLoaded", function() {
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
-            { 'className': "textcenter", "targets": [2] }, //status  
+            { 'className': "textcenter", "targets": [4] }, //status  
+            { 'className': "textcenter", "targets": [5] }, //status  
 
         ],
         "ajax": {

@@ -28,10 +28,10 @@ class ConfiguracionModel extends Query {
     }
     //actualizar
 
-    public function actualizar( string $nit, string $regimen, int $resolucion, string $nombre, string $telefono, string $direccion, string $ciudad, string $mensaje, int $id ) {
+    public function actualizar( string $nit, string $regimen, int $resolucion, string $nombre, string $telefono, string $direccion, string $ciudad, string $mensaje,string $impresora, int $id ) {
 
-        $sql = 'UPDATE configuracion SET nit = ?, regimen = ?,resolucion = ?, nombre = ?, telefono = ?, direccion = ?, ciudad = ?, mensaje = ? WHERE id = ?';
-        $data = array( $nit, $regimen, $resolucion, $nombre,  $telefono,  $direccion,  $ciudad,  $mensaje,  $id );
+        $sql = 'UPDATE configuracion SET nit = ?, regimen = ?,resolucion = ?, nombre = ?, telefono = ?, direccion = ?, ciudad = ?, mensaje = ?, tipo_Impresora = ? WHERE id = ?';
+        $data = array( $nit, $regimen, $resolucion, $nombre,  $telefono,  $direccion,  $ciudad,  $mensaje, $impresora, $id );
         $datos = $this->save( $sql, $data );
 
         if ( $datos == 1 ) {

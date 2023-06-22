@@ -52,13 +52,15 @@ class Configuracion extends Controller {
         $direccion = $_POST[ 'direccion' ];
         $ciudad = $_POST[ 'ciudad' ];
         $mensaje = $_POST[ 'mensaje' ];
+        $impresora = $_POST[ 'impresora' ];
+
         $id = $_POST[ 'id' ];
         $cantidadCaracter = strlen( $mensaje );
 
         if ( $cantidadCaracter > 95 ) {            
               $msg = ( array( 'ok'=> false, 'post' => 'No debe superar la cantidad de caracteres permitidos (95).' ) );
         } else {
-            $data = $this->model->actualizar( $nit, $regimen, $resolucion, $nombre, $telefono, $direccion, $ciudad, $mensaje, $id );
+            $data = $this->model->actualizar( $nit, $regimen, $resolucion, $nombre, $telefono, $direccion, $ciudad, $mensaje,$impresora, $id );
             if ( $data == 'ok' ) {
 
                 $msg = ( array( 'ok'=> true, 'post' => 'Se actualizaron los datos.' ) );

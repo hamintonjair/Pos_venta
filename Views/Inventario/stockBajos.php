@@ -7,7 +7,7 @@ include 'Views/Templates/body.php';
 <main class='app-content'>
     <div class='app-title'>
         <div>
-            <h1><i class='fas fa-flag'></i>Inventario <small>Stock bajos</small>
+            <h1><i class='fas fa-flag'></i>Inventario <small>Stock bajos "Menor a 5"</small>
                 <button class="btn btn-primary" type="button" onclick="volverInventario();" data-toggle="modal_arqueo"
                     class="fa-solid fa-circle-plus">Volver</button></a></li>
               

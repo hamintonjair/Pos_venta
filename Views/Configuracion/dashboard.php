@@ -110,7 +110,7 @@ include 'Views/Templates/body.php';
         <div class="col-xl-6">
             <div class="card">
                 <div class="card-header bg-dark text-white">
-                    Productos con Stock mínimo
+                    Productos con Stock mínimo a 10
                 </div>
                 <div class="card-body">
                     <canvas id="stockMinimo"></canvas>

@@ -91,6 +91,22 @@ include 'Views/Templates/body.php';
                                 aria-describedby="helpId"><?php echo $data['mensaje'] ?></textarea>
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class='form-group'>
+                            <label for='impresora'>Tipo de factura (<font color="red">*</font>)</label>
+                            <select class='custom-select' name='impresora' id='impresora'><?php echo $data['mensaje'] ?>
+                                <option selected>Selecionar..</option>
+                                <option value='Carta'>Carta</option>
+                                <option value='80mm'>80mm</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="mensaje">Impresora actual</label>
+                            (<font color="red"><?php echo $data['tipo_Impresora'] ?></font>)
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <button type='button' class='btn btn-primary' onclick="actualizarEmpresa(event)">Actualizar</button>

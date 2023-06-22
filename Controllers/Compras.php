@@ -180,6 +180,17 @@ class Compras extends Controller {
     }
     //generar pfd
 
+  
+    public function imprimirPDF($id){
+
+        if ($_SESSION['impresora'] == '80mm') {
+            $this->generarPDF80mm($id);
+        } else {
+            $this->generarPDF($id);
+        }
+
+    }
+    //generar pfd
     public function generarPDF( $id_compra ) {
 
         //traer datos d ela empresa
@@ -205,7 +216,7 @@ class Compras extends Controller {
 
         $pdf->Ln( 20 );
 
-        $pdf->SetFont( 'Arial', 'B', 14 );
+        $pdf->SetFont( 'Arial', 'B', 12 );
         $pdf->Cell( 0, 5, 'Factura de Compra ', 0, 1, 'C' );
        
 
@@ -263,7 +274,7 @@ class Compras extends Controller {
     
         $pdf->SetFont( 'Arial', 'B', 12 );
 
-        $pdf->Cell( 125, 5, 'Estado:', 0, 0, 'R' );
+        $pdf->Cell( 85, 5, 'Estado:', 0, 0, 'R' );
 
         $pdf->SetFont( 'Arial', '', 12 );
         if ( $estado == 0 ) {
@@ -274,7 +285,7 @@ class Compras extends Controller {
 
         }
         $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 125, 5, 'Tipo de pago:', 0, 0, 'R' );
+        $pdf->Cell( 85, 5, 'Tipo de pago:', 0, 0, 'R' );
         $pdf->SetFont( 'Arial', '', 12 );
         if ( $pago == 'Credito' ) {
 
@@ -291,10 +302,7 @@ class Compras extends Controller {
 
         $pdf->Cell( 24, 5, utf8_decode( $empresa[ 'mensaje' ] ), 0, 1, 'L' );
 
-        $pdf->Ln(4);
-
-        //encabezado de productos
-        $pdf->Ln( 1 );
+        $pdf->Ln(5);
 
         $pdf->SetFont( 'Arial', 'B', 12 );
         $pdf->setTextColor( 40, 40, 40 );
@@ -312,9 +320,9 @@ class Compras extends Controller {
         $pdf->SetDrawColor( 61, 174, 273, 1 );
 
         $pdf->setTextColor( 0, 0, 0 );
-        $pdf->Line( 15, 115, 200, 115 );
+        $pdf->Line( 15, 114, 200, 114 );
 
-        $pdf->Ln();
+        $pdf->Ln(1);
 
         $total = 0.00;
 
@@ -328,8 +336,8 @@ class Compras extends Controller {
             $total = $total + $row[ 'sub_total' ];
             $pdf->Cell( 15, 5, $row[ 'cantidad' ], 1, 0, 'L', 1 );
             $pdf->Cell( 90, 5, utf8_decode( $row[ 'descripcion' ] ), 1, 0, 'L', 1 );
-            $pdf->Cell( 40, 5, formatMoney( $row[ 'precio' ] ), 1, 0, 'L', 1 );
-            $pdf->Cell( 40, 5, formatMoney( $row[ 'sub_total' ] ), 1, 1, 'L', 1 );
+            $pdf->Cell( 40, 5, '$'.number_format( $row[ 'precio' ] ), 1, 0, 'L', 1 );
+            $pdf->Cell( 40, 5, '$'.number_format( $row[ 'sub_total' ] ), 1, 1, 'L', 1 );
         }
 
         $pdf->Ln();
@@ -340,10 +348,179 @@ class Compras extends Controller {
         $pdf->SetFont( 'Arial', 'B', 12 );
 
         $pdf->Cell( 150, 5,  $pagar, 0, 0, 'R', 1 );
-        $pdf->Cell( 35, 5, formatMoney( $total ), 0, 1, 'R', 1 );
+        $pdf->Cell( 35, 5, '$'.number_format( $total ), 0, 1, 'R', 1 );
 
         $pdf->Output();
     }
+
+    public function generarPDF80mm($id_venta) {
+        // Traer datos de la empresa
+        $empresa = $this->model->getEmpresa();
+    
+        $id_usuario = $_SESSION['id_usuario'];
+    
+        $usuario = $this->model->getUsuario($id_usuario);
+       // Traer datos de la compra
+        $productos = $this->model->getCompra($id_venta);
+    
+        require('Libraries/fpdf/fpdf.php');
+    
+        // Crea una instancia de FPDF con el tamaño personalizado 3
+        $pdf = new FPDF('P', 'mm', array(80, 210), true);
+    
+        // Configurar los márgenes
+        $pdf->SetMargins(5, 5, 5);
+    
+        $pdf->AddPage('PORTRAIT', array(80, 210));
+        $pdf->setFillColor(77, 182, 172);
+        $pdf->Rect(0, 0, 80, 20, 'F');
+        $pdf->Ln(5);
+        $pdf->setTitle( 'Reporte de Compra' );
+
+        $pdf->Image( base_url.'Assets/img/logo.png', 33, 23, 10, 10, 'png' );
+    
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->Cell(0, 5, 'Factura de Compra', 0, 1, 'C');
+        
+        foreach ($productos as $row) {
+            $fecha = $row['fecha'];
+            $nombre = $row['nombre'];
+            $estado = $row['estado'];
+            $pago = $row['pago'];
+        }
+        
+        $pdf->Cell(0, 5, $empresa['ciudad'], 0, 1, 'C');
+        $pdf->Ln(15);
+    
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->Cell(26, 5, 'Fecha de Compra:', 0, 0, 'L');
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Cell(20, 5, Ymd_dmY($fecha), 0, 1, 'L');
+    
+        // Resto del código...
+        $pdf->SetFont( 'Arial', 'B', 8 );
+        $pdf->Cell( 26, 5, 'Empresa: ', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 8 );
+        $pdf->Cell( 20, 5, $empresa[ 'nombre' ], 0, 1, 'L' );
+
+        $pdf->SetFont( 'Arial', 'B', 8 );
+        $pdf->Cell( 26, 5, 'Nit: ', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 8 );
+        $pdf->Cell( 20, 5, $empresa[ 'nit' ], 0, 1, 'L' );
+
+        $pdf->SetFont( 'Arial', 'B', 8 );
+        $pdf->Cell( 26, 5, utf8_decode( 'Regimen: ' ), 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 8 );
+        $pdf->Cell( 20, 5, utf8_decode($empresa['regimen']), 0, 1, 'L' );
+
+        $pdf->SetFont( 'Arial', 'B', 8 );
+        $pdf->Cell( 26, 5, 'Resolucion: ' , 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 8 );
+        $pdf->Cell( 20, 5,  $empresa['resolucion'], 0, 1, 'L' );
+
+        $pdf->SetFont( 'Arial', 'B', 8 );
+        $pdf->Cell( 26, 5, utf8_decode( 'Teléfono: ' ), 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 8 );
+        $pdf->Cell( 20, 5, $empresa[ 'telefono' ], 0, 1, 'L' );
+
+        $pdf->SetFont( 'Arial', 'B', 8 );
+        $pdf->Cell( 26, 5, utf8_decode( 'Dirección: ' ), 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 8 );
+        $pdf->Cell( 20, 5, utf8_decode( $empresa[ 'direccion' ]), 0, 1, 'L' );
+
+        $pdf->SetFont( 'Arial', 'B', 8 );
+        $pdf->Cell( 26, 5, 'Cajero: ', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 8 );
+        $pdf->Cell( 20, 5, utf8_decode( $usuario[ 'nombre' ] ), 0, 1, 'L' );
+
+        $pdf->SetFont( 'Arial', 'B', 8 );
+        $pdf->Cell( 26, 5, 'Cliente: ', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 8 );
+        $pdf->Cell( 20, 5, utf8_decode( $nombre ), 0, 1, 'L' );
+
+        $pdf->SetFont( 'Arial', 'B', 8 );
+        $pdf->Cell( 26, 5, 'Factura #: ', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 8 );
+        $pdf->Cell( 20, 5, $id_venta, 0, 1, 'L' );
+
+
+        $pdf->SetFont( 'Arial', 'B', 8 );
+
+        $pdf->Cell( 26, 5, 'Estado de la venta:', 0, 0, 'l' );
+        $pdf->SetFont( 'Arial', '', 8 );
+        if ( $estado == 0 ) {
+            $pdf->Cell( 20, 5, 'Anulado', 0, 1, 'R' );
+
+        } else {
+            $pdf->Cell( 20, 5, 'Completado', 0, 1, 'R' );
+
+        }
+        $pdf->SetFont( 'Arial', 'B', 8 );
+        $pdf->Cell( 20, 5, 'Tipo de pago:', 0, 0, 'R' );
+        $pdf->SetFont( 'Arial', '', 8 );
+      
+        if ( $pago == 'Credito' ) {
+
+            $pdf->Cell( 20, 5, $pago, 0, 1, 'R' );
+            $pagar = 'Total a pagar:';
+
+        } else {
+            $pdf->Cell( 20, 5, $pago, 0, 1, 'R' );
+            $pagar = 'Total pagado:';
+
+        }
+
+        $pdf->SetFont( 'Arial', '', 8 );
+        $pdf->MultiCell( 0, 5, utf8_decode( $empresa[ 'mensaje' ] ), 0, 1, 'J' );
+
+        $pdf->Ln( 5 );
+     
+        $pdf->setTextColor( 40, 40, 40 );
+        $pdf->setFillColor( 255, 255, 255 );
+        $pdf->SetDrawColor( 88, 88, 88 );
+
+         // Encabezados de las columnas
+         $pdf->SetFont('Arial', 'B', 8);
+         $pdf->Cell(8, 5, 'Cant', 1, 0, 'L', true);
+         $pdf->Cell(25, 5, utf8_decode('Descripción'), 1, 0, 'L', true);
+         $pdf->Cell(18, 5, 'P. Unitario', 1, 0, 'L', true);
+         $pdf->Cell(18, 5, 'Sub Total', 1, 1, 'L', true);
+
+         
+         $pdf->SetLineWidth(1);
+         $pdf->SetDrawColor(61, 174, 273, 1);
+         $pdf->SetTextColor(0, 0, 0);
+         $pdf->Ln(1);
+         
+         $total = 0.00;
+    
+        //  $pdf->SetFillColor(240, 240, 240);
+         $pdf->SetTextColor(40, 40, 40);
+         $pdf->SetDrawColor(255, 255, 255);
+         
+         $pdf->SetFont( 'Arial', '', 8 );
+         foreach ( $productos as $row ) {
+             $total = $total + $row[ 'sub_total' ];
+             $pdf->Cell( 8, 5, $row[ 'cantidad' ], 1, 0, 'L', 1 );
+             $pdf->Cell( 25, 5, utf8_decode( $row[ 'descripcion' ] ), 1, 0, 'L', 1 );
+             $pdf->Cell( 18, 5, '$'.number_format( $row[ 'precio' ] ), 1, 0, 'L', 1 );
+             $pdf->Cell( 18, 5, '$'.number_format( $row[ 'sub_total' ] ), 1, 1, 'L', 1 );
+         }
+
+      
+        $pdf->setFillColor( 99, 108, 97 );
+        $pdf->SetTextColor( 255, 255, 255 );
+
+        $pdf->SetFont( 'Arial', 'B', 8 );
+        $pdf->Ln();
+
+        $pdf->Cell( 20, 5, $pagar , 0, 0, 'R', 1 );
+        $pdf->Cell( 30, 5, '$'.number_format($total), 0, 1, 'R', 1 );
+    
+    
+        $pdf->Output();
+    }
+
 
     //historial compras
 
@@ -373,23 +550,38 @@ class Compras extends Controller {
                 if( $_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){
                     $data[ $i ][ 'acciones' ] = '<div>  
                     <button class="btn btn-warning" title="Anular" onclick="btnAnularC('.$data[ $i ][ 'id' ].')"><i class="fas fa-ban"></i></button>          
-                    <a type="button" class="btn btn-danger" href="'.base_url.'Compras/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
+                    <a type="button" class="btn btn-danger" href="'.base_url.'Compras/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>       
+                    <a type="button"  class="btn btn-danger" href="'.base_url.'Compras/generarPDF80mm/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF 80mm"><i class="fas fa-file-pdf"> 80mm</i></a>                            
+                     
                 </div>';
                 }else{
                     $data[ $i ][ 'acciones' ] = '<div>  
                     <button class="btn btn-warning" disabled="" title="Anular" onclick="btnAnularC('.$data[ $i ][ 'id' ].')"><i class="fas fa-ban"></i></button>          
-                     <a type="button"  class="btn btn-danger" href="'.base_url.'Compras/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
+                     <a type="button"  class="btn btn-danger" href="'.base_url.'Compras/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>
+                     <a type="button"  class="btn btn-danger" href="'.base_url.'Compras/generarPDF80mm/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF 80mm"><i class="fas fa-file-pdf"> 80mm</i></a>                            
+                            
                   </div>';
                 }
-              
+                
             } else {
 
                 if($_SESSION['rol'] == 'Administrador' || $_SESSION['rol'] == 'Supervisor'){
                      $data[ $i ][ 'estado' ] = ' <span class="badge badge-danger">Anulado</span>';
 
-                $data[ $i ][ 'acciones' ] = '<div>                        
-                <a type="button" class="btn btn-danger" href="'.base_url.'Compras/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a>                            
+                $data[ $i ][ 'acciones' ] = '<div>     
+                <button class="btn btn-warning" title="Anular" onclick="btnAnularC('.$data[ $i ][ 'id' ].')"><i class="fas fa-ban"></i></button>                       
+                <a type="button" class="btn btn-danger" href="'.base_url.'Compras/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a> 
+                <a type="button"  class="btn btn-danger" href="'.base_url.'Compras/generarPDF80mm/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PD 80mmF"><i class="fas fa-file-pdf"> 80mm</i></a>                            
+                           
                 </div>';
+                }else{
+                    $data[ $i ][ 'estado' ] = ' <span class="badge badge-danger">Anulado</span>';
+                    $data[ $i ][ 'acciones' ] = '<div>  
+                    <button class="btn btn-warning" disabled="" title="Anular" onclick="btnAnularC('.$data[ $i ][ 'id' ].')"><i class="fas fa-ban"></i></button>          
+                     <a type="button"  class="btn btn-danger" href="'.base_url.'Compras/generarPDF/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF"><i class="fas fa-file-pdf"></i></a> 
+                     <a type="button"  class="btn btn-danger" href="'.base_url.'Compras/generarPDF80mm/'.$data[ $i ][ 'id' ].'" target="_blank"  title="PDF 80mm"><i class="fas fa-file-pdf"> 80mm</i></a>                            
+                           
+                  </div>';
                 }
                
 

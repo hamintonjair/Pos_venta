@@ -32,7 +32,7 @@ include 'Views/Templates/body.php';
                 <div class='tile-body'>
                     <div class='table-responsive'>
                         <table class='table table-hover table-bordered' id='tableUsuariosEliminados'>
-                            <thead>
+                            <thead class="thead-dark">
                                 <tr>
                                     <th>#</th>
                                     <th>Usuario</th>
