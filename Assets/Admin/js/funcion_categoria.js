@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
+
+    let base_url = 'http://localhost/Pos_venta/';
+
     $('#tableCategorias').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
@@ -63,6 +66,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 })
 document.addEventListener("DOMContentLoaded", function() {
+    let base_url = 'http://localhost/Pos_venta/';
+
     $('#tableCategoriasEliminado').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
@@ -129,11 +134,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //eliminado
 function categoriaEliminado() {
+    let base_url = 'http://localhost/Pos_venta/';
 
     window.location = base_url + "Categorias/categoriaEliminado";
 }
 //vaciar categorias
 function categoriaVaciar() {
+    let base_url = 'http://localhost/Pos_venta/';
+
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',
@@ -191,12 +199,14 @@ function categoriaVaciar() {
 }
 //volver
 function volverCategoria() {
+    let base_url = 'http://localhost/Pos_venta/';
 
     window.location = base_url + "categorias";
 }
 //registrar categoria
 function registrarCategoria(e) {
     e.preventDefault();
+    let base_url = 'http://localhost/Pos_venta/';
 
     const categoria = document.getElementById("categoria");
 
@@ -264,82 +274,111 @@ function editarCategoria(id) {
     document.querySelector('#titleModal').innerHTML = "Actualizar Categoria";
     document.querySelector('#frmCategoria').reset();
 
-    const url = base_url + "Categorias/editar/" + id;
-    const http = new XMLHttpRequest();
-    http.open("GET", url, true);
-    http.send();
-    http.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            const resp = JSON.parse(this.responseText);
-
-            document.getElementById('idCategoria').value = resp.id;
-            document.getElementById("categoria").value = resp.nombre;
+    let base_url = 'http://localhost/Pos_venta/';
+    $.ajax({
+        url: base_url + 'Categorias/editar/' + id,
+        type: "GET",
+        dataType: "json",
+        data: {
+            id: id
+        },
+        success: function(resp) {
+            $('#idCategoria').val(resp[0].id);
+            $('#categoria').val(resp[0].nombre);
             $('#nueva_categoria').modal('show');
         }
-    }
+    });
 
 }
 
 //eliminar
 function eliminarCategoria(id) {
 
-    const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-            confirmButton: 'btn btn-success',
-            cancelButton: 'btn btn-danger'
-        },
-        buttonsStyling: false
-    })
-    swalWithBootstrapButtons.fire({
-        title: '¿Realmente quiere eliminar la Categoría?',
-        text: "El categoría no se eliminará de forma permanete, solo cambiará el estado de inactivo",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Si, Eliminar!',
-        cancelButtonText: 'No, cancel!',
-        reverseButtons: true
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const url = base_url + "Categorias/deleteCategoria/" + id;
-            const http = new XMLHttpRequest();
-            http.open("GET", url, true);
-            http.send();
-            http.onreadystatechange = function() {
+    let base_url = 'http://localhost/Pos_venta/';
 
-                if (this.readyState == 4 && this.status == 200) {
-                    const resp = JSON.parse(this.responseText);
-
-                    if (resp.eliminado == true) {
-                        swalWithBootstrapButtons.fire(
-                            'Eliminado!',
-                            resp.post,
-                            'success',
-                            location.reload()
-                        );
-                    } else {
-                        swalWithBootstrapButtons.fire(
-                            'Cancelado!',
-                            resp.msg,
-                            'error'
-                        );
+    // Verificar la relación del categoria
+    $.ajax({
+        url: base_url + "Categorias/eliminar/" + id,
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                // No hay relación, eliminar directamente
+                // eliminarCate(id);
+                Swal.fire({
+                    title: 'Success',
+                    text: response.message,
+                    icon: 'success'
+                });
+                location.reload();
+            } else {
+                // Mostrar confirmación adicional si hay relación
+                Swal.fire({
+                    title: 'Advertencia',
+                    text: response.message,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        eliminarCate(id);
                     }
-                }
+                });
             }
-
-        } else if (
-            /* Read more about handling dismissals below */
-            result.dismiss === Swal.DismissReason.cancel
-        ) {
-            swalWithBootstrapButtons.fire(
-                'Cancelado!',
-                'La categoría no fue eliminada',
-                'error'
-            )
+        },
+        error: function() {
+            Swal.fire({
+                title: 'Error',
+                text: 'Ha ocurrido un error al verificar la relación',
+                icon: 'error'
+            });
         }
-    })
+    });
+};
+
+function eliminarCate(id) {
+
+    let base_url = 'http://localhost/Pos_venta/';
+    // Eliminar el categoria
+    const url = base_url + "Categorias/deleteCategoria/" + id;
+    const http = new XMLHttpRequest();
+    http.open("GET", url, true);
+    http.send();
+    http.onreadystatechange = function() {
+
+        if (this.readyState == 4 && this.status == 200) {
+            const resp = JSON.parse(this.responseText);
+
+            if (resp.eliminado == true) {
+
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: resp.post,
+                    showConfirmButton: false,
+                    timer: 2200
+                });
+                location.reload()
+
+            } else {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'error',
+                    title: resp.msg,
+                    showConfirmButton: false,
+                    timer: 2200
+                });
+            }
+        }
+    }
+
 }
+
 //reingresar categoria
 function reingresarCategoria(id) {
+    let base_url = 'http://localhost/Pos_venta/';
+
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',

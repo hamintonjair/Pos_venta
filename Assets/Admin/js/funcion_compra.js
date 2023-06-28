@@ -4,6 +4,7 @@ let t_h_c;
 
 function buscarCodigo(e) {
     e.preventDefault();
+    let base_url = 'http://localhost/Pos_venta/';
 
     if (e.which == 13) {
         const cod = document.getElementById("codigo2").value;
@@ -17,13 +18,14 @@ function buscarCodigo(e) {
                 const resp = JSON.parse(this.responseText);
 
                 if (resp) {
-                    document.getElementById("descripcion").value = resp.descripcion;
-                    document.getElementById("precio").value = resp.precio_compra;
-                    document.getElementById("id").value = resp.id;
-                    document.getElementById("nit").value = resp.nit;
-                    document.getElementById("id_proveedor").value = resp.id_proveedor;
-                    document.getElementById("proveedor").value = resp.nombre;
-                    document.getElementById("cantidad").focus();
+
+                    $("#descripcion").val(resp[0].descripcion);
+                    $("#precio").val(resp[0].precio_compra);
+                    $("#id").val(resp[0].id);
+                    $("#nit").val(resp[0].nit);
+                    $("#id_proveedor").val(resp[0].id_proveedor);
+                    $("#proveedor").val(resp[0].nombre);
+                    $("#cantidad").focus();
                 } else {
                     Swal.fire({
                         position: 'top-end',
@@ -32,13 +34,14 @@ function buscarCodigo(e) {
                         showConfirmButton: false,
                         timer: 2200
                     })
-                    document.getElementById("descripcion").value = "Descripcion del producto";
-                    document.getElementById("cantidad").value = "0.00";
-                    document.getElementById("precio").value = "0.00";
-                    document.getElementById("sub_total").value = "0.00";
-                    document.getElementById("nit").value = "";
-                    document.getElementById("proveedor").value = "";
-                    document.getElementById("precio").focus()
+                    $("#descripcion").val("Descripcion del producto");
+                    $("#cantidad").val("0.00");
+                    $("#precio").val("0.00");
+                    $("#sub_total").val("0.00");
+                    $("#nit").val("");
+                    $("#proveedor").val(resp.nombre);
+                    $("#precio").focus();
+
                 }
 
 
@@ -50,12 +53,16 @@ function buscarCodigo(e) {
 
 // //buscar por nombre
 function buscarNombreC() {
+    let base_url = 'http://localhost/Pos_venta/';
 
-    const select = document.getElementById("nombre");
-    const nomb = select.options[select.selectedIndex].value;
-    const valorCodificado = nomb.replace(/ /g, '+');
-    cod_producto = valorCodificado;
-    const url = base_url + "Compras/buscarCompra/" + valorCodificado;
+    // const nomb = document.getElementById("nombre").value;
+    const select = $("#nombre");
+    const nomb = select.val();
+    // const cod = nomb.replace(/ /g, '+');
+    const cod = encodeURIComponent(nomb.replace(/ /g, '+'));
+
+    cod_producto = cod;
+    const url = base_url + "Compras/buscarCompra/" + cod;
     const http = new XMLHttpRequest();
     http.open("GET", url, true);
     http.send();
@@ -65,13 +72,14 @@ function buscarNombreC() {
 
 
             if (resp) {
-                document.getElementById("descripcion").value = resp.descripcion;
-                document.getElementById("precio").value = resp.precio_compra;
-                document.getElementById("id").value = resp.id;
-                document.getElementById("nit").value = resp.nit;
-                document.getElementById("id_proveedor").value = resp.id_proveedor;
-                document.getElementById("proveedor").value = resp.nombre;
-                document.getElementById("cantidad").focus();
+
+                $("#descripcion").val(resp[0].descripcion);
+                $("#precio").val(resp[0].precio_compra);
+                $("#id").val(resp[0].id);
+                $("#nit").val(resp[0].nit);
+                $("#id_proveedor").val(resp[0].id_proveedor);
+                $("#proveedor").val(resp[0].nombre);
+                $("#cantidad").focus();
             } else {
                 Swal.fire({
                     position: 'top-end',
@@ -80,13 +88,13 @@ function buscarNombreC() {
                     showConfirmButton: false,
                     timer: 2200
                 })
-                document.getElementById("descripcion").value = "Descripcion del producto";
-                document.getElementById("cantidad").value = "0.00";
-                document.getElementById("precio").value = "0.00";
-                document.getElementById("sub_total").value = "0.00";
-                document.getElementById("nit").value = "";
-                document.getElementById("proveedor").value = "";
-                document.getElementById("precio").focus()
+                $("#descripcion").val("Descripcion del producto");
+                $("#cantidad").val("0.00");
+                $("#precio").val("0.00");
+                $("#sub_total").val("0.00");
+                $("#nit").val("");
+                $("#proveedor").val(resp.nombre);
+                $("#precio").focus();
             }
 
 
@@ -116,6 +124,8 @@ function filtrarProductosC() {
 function buscarProveedor(e) {
     e.preventDefault();
     if (e.which == 13) {
+        let base_url = 'http://localhost/Pos_venta/';
+
         const nit = document.getElementById("nit").value;
         const url = base_url + "Compras/buscarProveedor/" + nit;
         const http = new XMLHttpRequest();
@@ -126,8 +136,9 @@ function buscarProveedor(e) {
                 const resp = JSON.parse(this.responseText);
 
                 if (resp) {
-                    document.getElementById("proveedor").value = resp.nombre;
-                    document.getElementById("id_proveedor").value = resp.id;
+                    $("#proveedor").val(resp[0].nombre);
+                    $("#id_proveedor").val(resp[0].id);
+
                 } else {
                     Swal.fire({
                         position: 'top-end',
@@ -136,9 +147,10 @@ function buscarProveedor(e) {
                         showConfirmButton: false,
                         timer: 2200
                     })
-                    document.getElementById("nit").value = "";
-                    document.getElementById("nit").focus();
-                    document.getElementById("proveedor").value = "";
+                    $("#nit").val("");
+                    $("#nit").focus();
+                    $("#proveedor").val("");
+
                 }
 
             }
@@ -226,6 +238,8 @@ function calcularPrecioC(e) {
     document.getElementById("sub_total").value = precio * cant;
     if (e.which == 13) {
         if (cant > 0) {
+            let base_url = 'http://localhost/Pos_venta/';
+
             const url = base_url + "Compras/ingresar";
             const frm = document.getElementById("frmCompra");
             const http = new XMLHttpRequest();
@@ -277,6 +291,8 @@ function calcularPrecioC(e) {
 
 //mostar detalles del producto de la compra
 function cargarDetalleC() {
+    let base_url = 'http://localhost/Pos_venta/';
+
     const url = base_url + "Compras/listarC";
     const http = new XMLHttpRequest();
     http.open("GET", url, true);
@@ -301,10 +317,13 @@ function cargarDetalleC() {
                 </td>            
                 </tr>`
             });
-            Pagar = resp.total_pagar.total
-            const pagar = new Intl.NumberFormat().format(resp.total_pagar.total);
-            document.getElementById("tblDetalleC").innerHTML = html;
+            Pagar = resp.total_pagar[0].total;
+            const pagar = new Intl.NumberFormat().format(resp.total_pagar[0].total);
+            $("#tblDetalleC").html(html);
+            $("#total").val(pagar);
             totalPagar = document.getElementById("total").value = pagar;
+
+
         }
 
     }
@@ -312,6 +331,8 @@ function cargarDetalleC() {
 //eliminar detalle
 function deleteDetalleC(id) {
     id_producto = id;
+    let base_url = 'http://localhost/Pos_venta/';
+
     const url = base_url + "Compras/delete/" + id;
     const http = new XMLHttpRequest();
     http.open("GET", url, true);
@@ -374,6 +395,8 @@ function generarCompra() {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
+            let base_url = 'http://localhost/Pos_venta/';
+
             const url = base_url + "Compras/registrarCompra";
             const frm = document.getElementById("frmCompras");
             const http = new XMLHttpRequest();
@@ -420,6 +443,7 @@ function generarCompra() {
 
 //pago efectivo
 function compra() {
+    let base_url = 'http://localhost/Pos_venta/';
 
     const url = base_url + "Compras/TipoPago";
     const frm = document.getElementById("frmCerrarC");
@@ -434,6 +458,8 @@ function compra() {
 }
 //historial de compras
 document.addEventListener("DOMContentLoaded", function() {
+    let base_url = 'http://localhost/Pos_venta/';
+
     $('#tableHistorial').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
@@ -519,6 +545,8 @@ function btnAnularC(id) {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
+            let base_url = 'http://localhost/Pos_venta/';
+
             const url = base_url + "Compras/anularCompra/" + id;
             const http = new XMLHttpRequest();
             http.open("GET", url, true);

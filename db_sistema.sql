@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-06-2023 a las 04:10:36
+-- Tiempo de generación: 28-06-2023 a las 02:37:15
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.1.17
 
@@ -93,7 +93,7 @@ CREATE TABLE `clientes` (
 --
 
 INSERT INTO `clientes` (`id`, `dni`, `nombre`, `telefono`, `direccion`, `estado`) VALUES
-(1, '999999999', 'GENERICO', '5555555', 'Quibdó-chocó', 1);
+(1, '999999999', 'GENERICO', '5555555', 'Quibdo - Choco', 1);
 
 -- --------------------------------------------------------
 
@@ -135,8 +135,8 @@ CREATE TABLE `configuracion` (
 -- Volcado de datos para la tabla `configuracion`
 --
 
-INSERT INTO `configuracion` (`id`, `nit`, `regimen`, `resolucion`, `nombre`, `telefono`, `direccion`, `ciudad`, `mensaje`) VALUES
-(1, '99999999-1', 'Comun', 0, 'Jojama', '3125555555', 'carrera 112 # 46 - 136', 'Quibdo - Choco - Colombia', 'Gracias por preferirnos, somos  papeleria y multiservicios en general. ');
+INSERT INTO `configuracion` (`id`, `nit`, `regimen`, `resolucion`, `nombre`, `telefono`, `direccion`, `ciudad`, `mensaje`, `tipo_Impresora`) VALUES
+(1, '99999999-1', 'Comun', 0, 'Jojama', '3125555555', 'carrera 112 # 46 - 136', 'Quibdo - Choco - Colombia', 'Gracias por preferirnos, somos  papeleria y multiservicios en general. ', '80mm');
 
 -- --------------------------------------------------------
 
@@ -179,6 +179,16 @@ CREATE TABLE `detalle_permisos` (
   `id_usuario` int(11) NOT NULL,
   `id_permiso` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `detalle_permisos`
+--
+
+INSERT INTO `detalle_permisos` (`id`, `id_usuario`, `id_permiso`) VALUES
+(3, 2, 1),
+(4, 2, 4),
+(5, 2, 9),
+(6, 2, 10);
 
 -- --------------------------------------------------------
 
@@ -232,9 +242,9 @@ CREATE TABLE `medidas` (
 --
 
 INSERT INTO `medidas` (`id`, `nombre`, `nombre_corto`, `estado`) VALUES
-(1, 'Gramos', 'g', 1),
-(2, 'Kilogramos', 'kg', 1),
-(3, 'Unidad', 'uds', 1);
+(1, 'g', '', 1),
+(2, 'kg', '', 1),
+(3, 'uds', '', 1);
 
 -- --------------------------------------------------------
 
@@ -359,7 +369,7 @@ CREATE TABLE `proveedor` (
 --
 
 INSERT INTO `proveedor` (`id`, `nit`, `razon_social`, `nombre`, `telefono`, `direccion`, `estado`) VALUES
-(1, '999999999', 'GENERICO', 'GENÉRICO', '5555555', 'Quibdó-Chocó', 1);
+(1, '999999999', 'GENERICO', 'GENÉRICO', '5555555', 'Quibdo-Choco', 1);
 
 -- --------------------------------------------------------
 
@@ -382,7 +392,8 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `usuario`, `nombre`, `clave`, `id_caja`, `rol`, `estado`) VALUES
-(1, 'admin', 'Administrador', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 1, 'Administrador', 1);
+(1, 'admin', 'Administrador', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 1, 'Administrador', 1),
+(2, 'vendedor', 'Vendedor', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', 2, 'Vendedor', 1);
 
 -- --------------------------------------------------------
 
@@ -561,7 +572,7 @@ ALTER TABLE `cierre_caja`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `compras`
@@ -591,7 +602,7 @@ ALTER TABLE `detalle`
 -- AUTO_INCREMENT de la tabla `detalle_permisos`
 --
 ALTER TABLE `detalle_permisos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_temp`
@@ -633,7 +644,7 @@ ALTER TABLE `productos`
 -- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`

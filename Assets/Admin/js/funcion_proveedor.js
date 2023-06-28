@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
+    let base_url = 'http://localhost/Pos_venta/';
     $('#tableProveedores').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
@@ -76,7 +77,7 @@ function registrarProveedor(e) {
     const nombre = document.getElementById("nombre");
     const telefono = document.getElementById("telefono");
     const direccion = document.getElementById("direccion");
-
+    let base_url = 'http://localhost/Pos_venta/';
 
     if (nit.value == "" || razon_social.value == "" || nombre.value == "" || telefono.value == "" || direccion.value == "") {
 
@@ -147,29 +148,29 @@ function editarProveedor(id) {
     document.querySelector('#titleModal').innerHTML = "Actualizar Proveedor";
     document.querySelector('#frmProveedores').reset();
 
-    const url = base_url + "Proveedores/editar/" + id;
-    const http = new XMLHttpRequest();
-    http.open("GET", url, true);
-    http.send();
-    http.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            const resp = JSON.parse(this.responseText);
-
-            document.getElementById('idProveedor').value = resp.id;
-            document.getElementById("nit").value = resp.nit;
-            document.getElementById("razon_social").value = resp.razon_social;
-            document.getElementById("nombre").value = resp.nombre;
-            document.getElementById("telefono").value = resp.telefono;
-            document.getElementById("direccion").value = resp.direccion;
+    let base_url = 'http://localhost/Pos_venta/';
+    $.ajax({
+        url: base_url + 'Proveedores/editar/' + id,
+        type: "GET",
+        dataType: "json",
+        data: {
+            id: id
+        },
+        success: function(resp) {
+            $('#idProveedor').val(resp[0].id);
+            $('#nit').val(resp[0].nit);
+            $('#razon_social').val(resp[0].razon_social);
+            $('#nombre').val(resp[0].nombre);
+            $('#telefono').val(resp[0].telefono);
+            $('#direccion').val(resp[0].direccion);
             $('#nuevo_proveedor').modal('show');
         }
-    }
-
+    });
 }
 
 //eliminar
 function eliminarProveedor(id) {
-
+    let base_url = 'http://localhost/Pos_venta/';
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',
@@ -179,7 +180,7 @@ function eliminarProveedor(id) {
     })
     swalWithBootstrapButtons.fire({
         title: '¿Realmente quiere eliminar el Proveedor?',
-        text: "El proveedor no se eliminará de forma permanete, solo cambiará el estado de inactivo",
+        text: "El proveedor no se eliminará de forma permanente, solo cambiará el estado de inactivo",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Si, Eliminar!',
@@ -227,6 +228,7 @@ function eliminarProveedor(id) {
 }
 //reingresar usuario
 function reingresarProveedor(id) {
+    let base_url = 'http://localhost/Pos_venta/';
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',

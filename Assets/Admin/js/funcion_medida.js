@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
+    let base_url = 'http://localhost/Pos_venta/';
+
     $('#tableMedidas').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
@@ -65,6 +67,8 @@ document.addEventListener("DOMContentLoaded", function() {
 })
 
 document.addEventListener("DOMContentLoaded", function() {
+    let base_url = 'http://localhost/Pos_venta/';
+
     $('#tableMedidasEliminado').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
@@ -131,11 +135,13 @@ document.addEventListener("DOMContentLoaded", function() {
 })
 
 function medidasEliminado() {
+    let base_url = 'http://localhost/Pos_venta/';
 
     window.location = base_url + "Medidas/medidasEliminado";
 }
 
 function volverMedidas() {
+    let base_url = 'http://localhost/Pos_venta/';
 
     window.location = base_url + "medidas";
 }
@@ -157,6 +163,8 @@ function registrarMedida(e) {
 
 
     } else {
+        let base_url = 'http://localhost/Pos_venta/';
+
         const url = base_url + "Medidas/registrarMedida";
         const frm = document.getElementById("frmMedida");
         const http = new XMLHttpRequest();
@@ -210,83 +218,110 @@ function editarMedida(id) {
     document.querySelector('#titleModal').innerHTML = "Actualizar Medida";
     document.querySelector('#frmMedida').reset();
 
-    const url = base_url + "Medidas/editar/" + id;
-    const http = new XMLHttpRequest();
-    http.open("GET", url, true);
-    http.send();
-    http.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            const resp = JSON.parse(this.responseText);
-
-            document.getElementById('idMedida').value = resp.id;
-            document.getElementById("nombre").value = resp.nombre;
-            document.getElementById("nombre_corto").value = resp.nombre_corto;
+    let base_url = 'http://localhost/Pos_venta/';
+    $.ajax({
+        url: base_url + 'Medidas/editar/' + id,
+        type: "GET",
+        dataType: "json",
+        data: {
+            id: id
+        },
+        success: function(resp) {
+            $('#idMedida').val(resp[0].id);
+            $('#nombre').val(resp[0].nombre);
+            $('#nombre_corto').val(resp[0].nombre_corto);
             $('#nueva_medida').modal('show');
         }
-    }
+    });
 
 }
 
 //eliminar
 function eliminarMedida(id) {
 
-    const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-            confirmButton: 'btn btn-success',
-            cancelButton: 'btn btn-danger'
-        },
-        buttonsStyling: false
-    })
-    swalWithBootstrapButtons.fire({
-        title: '¿Realmente quiere eliminar el Medida?',
-        text: "La medida no se eliminará de forma permanete, solo cambiará el estado de inactivo",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Si, Eliminar!',
-        cancelButtonText: 'No, cancel!',
-        reverseButtons: true
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const url = base_url + "Medidas/deleteMedida/" + id;
-            const http = new XMLHttpRequest();
-            http.open("GET", url, true);
-            http.send();
-            http.onreadystatechange = function() {
+    let base_url = 'http://localhost/Pos_venta/';
 
-                if (this.readyState == 4 && this.status == 200) {
-                    const resp = JSON.parse(this.responseText);
-
-                    if (resp.eliminado == true) {
-                        swalWithBootstrapButtons.fire(
-                            'Eliminado!',
-                            resp.post,
-                            'success',
-                            location.reload()
-                        );
-                    } else {
-                        swalWithBootstrapButtons.fire(
-                            'Cancelado!',
-                            resp.msg,
-                            'error'
-                        );
+    // Verificar la relación del usuario
+    $.ajax({
+        url: base_url + "Medidas/eliminar/" + id,
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                // No hay relación, eliminar directamente
+                eliminarMedi(id);
+            } else {
+                // Mostrar confirmación adicional si hay relación
+                Swal.fire({
+                    title: 'Advertencia',
+                    text: response.message,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        eliminarMedi(id);
                     }
-                }
+                });
             }
-
-        } else if (
-            /* Read more about handling dismissals below */
-            result.dismiss === Swal.DismissReason.cancel
-        ) {
-            swalWithBootstrapButtons.fire(
-                'Cancelado!',
-                'La medida no fue eliminado',
-                'error'
-            )
+        },
+        error: function() {
+            Swal.fire({
+                title: 'Error',
+                text: 'Ha ocurrido un error al verificar la relación',
+                icon: 'error'
+            });
         }
-    })
+    });
+};
+
+function eliminarMedi(id) {
+
+    let base_url = 'http://localhost/Pos_venta/';
+
+    // Eliminar el usuario
+    $.ajax({
+        url: base_url + "Medidas/deleteMedida/" + id,
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            if (response.eliminado == true) {
+                // Usuario eliminado correctamente
+                Swal.fire({
+                    title: 'Eliminado',
+                    text: response.post,
+                    icon: 'success'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Recargar la página
+                        location.reload();
+                    }
+                });
+            } else {
+                // Error al eliminar el usuario
+                Swal.fire({
+                    title: 'Error',
+                    text: response.post,
+                    icon: 'error'
+                });
+            }
+        },
+        error: function() {
+            // Mostrar mensaje de error en caso de falla en la petición Ajax
+            Swal.fire({
+                title: 'Error',
+                text: 'Ha ocurrido un error al procesar la solicitud',
+                icon: 'error'
+            });
+        }
+    });
 }
+
 //reingresar caja
 function reingresarMedida(id) {
+    let base_url = 'http://localhost/Pos_venta/';
+
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',
@@ -343,6 +378,8 @@ function reingresarMedida(id) {
 }
 //vaciar medidas
 function medidasVaciar() {
+    let base_url = 'http://localhost/Pos_venta/';
+
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',

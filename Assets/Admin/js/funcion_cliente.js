@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
+
+    let base_url = 'http://localhost/Pos_venta/';
+
     $('#tableClientes').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
@@ -87,6 +90,8 @@ function registrarCliente(e) {
         })
 
     } else {
+        let base_url = 'http://localhost/Pos_venta/';
+
         const url = base_url + "Clientes/registrarCliente";
         const frm = document.getElementById("frmCliente");
         const http = new XMLHttpRequest();
@@ -133,6 +138,8 @@ function registrarCliente(e) {
 
 }
 document.addEventListener("DOMContentLoaded", function() {
+        let base_url = 'http://localhost/Pos_venta/';
+
         $('#tableClientesEliminados').dataTable({
             "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
             dom: 'lBfrtip',
@@ -201,11 +208,14 @@ document.addEventListener("DOMContentLoaded", function() {
     })
     //eliminado
 function clienteEliminado() {
+    let base_url = 'http://localhost/Pos_venta/';
 
     window.location = base_url + "Clientes/clienteEliminado";
 }
 //vaciar cliente
 function clienteVaciar() {
+    let base_url = 'http://localhost/Pos_venta/';
+
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',
@@ -263,6 +273,7 @@ function clienteVaciar() {
 }
 //volver
 function volverCliente() {
+    let base_url = 'http://localhost/Pos_venta/';
 
     window.location = base_url + "clientes";
 }
@@ -275,27 +286,28 @@ function editarCliente(id) {
     document.querySelector('#titleModal').innerHTML = "Actualizar Cliente";
     document.querySelector('#frmCliente').reset();
 
-    const url = base_url + "Clientes/editar/" + id;
-    const http = new XMLHttpRequest();
-    http.open("GET", url, true);
-    http.send();
-    http.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            const resp = JSON.parse(this.responseText);
-
-            document.getElementById('idCliente').value = resp.id;
-            document.getElementById("dni").value = resp.dni;
-            document.getElementById("nombre").value = resp.nombre;
-            document.getElementById("telefono").value = resp.telefono;
-            document.getElementById("direccion").value = resp.direccion;
+    let base_url = 'http://localhost/Pos_venta/';
+    $.ajax({
+        url: base_url + 'clientes/editar/' + id,
+        type: "GET",
+        dataType: "json",
+        data: {
+            id: id
+        },
+        success: function(resp) {
+            $('#idCliente').val(resp[0].id);
+            $('#dni').val(resp[0].dni);
+            $('#nombre').val(resp[0].nombre);
+            $('#telefono').val(resp[0].telefono);
+            $('#direccion').val(resp[0].direccion);
             $('#nuevo_cliente').modal('show');
         }
-    }
-
+    });
 }
 
 //eliminar
 function eliminarCliente(id) {
+    let base_url = 'http://localhost/Pos_venta/';
 
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -354,6 +366,8 @@ function eliminarCliente(id) {
 }
 //reingresar cliente
 function reingresarCliente(id) {
+    let base_url = 'http://localhost/Pos_venta/';
+
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',

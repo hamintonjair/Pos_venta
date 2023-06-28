@@ -1,39 +1,43 @@
 //login
-function frmLogin(e) {
-    e.preventDefault();
+document.addEventListener("DOMContentLoaded", function() {
 
-    const usuarios = document.getElementById("usuario");
-    const clave = document.getElementById("clave");
-    if (usuarios.value == "") {
-        clave.classList.remove("is-invalid");
-        usuarios.classList.add("is-invalid");
-        usuarios.focus();
-    } else if (clave.value == "") {
-        usuarios.classList.remove("is-invalid");
-        clave.classList.add("is-invalid");
-        clave.focus();
-    } else {
-        const url = base_url + "Usuarios/validar";
-        const frm = document.getElementById("frmLogin");
-        const http = new XMLHttpRequest();
-        http.open("POST", url, true);
-        http.send(new FormData(frm));
-        http.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                const resp = JSON.parse(this.responseText);
+    let formulario = document.querySelector("#frmLogin");
+    formulario.onsubmit = function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
 
-                if (resp.ok == true) {
-                    alerta("Atención", resp.post, "success");
-                    window.location = base_url + "Configuracion/dashboard";
-                } else {
-                    document.getElementById("alerta").classList.remove("d-none");
-                    document.getElementById("alerta").innerHTML = resp;
+        let base_url = 'http://localhost/Pos_venta/';
+        const usuarios = document.querySelector('#usuario').value;
+        const clave = document.querySelector('#clave').value;
+
+        if (usuarios == "" || clave == "") {
+            alerta('Error', 'Todos los campos son obligatorios.', 'error');
+
+        } else {
+            $.ajax({
+                type: 'post',
+                url: base_url + 'Login/validar',
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response.ok === true) {
+                        alerta('Success', response.post, 'success');
+                        window.location = base_url + 'dashboard/inicio'
+
+                    } else {
+                        alerta('Error', response.post, 'error');
+
+                    }
                 }
-            }
-        }
-    }
 
-}
+            });
+        }
+    };
+})
+
+
 
 function alerta(title, text, icon) {
     Swal.fire({

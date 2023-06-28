@@ -1,4 +1,7 @@
+//listar usuarios
 document.addEventListener("DOMContentLoaded", function() {
+    let base_url = 'http://localhost/Pos_venta/';
+
     $('#tableUsuarios').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
@@ -66,7 +69,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 })
 
+//listar usuarios eliminados
 document.addEventListener("DOMContentLoaded", function() {
+    let base_url = 'http://localhost/Pos_venta/';
+
     $('#tableUsuariosEliminados').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
@@ -156,6 +162,8 @@ function registrarUsuario(e) {
         })
 
     } else {
+        let base_url = 'http://localhost/Pos_venta/';
+
         const url = base_url + "Usuarios/registrarUser";
         const frm = document.getElementById("frmUsuarios");
         const http = new XMLHttpRequest();
@@ -212,32 +220,34 @@ function editarUsuario(id) {
     document.querySelector('#titleModal').innerHTML = "Actualizar Usuario";
     document.querySelector('#frmUsuarios').reset();
 
-    const url = base_url + "Usuarios/editar/" + id;
-    const http = new XMLHttpRequest();
-    http.open("GET", url, true);
-    http.send();
-    http.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            const resp = JSON.parse(this.responseText);
-
-            document.getElementById('idUsuario').value = resp.id;
-            document.getElementById("usuario").value = resp.usuario;
-            document.getElementById("nombre").value = resp.nombre;
-            document.getElementById("caja").value = resp.id_caja;
-            document.getElementById("rol").value = resp.rol;
-            document.getElementById("clave").value = resp.clave;
+    let base_url = 'http://localhost/Pos_venta/';
+    $.ajax({
+        url: base_url + 'Usuarios/editar/' + id,
+        type: "GET",
+        dataType: "json",
+        data: {
+            id: id
+        },
+        success: function(resp) {
+            $('#idUsuario').val(resp[0].id);
+            $('#usuario').val(resp[0].usuario);
+            $('#nombre').val(resp[0].nombre);
+            $('#caja').val(resp[0].id_caja);
+            $('#rol').val(resp[0].rol);
+            $('#clave').val(resp[0].clave);
             $('#nuevo_usuario').modal('show');
         }
-    }
-
+    });
 }
 //eliminado
 function usuarioEliminado() {
-
+    let base_url = 'http://localhost/Pos_venta/';
     window.location = base_url + "Usuarios/usuarioEliminado";
 }
 //vaciar usuario
 function usuarioVaciar() {
+    let base_url = 'http://localhost/Pos_venta/';
+
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',
@@ -295,69 +305,95 @@ function usuarioVaciar() {
 }
 //volver
 function volverUsuarios() {
-
+    let base_url = 'http://localhost/Pos_venta/';
     window.location = base_url + "usuarios";
 }
 //eliminar
 function eliminarUsuario(id) {
 
-    const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-            confirmButton: 'btn btn-success',
-            cancelButton: 'btn btn-danger'
-        },
-        buttonsStyling: false
-    })
-    swalWithBootstrapButtons.fire({
-        title: '¿Realmente quiere eliminar el Usuario?',
-        text: "El usuario no se eliminará de forma permanete, solo cambiará el estado de inactivo",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Si, Eliminar!',
-        cancelButtonText: 'No, cancel!',
-        reverseButtons: true
-    }).then((result) => {
-        if (result.isConfirmed) {
-            const url = base_url + "Usuarios/deleteUsuario/" + id;
-            const http = new XMLHttpRequest();
-            http.open("GET", url, true);
-            http.send();
-            http.onreadystatechange = function() {
+    let base_url = 'http://localhost/Pos_venta/';
 
-                if (this.readyState == 4 && this.status == 200) {
-                    const resp = JSON.parse(this.responseText);
-
-                    if (resp.eliminado == true) {
-                        swalWithBootstrapButtons.fire(
-                            'Eliminado!',
-                            resp.post,
-                            'success',
-                            location.reload()
-                        );
-                    } else {
-                        swalWithBootstrapButtons.fire(
-                            'Cancelado!',
-                            resp.msg,
-                            'error'
-                        );
+    // Verificar la relación del usuario
+    $.ajax({
+        url: base_url + "Usuarios/eliminar/" + id,
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            if (response.success) {
+                console.log(response);
+                // No hay relación, eliminar directamente
+                eliminarUser(id);
+            } else {
+                // Mostrar confirmación adicional si hay relación
+                Swal.fire({
+                    title: 'Advertencia',
+                    text: response.message,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        eliminarUser(id);
                     }
-                }
+                });
             }
-
-        } else if (
-            /* Read more about handling dismissals below */
-            result.dismiss === Swal.DismissReason.cancel
-        ) {
-            swalWithBootstrapButtons.fire(
-                'Cancelado!',
-                'El usuario no fue eliminado',
-                'error'
-            )
+        },
+        error: function() {
+            Swal.fire({
+                title: 'Error',
+                text: 'Ha ocurrido un error al verificar la relación',
+                icon: 'error'
+            });
         }
-    })
+    });
+};
+
+function eliminarUser(id) {
+    let base_url = 'http://localhost/Pos_venta/';
+
+    // Eliminar el usuario
+    $.ajax({
+        url: base_url + "Usuarios/deleteUsuario/" + id,
+        type: 'POST',
+        dataType: 'json',
+        success: function(response) {
+            if (response.eliminado == true) {
+                // Usuario eliminado correctamente
+                Swal.fire({
+                    title: 'Eliminado',
+                    text: response.post,
+                    icon: 'success'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Recargar la página
+                        location.reload();
+                    }
+                });
+            } else {
+                // Error al eliminar el usuario
+                Swal.fire({
+                    title: 'Error',
+                    text: response.post,
+                    icon: 'error'
+                });
+            }
+        },
+        error: function() {
+            // Mostrar mensaje de error en caso de falla en la petición Ajax
+            Swal.fire({
+                title: 'Error',
+                text: 'Ha ocurrido un error al procesar la solicitud',
+                icon: 'error'
+            });
+        }
+    });
 }
+
 //reingresar usuario
 function reingresarUsuario(id) {
+    let base_url = 'http://localhost/Pos_venta/';
+
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',
@@ -439,6 +475,8 @@ function frmPass(e) {
                 timer: 2200
             })
         } else {
+            let base_url = 'http://localhost/Pos_venta/';
+
             const url = base_url + "Usuarios/cambiarPass";
             const frm = document.getElementById("frmPass");
             const http = new XMLHttpRequest();
@@ -479,6 +517,7 @@ function frmPass(e) {
 //registrar permisos 
 function registrarPermisos(e) {
     e.preventDefault();
+    let base_url = 'http://localhost/Pos_venta/';
 
     const url = base_url + "Usuarios/RegistrarPermisos";
     const frm = document.getElementById("formulario")

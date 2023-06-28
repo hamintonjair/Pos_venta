@@ -7,6 +7,8 @@ function buscarCodigoVenta(e) {
     if (e.which == 13) {
         const cod = document.getElementById("codigo2").value;
         cod_productoV = cod;
+        let base_url = 'http://localhost/Pos_venta/';
+
         const url = base_url + "Ventas/buscarVenta/" + cod;
         const http = new XMLHttpRequest();
         http.open("GET", url, true);
@@ -24,25 +26,24 @@ function buscarCodigoVenta(e) {
                         showConfirmButton: false,
                         timer: 2200
                     })
+                    $("#descripcion").val("Descripcion del producto");
+                    $("#cantidad").val("0.00");
+                    $("#precio").val("0.00");
+                    $("#sub_total").val("0.00");
+                    $("#iva").val("0.00");
+                    $("#precio").focus();
 
-                    document.getElementById("descripcion").value = "Descripcion del producto";
-                    document.getElementById("cantidad").value = "0.00";
-                    document.getElementById("precio").value = "0.00";
-                    document.getElementById("sub_total").value = "0.00";
-                    document.getElementById("iva").value = "0.00";
-                    document.getElementById("precio").focus()
                 } else {
-                    document.getElementById("nombre").value = "";
-                    document.getElementById("descripcion").value = resp.descripcion;
-                    document.getElementById("precio").value = resp.precio_venta;
-                    document.getElementById("iva").value = resp.iva;
-                    document.getElementById("id").value = resp.id;
-                    document.getElementById("cantidad").removeAttribute('disabled');
-                    document.getElementById("cantidad").value = "";
-                    document.getElementById("cantidad").focus();
+                    $("#nombre").val("");
+                    $("#descripcion").val(resp[0].descripcion);
+                    $("#precio").val(resp[0].precio_venta);
+                    $("#iva").val(resp[0].iva);
+                    $("#id").val(resp[0].id);
+                    $("#cantidad").removeAttr('disabled');
+                    $("#cantidad").val("");
+                    $("#cantidad").focus();
+
                 }
-
-
             }
         }
     }
@@ -50,21 +51,23 @@ function buscarCodigoVenta(e) {
 }
 //buscar por nombre
 function buscarNombre() {
+    let base_url = 'http://localhost/Pos_venta/';
 
     // const nomb = document.getElementById("nombre").value;
-    const select = document.getElementById("nombre");
-    const nomb = select.options[select.selectedIndex].value;
-    const valorCodificado = nomb.replace(/ /g, '+');
-    cod_producto = valorCodificado;
-    const url = base_url + "Ventas/buscarVenta/" + valorCodificado;
-    const http = new XMLHttpRequest();
-    http.open("GET", url, true);
-    http.send();
-    http.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            const resp = JSON.parse(this.responseText);
+    const select = $("#nombre");
+    const nomb = select.val();
+    // const cod = nomb.replace(/ /g, '+');
+    const cod = encodeURIComponent(nomb.replace(/ /g, '+'));
 
-
+    cod_producto = cod;
+    $.ajax({
+        url: base_url + 'Ventas/buscarVenta/' + cod,
+        type: "GET",
+        dataType: "json",
+        data: {
+            cod: cod
+        },
+        success: function(resp) {
             if (resp.post == "Producto agotado." || resp.post == "Producto no existe.") {
 
                 Swal.fire({
@@ -74,28 +77,26 @@ function buscarNombre() {
                     showConfirmButton: false,
                     timer: 2200
                 })
+                $("#descripcion").val("Descripcion del producto");
+                $("#cantidad").val("0.00");
+                $("#precio").val("0.00");
+                $("#sub_total").val("0.00");
+                $("#iva").val("0.00");
+                $("#precio").focus();
 
-                document.getElementById("descripcion").value = "Descripcion del producto";
-                document.getElementById("cantidad").value = "0.00";
-                document.getElementById("precio").value = "0.00";
-                document.getElementById("sub_total").value = "0.00";
-                document.getElementById("iva").value = "0.00";
-                document.getElementById("precio").focus()
             } else {
-                document.getElementById("codigo2").value = "";
-                document.getElementById("descripcion").value = resp.descripcion;
-                document.getElementById("precio").value = resp.precio_venta;
-                document.getElementById("iva").value = resp.iva;
-                document.getElementById("id").value = resp.id;
-                document.getElementById("cantidad").removeAttribute('disabled');
-                document.getElementById("cantidad").value = "";
-                document.getElementById("cantidad").focus();
+                $("#nombre").val("");
+                $("#descripcion").val(resp[0].descripcion);
+                $("#precio").val(resp[0].precio_venta);
+                $("#iva").val(resp[0].iva);
+                $("#id").val(resp[0].id);
+                $("#cantidad").removeAttr('disabled');
+                $("#cantidad").val("");
+                $("#cantidad").focus();
+
             }
-
-
         }
-
-    }
+    });
 
 }
 //filtro
@@ -118,6 +119,8 @@ function filtrarProductos() {
 function buscarCliente(e) {
     e.preventDefault();
     if (e.which == 13) {
+        let base_url = 'http://localhost/Pos_venta/';
+
         const cedula = document.getElementById("cedula").value;
         const url = base_url + "Ventas/buscarCliente/" + cedula;
         const http = new XMLHttpRequest();
@@ -128,8 +131,8 @@ function buscarCliente(e) {
                 const resp = JSON.parse(this.responseText);
 
                 if (resp) {
-                    document.getElementById("cliente").value = resp.nombre;
-                    document.getElementById("ID").value = resp.id;
+                    $("#cliente").val(resp[0].nombre);
+                    $("#ID").val(resp[0].id);
                 } else {
                     Swal.fire({
                         position: 'top-end',
@@ -138,9 +141,10 @@ function buscarCliente(e) {
                         showConfirmButton: false,
                         timer: 2200
                     })
-                    document.getElementById("cedula").value = "";
-                    document.getElementById("cedula").focus();
-                    document.getElementById("cliente").value = "";
+                    $("#cedula").val("");
+                    $("#codigo2").focus();
+                    $("#cliente").val("");
+
                 }
 
 
@@ -154,14 +158,20 @@ let totalPago;
 //calcular cantidad
 function calcularPrecioVenta(e) {
     e.preventDefault();
-    const cant = document.getElementById("cantidad").value;
-    const precio = document.getElementById("precio").value;
-    const iva = document.getElementById("iva").value;
+
+
+    let base_url = 'http://localhost/Pos_venta/';
+
+    var cant = $('#cantidad').val();
+    var precio = $('#precio').val();
+    var iva = $('#iva').val();
+
     const subTotal = precio * cant;
     const subIva = (subTotal * iva) / 100;
     document.getElementById("sub_total").value = subIva + subTotal;
     if (e.which == 13) {
         if (cant > 0) {
+            $("#precio").removeAttr('disabled');
             const url = base_url + "Ventas/ingresar";
             const frm = document.getElementById("frmVenta");
             const http = new XMLHttpRequest();
@@ -181,8 +191,10 @@ function calcularPrecioVenta(e) {
                         })
                         frm.reset();
                         cargarDetalle();
-                        document.getElementById("cantidad").setAttribute('disabled', 'disabled');
-                        document.getElementById("codigo2").focus()
+                        $("#precio").prop('disabled', true);
+                        $("#cantidad").removeAttr('disabled');
+                        $("#codigo2").focus();
+
 
                     } else if (resp.actualizado == true) {
 
@@ -195,8 +207,9 @@ function calcularPrecioVenta(e) {
                         })
                         frm.reset();
                         cargarDetalle();
-                        document.getElementById("cantidad").setAttribute('disabled', 'disabled');
-                        document.getElementById("codigo2").focus()
+                        $("#precio").prop('disabled', true);
+                        $("#cantidad").removeAttr('disabled');
+                        $("#codigo2").focus();
 
                     } else {
                         Swal.fire({
@@ -206,7 +219,7 @@ function calcularPrecioVenta(e) {
                             showConfirmButton: false,
                             timer: 2200
                         })
-                        document.getElementById("cantidad").value = "";
+                        $("#cantidad").val("");
                     }
                 }
             }
@@ -214,46 +227,56 @@ function calcularPrecioVenta(e) {
     }
 }
 //mostar detalles del producto de la compra
+
 function cargarDetalle() {
+    let base_url = 'http://localhost/Pos_venta/';
+
     const url = base_url + "Ventas/listar";
-    const http = new XMLHttpRequest();
-    http.open("GET", url, true);
-    http.send();
-    http.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            const resp = JSON.parse(this.responseText);
+    $.ajax({
+        url: url,
+        type: "GET",
+        dataType: "json",
+        success: function(resp) {
             let html = '';
 
-            resp.detalle.forEach(row => {
+            $.each(resp.detalle, function(index, row) {
+                const precio = new Intl.NumberFormat().format(row.precio);
+                const sub_total = new Intl.NumberFormat().format(row.sub_total);
 
-                const precio = new Intl.NumberFormat().format(row['precio']);
-                const sub_total = new Intl.NumberFormat().format(row['sub_total']);
                 html += `<tr>
-                <td>${row['id']}</td>
-                <td>${row['descripcion']}</td>
-                <td>${row['cantidad']}</td>
-                <td><input class="form-control" placeholder="Descuento" type="text" onkeyup="calcularDescuento(event,${row['id']})"></td>
-                <td>${row['descuento']}</td>
-                <td>${precio}</td>
-                <td>${row['iva']}</td>
-                <td>${sub_total}</td>     
-                <td>
-                   <button class="btn btn-danger" title="Eliminar" type="button" onclick="deleteDetalle(${row['id']})"><i class="fas fa-trash-alt"></i></button>
-                </td>            
-                </tr>`
+                    <td>${row.id}</td>
+                    <td>${row.descripcion}</td>
+                    <td>${row.cantidad}</td>
+                    <td><input class="form-control" placeholder="Descuento" type="text" onkeyup="calcularDescuento(event, ${row.id})"></td>
+                    <td>${row.descuento}</td>
+                    <td>${precio}</td>
+                    <td>${row.iva}</td>
+                    <td>${sub_total}</td>     
+                    <td>
+                        <button class="btn btn-danger" title="Eliminar" type="button" onclick="deleteDetalle(${row.id})"><i class="fas fa-trash-alt"></i></button>
+                    </td>            
+                </tr>`;
             });
-            Pagar = resp.total_pagar.total
-            const pagar = new Intl.NumberFormat().format(resp.total_pagar.total);
-            document.getElementById("tblDetalle").innerHTML = html;
-            totalPago = document.getElementById("total").value = pagar;
-        }
 
-    }
+            Pagar = resp.total_pagar[0].total;
+            const pagar = new Intl.NumberFormat().format(resp.total_pagar[0].total);
+            $("#tblDetalle").html(html);
+            $("#total").val(pagar);
+            totalPago = document.getElementById("total").value = pagar;
+        },
+        error: function() {
+            alert("Error al cargar los detalles de venta.");
+        }
+    });
 }
+
 //calcular decuento
 function calcularDescuento(e, id) {
     e.preventDefault();
 
+    const descuento = e.target.value;
+
+    console.log(descuento);
     if (e.target.value == '') {
 
         Swal.fire({
@@ -266,7 +289,9 @@ function calcularDescuento(e, id) {
     } else {
 
         if (e.which == 13) {
-            const url = base_url + "Ventas/calcularDescuento/" + id + "/" + e.target.value;
+            let base_url = 'http://localhost/Pos_venta/';
+
+            const url = base_url + "Ventas/calcularDescuento/" + id + "/" + descuento;
             const http = new XMLHttpRequest();
             http.open("GET", url, true);
             http.send();
@@ -300,6 +325,8 @@ function calcularDescuento(e, id) {
 //eliminar detalle
 function deleteDetalle(id) {
     id_producto = id;
+    let base_url = 'http://localhost/Pos_venta/';
+
     const url = base_url + "Ventas/delete/" + id;
     const http = new XMLHttpRequest();
     http.open("GET", url, true);
@@ -340,6 +367,7 @@ function efectivo(e) {
         efectivos = document.getElementById("efectivos").value;
         cambio = efectivos - Pagar;
         document.getElementById("devolver").value = new Intl.NumberFormat().format(cambio);
+        let base_url = 'http://localhost/Pos_venta/';
 
         const url = base_url + "Ventas/ingresarCambio";
         const frm = document.getElementById("frmCerrar");
@@ -405,6 +433,8 @@ function generarVenta() {
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
+                let base_url = 'http://localhost/Pos_venta/';
+
                 const url = base_url + "Ventas/registrarVenta/";
                 const frm = document.getElementById("frmVentas");
                 frm.a = document.getElementById("frmCerrar");
@@ -429,7 +459,7 @@ function generarVenta() {
                         } else {
                             swalWithBootstrapButtons.fire(
                                 'Venta Cancelado!',
-                                resp.msg,
+                                resp.post,
                                 'error'
                             );
                         }
@@ -470,6 +500,8 @@ function btnAnularV(id) {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
+            let base_url = 'http://localhost/Pos_venta/';
+
             const url = base_url + "Ventas/anularVenta/" + id;
             const http = new XMLHttpRequest();
             http.open("GET", url, true);
@@ -513,6 +545,7 @@ function btnAnularV(id) {
 }
 //hostorial ventas
 document.addEventListener("DOMContentLoaded", function() {
+    let base_url = 'http://localhost/Pos_venta/';
 
     $('#tableHistorialVentas').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },

@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
+    let base_url = 'http://localhost/Pos_venta/';
     $('#tableCajas').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
@@ -68,7 +69,6 @@ function registrarCaja(e) {
     e.preventDefault();
 
     const caja = document.getElementById("caja");
-
     if (caja.value == "") {
 
         Swal.fire({
@@ -80,6 +80,7 @@ function registrarCaja(e) {
         })
 
     } else {
+        let base_url = 'http://localhost/Pos_venta/';
         const url = base_url + "Cajas/registrarCaja";
         const frm = document.getElementById("frmCaja");
         const http = new XMLHttpRequest();
@@ -135,25 +136,27 @@ function editarCaja(id) {
     document.querySelector('#titleModal').innerHTML = "Actualizar Caja";
     document.querySelector('#frmCaja').reset();
 
-    const url = base_url + "Cajas/editar/" + id;
-    const http = new XMLHttpRequest();
-    http.open("GET", url, true);
-    http.send();
-    http.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            const resp = JSON.parse(this.responseText);
 
-            document.getElementById('idCaja').value = resp.id;
-            document.getElementById("caja").value = resp.caja;
+    let base_url = 'http://localhost/Pos_venta/';
+    $.ajax({
+        url: base_url + 'Cajas/editar/' + id,
+        type: "GET",
+        dataType: "json",
+        data: {
+            id: id
+        },
+        success: function(resp) {
+            $('#idCaja').val(resp[0].id);
+            $('#caja').val(resp[0].caja);
             $('#nueva_caja').modal('show');
         }
-    }
+    });
 
 }
 
 //eliminar
 function eliminarCaja(id) {
-
+    let base_url = 'http://localhost/Pos_venta/';
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',
@@ -163,7 +166,7 @@ function eliminarCaja(id) {
     })
     swalWithBootstrapButtons.fire({
         title: '¿Realmente quiere eliminar el Caja?',
-        text: "El caja no se eliminará de forma permanete, solo cambiará el estado de inactivo",
+        text: "El caja se eliminará de forma permanente",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Si, Eliminar!',
@@ -211,6 +214,7 @@ function eliminarCaja(id) {
 }
 //reingresar caja
 function reingresarCaja(id) {
+    let base_url = 'http://localhost/Pos_venta/';
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',
@@ -267,6 +271,7 @@ function reingresarCaja(id) {
 }
 
 function openArqueo() {
+    let base_url = 'http://localhost/Pos_venta/';
     window.location = base_url + "cajas/arqueo";
 }
 //abrir modal
@@ -294,6 +299,7 @@ function abrirArqueo(e) {
             timer: 2200
         })
     } else {
+        let base_url = 'http://localhost/Pos_venta/';
         const frmAbrirCaja = document.getElementById("frmAbrirCaja");
         const url = base_url + "Cajas/abrirArqueo";
         const http = new XMLHttpRequest();
@@ -330,6 +336,7 @@ function abrirArqueo(e) {
 }
 //arqueo
 document.addEventListener("DOMContentLoaded", function() {
+    let base_url = 'http://localhost/Pos_venta/';
     $('#tableArqueoCajas').dataTable({
         "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
@@ -402,42 +409,40 @@ document.addEventListener("DOMContentLoaded", function() {
 //cerrar caja
 function cerrarArqueo() {
 
-    const url = base_url + "Cajas/consultarVentas";
-    const http = new XMLHttpRequest();
-    http.open("GET", url, true);
-    http.send();
-    http.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            const resp = JSON.parse(this.responseText);
+    let base_url = 'http://localhost/Pos_venta/';
+    $.ajax({
+        url: base_url + 'Cajas/consultarVentas/',
+        type: "GET",
+        dataType: "json",
+
+        success: function(resp) {
 
             if (resp.ok == false) {
 
                 Swal.fire({
                     position: 'top-end',
-                    icon: 'error',
+                    icon: 'warning',
                     title: resp.post,
                     showConfirmButton: false,
                     timer: 2200
                 })
-
-            } else {
-                document.getElementById('ocultar_campos2').classList.add('d-none');
-                document.getElementById('monto_inicial').value = resp.inicial.monto_inicial;
-                document.getElementById('monto_final').value = resp.monto_total.total;
-                document.getElementById('total_ventas').value = resp.total_ventas.total;
-                document.getElementById('monto_general').value = resp.monto_general;
-                document.getElementById('id').value = resp.inicial.id;
-                document.getElementById('ocultar_campos').classList.remove('d-none');
-                document.getElementById('btnActionForm').textContent = 'Cerrar caja';
-                $('#abrir_caja').modal('show');
             }
+            $('#ocultar_campos2').addClass('d-none');
+            $('#monto_inicial').val(resp.inicial[0].monto_inicial);
+            $('#monto_final').val(resp.monto_total[0].total);
+            $('#total_ventas').val(resp.total_ventas[0].total);
+            $('#monto_general').val(resp.monto_general);
+            $('#id').val(resp.inicial[0].id);
+            $('#ocultar_campos').removeClass('d-none');
+            $('#btnActionForm').text('Cerrar caja');
+            $('#abrir_caja').modal('show');
         }
-    }
+    });
 
 }
 //volver
 function volverCaja() {
-
+    let base_url = 'http://localhost/Pos_venta/';
     window.location = base_url + "cajas";
 }
 
