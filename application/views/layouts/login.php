@@ -7,6 +7,8 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Iniciar Sesión</title>
+		<link rel="shortcut icon" href="<?php echo base_url(); ?>favicon.ico"> 
+
         <link href="<?php echo base_url(); ?>assets/css/styles.css" rel="stylesheet" />
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/libreria/sweetalert2/dist/sweetalert2.min.css">        
     </head>
