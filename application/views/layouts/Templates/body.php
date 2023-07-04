@@ -5,7 +5,7 @@
           </div>
         </div>
     <!-- Navbar-->   
-    <header class="app-header"><a class="app-header__logo" href="<?php echo base_url(); ?>dashboard">Efi-conta</a>
+    <header class="app-header"><a class="app-header__logo" href="<?php echo base_url(); ?>dashboard">Efi-conta V1.0</a>
       <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="" data-toggle="sidebar" aria-label="Hide Sidebar"><i class="fad fa-bars"></i></a>
       <!-- Navbar Right Menu-->
       <ul class="app-nav">
