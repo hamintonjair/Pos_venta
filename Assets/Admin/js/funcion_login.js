@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 success: function(response) {
                     if (response.ok === true) {
                         alerta('Success', response.post, 'success');
-                        window.location = base_url + 'dashboard/inicio'
+                        window.location = base_url + 'dashboard/inicio';
 
                     } else {
                         alerta('Error', response.post, 'error');

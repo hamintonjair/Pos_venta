@@ -4,8 +4,8 @@ class Login extends CI_Controller{
     public function __construct()
     {
         session_start(); 
-        if(!empty($_SESSION['activo'])){
-            echo '<script>window.location.href="http://localhost/Pos_venta/"</script>';				
+        if(isset($_SESSION['activo'])){
+            echo '<script>window.location.href="http://localhost/Pos_venta/dashboard"</script>';				
        }      
         parent::__construct();
         $this->load->model('UsuariosModel');
