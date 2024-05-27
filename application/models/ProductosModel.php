@@ -65,10 +65,7 @@ class ProductosModel extends CI_Model {
             }
         } else {
 
-            $result = array(
-                'existe' => 'existe',
-
-            );
+            $result = 'existe';
         }
 
         return $result;

@@ -171,7 +171,7 @@ class Productos extends CI_Controller{
                       if(!empty($name)){
                         move_uploaded_file($tpmName, $destino);
                        }
-                    }else if($data[0]->existe == "existe"){
+                    }else if($data[0] == "e"){
                         $msg = (array('ok'=>false, 'post' => 'El producto ya existe y está asociado a otro proveedor.'));	
                         
                     }else{
