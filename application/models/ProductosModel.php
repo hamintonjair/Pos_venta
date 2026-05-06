@@ -141,9 +141,23 @@ class ProductosModel extends CI_Model {
     }
     //vaciar productos eliminados
     public function vaciarProducto(){
-
+        // Primero obtener los productos eliminados para eliminar sus imágenes
         $this->db->where('estado', 0);
-        $this->db->update('productos');
+        $productos_eliminados = $this->db->get('productos')->result();
+        
+        // Eliminar imágenes físicas
+        foreach ($productos_eliminados as $producto) {
+            if (!empty($producto->foto) && $producto->foto != 'default.png') {
+                $ruta_imagen = FCPATH . 'assets/img/' . $producto->foto;
+                if (file_exists($ruta_imagen)) {
+                    unlink($ruta_imagen);
+                }
+            }
+        }
+        
+        // Eliminar registros de la base de datos
+        $this->db->where('estado', 0);
+        $this->db->delete('productos');
         $result = $this->db->affected_rows();
 
         return $result;

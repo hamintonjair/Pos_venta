@@ -1,10 +1,18 @@
 let cod_producto;
 let id_producto;
 let t_h_c;
-
+function getBaseURL() {
+    // Intentar obtener desde el meta tag o usar fallback
+    const metaUrl = document.querySelector('meta[name="base-url"]');
+    if (metaUrl) {
+        return metaUrl.getAttribute('content');
+    }
+    // Fallback para desarrollo local
+    return 'http://localhost/Pos_venta/';
+}
 function buscarCodigo(e) {
     e.preventDefault();
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     if (e.which == 13) {
         const cod = document.getElementById("codigo2").value;
@@ -53,7 +61,7 @@ function buscarCodigo(e) {
 
 // //buscar por nombre
 function buscarNombreC() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     // const nomb = document.getElementById("nombre").value;
     const select = $("#nombre");
@@ -124,7 +132,7 @@ function filtrarProductosC() {
 function buscarProveedor(e) {
     e.preventDefault();
     if (e.which == 13) {
-        let base_url = 'http://localhost/Pos_venta/';
+        let base_url = getBaseURL();
 
         const nit = document.getElementById("nit").value;
         const url = base_url + "Compras/buscarProveedor/" + nit;
@@ -238,7 +246,7 @@ function calcularPrecioC(e) {
     document.getElementById("sub_total").value = precio * cant;
     if (e.which == 13) {
         if (cant > 0) {
-            let base_url = 'http://localhost/Pos_venta/';
+            let base_url = getBaseURL();
 
             const url = base_url + "Compras/ingresar";
             const frm = document.getElementById("frmCompra");
@@ -291,7 +299,7 @@ function calcularPrecioC(e) {
 
 //mostar detalles del producto de la compra
 function cargarDetalleC() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const url = base_url + "Compras/listarC";
     const http = new XMLHttpRequest();
@@ -331,7 +339,7 @@ function cargarDetalleC() {
 //eliminar detalle
 function deleteDetalleC(id) {
     id_producto = id;
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const url = base_url + "Compras/delete/" + id;
     const http = new XMLHttpRequest();
@@ -395,7 +403,7 @@ function generarCompra() {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            let base_url = 'http://localhost/Pos_venta/';
+            let base_url = getBaseURL();
 
             const url = base_url + "Compras/registrarCompra";
             const frm = document.getElementById("frmCompras");
@@ -443,7 +451,7 @@ function generarCompra() {
 
 //pago efectivo
 function compra() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const url = base_url + "Compras/TipoPago";
     const frm = document.getElementById("frmCerrarC");
@@ -458,10 +466,10 @@ function compra() {
 }
 //historial de compras
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     $('#tableHistorial').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
             { 'className': "textcenter", "targets": [4] }, //status  
@@ -545,7 +553,7 @@ function btnAnularC(id) {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            let base_url = 'http://localhost/Pos_venta/';
+            let base_url = getBaseURL();
 
             const url = base_url + "Compras/anularCompra/" + id;
             const http = new XMLHttpRequest();

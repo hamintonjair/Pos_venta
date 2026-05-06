@@ -1,9 +1,18 @@
+function getBaseURL() {
+    // Intentar obtener desde el meta tag o usar fallback
+    const metaUrl = document.querySelector('meta[name="base-url"]');
+    if (metaUrl) {
+        return metaUrl.getAttribute('content');
+    }
+    // Fallback para desarrollo local
+    return 'http://localhost/Pos_venta/';
+}
 document.addEventListener("DOMContentLoaded", function() {
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     $('#tableCategorias').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
             { 'className': "textcenter", "targets": [3] }, //status  
@@ -66,10 +75,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 })
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     $('#tableCategoriasEliminado').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
             { 'className': "textcenter", "targets": [3] }, //status  
@@ -134,13 +143,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //eliminado
 function categoriaEliminado() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "Categorias/categoriaEliminado";
 }
 //vaciar categorias
 function categoriaVaciar() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -199,14 +208,14 @@ function categoriaVaciar() {
 }
 //volver
 function volverCategoria() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "categorias";
 }
 //registrar categoria
 function registrarCategoria(e) {
     e.preventDefault();
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const categoria = document.getElementById("categoria");
 
@@ -274,7 +283,7 @@ function editarCategoria(id) {
     document.querySelector('#titleModal').innerHTML = "Actualizar Categoria";
     document.querySelector('#frmCategoria').reset();
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     $.ajax({
         url: base_url + 'Categorias/editar/' + id,
         type: "GET",
@@ -294,7 +303,7 @@ function editarCategoria(id) {
 //eliminar
 function eliminarCategoria(id) {
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     // Verificar la relación del categoria
     $.ajax({
@@ -339,7 +348,7 @@ function eliminarCategoria(id) {
 
 function eliminarCate(id) {
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     // Eliminar el categoria
     const url = base_url + "Categorias/deleteCategoria/" + id;
     const http = new XMLHttpRequest();
@@ -377,7 +386,7 @@ function eliminarCate(id) {
 
 //reingresar categoria
 function reingresarCategoria(id) {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {

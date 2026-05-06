@@ -1,8 +1,18 @@
+
+function getBaseURL() {
+    // Intentar obtener desde el meta tag o usar fallback
+    const metaUrl = document.querySelector('meta[name="base-url"]');
+    if (metaUrl) {
+        return metaUrl.getAttribute('content');
+    }
+    // Fallback para desarrollo local
+    return 'http://localhost/Pos_venta/';
+}
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     $('#tableMedidas').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
             { 'className': "textcenter", "targets": [3] }, //status  
@@ -67,10 +77,10 @@ document.addEventListener("DOMContentLoaded", function() {
 })
 
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     $('#tableMedidasEliminado').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
             { 'className': "textcenter", "targets": [3] }, //status  
@@ -135,13 +145,13 @@ document.addEventListener("DOMContentLoaded", function() {
 })
 
 function medidasEliminado() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "Medidas/medidasEliminado";
 }
 
 function volverMedidas() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "medidas";
 }
@@ -163,7 +173,7 @@ function registrarMedida(e) {
 
 
     } else {
-        let base_url = 'http://localhost/Pos_venta/';
+        let base_url = getBaseURL();
 
         const url = base_url + "Medidas/registrarMedida";
         const frm = document.getElementById("frmMedida");
@@ -218,7 +228,7 @@ function editarMedida(id) {
     document.querySelector('#titleModal').innerHTML = "Actualizar Medida";
     document.querySelector('#frmMedida').reset();
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     $.ajax({
         url: base_url + 'Medidas/editar/' + id,
         type: "GET",
@@ -239,7 +249,7 @@ function editarMedida(id) {
 //eliminar
 function eliminarMedida(id) {
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     // Verificar la relación del usuario
     $.ajax({
@@ -278,7 +288,7 @@ function eliminarMedida(id) {
 
 function eliminarMedi(id) {
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     // Eliminar el usuario
     $.ajax({
@@ -320,7 +330,7 @@ function eliminarMedi(id) {
 
 //reingresar caja
 function reingresarMedida(id) {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -378,7 +388,7 @@ function reingresarMedida(id) {
 }
 //vaciar medidas
 function medidasVaciar() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {

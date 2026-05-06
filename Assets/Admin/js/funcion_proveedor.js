@@ -1,7 +1,17 @@
+
+function getBaseURL() {
+    // Intentar obtener desde el meta tag o usar fallback
+    const metaUrl = document.querySelector('meta[name="base-url"]');
+    if (metaUrl) {
+        return metaUrl.getAttribute('content');
+    }
+    // Fallback para desarrollo local
+    return 'http://localhost/Pos_venta/';
+}
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     $('#tableProveedores').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
             { 'className': "textcenter", "targets": [6] }, //status
@@ -77,7 +87,7 @@ function registrarProveedor(e) {
     const nombre = document.getElementById("nombre");
     const telefono = document.getElementById("telefono");
     const direccion = document.getElementById("direccion");
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     if (nit.value == "" || razon_social.value == "" || nombre.value == "" || telefono.value == "" || direccion.value == "") {
 
@@ -148,7 +158,7 @@ function editarProveedor(id) {
     document.querySelector('#titleModal').innerHTML = "Actualizar Proveedor";
     document.querySelector('#frmProveedores').reset();
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     $.ajax({
         url: base_url + 'Proveedores/editar/' + id,
         type: "GET",
@@ -170,7 +180,7 @@ function editarProveedor(id) {
 
 //eliminar
 function eliminarProveedor(id) {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',
@@ -228,7 +238,7 @@ function eliminarProveedor(id) {
 }
 //reingresar usuario
 function reingresarProveedor(id) {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',

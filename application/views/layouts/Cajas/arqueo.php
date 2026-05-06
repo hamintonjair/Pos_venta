@@ -50,57 +50,123 @@
     <!-- Modal -->
     <div class='modal fade' id='abrir_caja' tabindex='-1' role='dialog' aria-labelledby='modelTitleId'
         aria-hidden='true'>
-        <div class='modal-dialog' role='document'>
+        <div class='modal-dialog modal-dialog-centered modal-lg' role='document'>
             <div class='modal-content'>
-                <div class='modal-header headerRegister'>
-                    <h5 class='modal-title' id='titleModal'>Arqueo Caja</h5>
+                <div class='modal-header bg-info text-white'>
+                    <h5 class='modal-title' id='titleModal'>
+                        <i class='fas fa-cash-register'></i> Arqueo de Caja
+                    </h5>
                     <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                        <span aria-hidden='true'>&times;
-                        </span>
+                        <span aria-hidden='true'>&times;</span>
                     </button>
                 </div>
                 <div class='modal-body'>
                     <form method='post' id='frmAbrirCaja' onsubmit="abrirArqueo(event);">
                         <input type='hidden' id='id' name='id' value=''>
-                        <div class='form-group' id="ocultar_campos2">
-                            <label for='caja'>Cajas</label>
-                            <select class="form-control selectpicker" id="id_caja" name="id_caja">
-                                        <option selected="selected">Seleccionar..</option>
-                                        <?php foreach ($cajas as $row){ ?>
-                                        <option value="<?php echo $row->id; ?>"><?php echo $row->caja; ?>
-                                        </option>
-                                        <?php }; ?>
-                                    </select>
-                        </div>
-                        <div class='form-group'>
-                            <label for='caja'>Monto inicial</label>
-                            <input type='text' name='monto_inicial' id='monto_inicial'
-                                class='form-control valid validNumber' placeholder='Monto inicial'
-                                aria-describedby='helpId'>
+                        
+                        <!-- Sección de Apertura de Caja -->
+                        <div id="ocultar_campos2">
+                            <div class='card mb-3'>
+                                <div class='card-header bg-light'>
+                                    <h6 class='mb-0'><i class='fas fa-unlock'></i> Apertura de Caja</h6>
+                                </div>
+                                <div class='card-body'>
+                                    <div class='form-group'>
+                                        <label for='caja' class='font-weight-bold'>
+                                            <i class='fas fa-box'></i> Seleccionar Caja
+                                        </label>
+                                        <select class="form-control selectpicker" id="id_caja" name="id_caja">
+                                            <option selected="selected">Seleccionar..</option>
+                                            <?php foreach ($cajas as $row){ ?>
+                                            <option value="<?php echo $row->id; ?>"><?php echo $row->caja; ?></option>
+                                            <?php }; ?>
+                                        </select>
+                                    </div>
+                                    <div class='form-group'>
+                                        <label for='monto_inicial' class='font-weight-bold'>
+                                            <i class='fas fa-dollar-sign'></i> Monto Inicial
+                                        </label>
+                                        <div class='input-group'>
+                                            <div class='input-group-prepend'>
+                                                <span class='input-group-text'>$</span>
+                                            </div>
+                                            <input type='text' name='monto_inicial' id='monto_inicial'
+                                                class='form-control valid validNumber' placeholder='0.00'
+                                                aria-describedby='helpId' style='font-weight: bold;'>
+                                        </div>
+                                        <small class='form-text text-muted'>
+                                            Ingrese el monto inicial con el que abrirá la caja
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
+                        <!-- Sección de Cierre de Caja -->
                         <div id="ocultar_campos">
-                            <div class="form-group">
-                                <label for="monto_final">Monto final</label>
-                                <input type="text" id="monto_final" class="form-control" aria-describedby="helpId"
-                                    >
-                            </div>
-                            <div class="form-group">
-                                <label for="total_ventas">Total ventas</label>
-                                <input type="text" id="total_ventas" class="form-control" aria-describedby="helpId"
-                                    disabled>
-                            </div>
-                            <div class="form-group">
-                                <label for="monto_general">Monto total</label>
-                                <input type="text" id="monto_general" class="form-control" aria-describedby="helpId"
-                                    disabled>
+                            <div class='card mb-3'>
+                                <div class='card-header bg-warning text-dark'>
+                                    <h6 class='mb-0'><i class='fas fa-lock'></i> Cierre de Caja</h6>
+                                </div>
+                                <div class='card-body'>
+                                    <div class='row'>
+                                        <div class='col-md-6'>
+                                            <div class="form-group">
+                                                <label for="monto_final" class='font-weight-bold'>
+                                                    <i class='fas fa-coins'></i> Monto Final en Caja
+                                                </label>
+                                                <div class='input-group'>
+                                                    <div class='input-group-prepend'>
+                                                        <span class='input-group-text'>$</span>
+                                                    </div>
+                                                    <input type="text" id="monto_final" class="form-control" 
+                                                        placeholder='0.00' aria-describedby='helpId' style='font-weight: bold;'>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-md-6'>
+                                            <div class="form-group">
+                                                <label for="total_ventas" class='font-weight-bold'>
+                                                    <i class='fas fa-shopping-cart'></i> Total Ventas
+                                                </label>
+                                                <div class='input-group'>
+                                                    <div class='input-group-prepend'>
+                                                        <span class='input-group-text'>$</span>
+                                                    </div>
+                                                    <input type="text" id="total_ventas" class="form-control bg-light" 
+                                                        placeholder='0.00' aria-describedby='helpId' disabled style='font-weight: bold;'>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="monto_general" class='font-weight-bold'>
+                                            <i class='fas fa-calculator'></i> Monto Total Calculado
+                                        </label>
+                                        <div class='input-group input-group-lg'>
+                                            <div class='input-group-prepend'>
+                                                <span class='input-group-text'>$</span>
+                                            </div>
+                                            <input type="text" id="monto_general" class="form-control bg-success text-white" 
+                                                placeholder='0.00' aria-describedby='helpId' disabled 
+                                                style='font-weight: bold; font-size: 1.2em;'>
+                                        </div>
+                                        <small class='form-text text-muted'>
+                                            Monto final + total ventas = monto total esperado
+                                        </small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        
                         <div class='modal-footer'>
-
-                            <button id='btnActionForm' type='submit' class='btn btn-primary'><span id='btnText'>
-                                    Abrir</span></button>
-                            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+                            <button type='button' class='btn btn-secondary' data-dismiss='modal'>
+                                <i class='fas fa-times'></i> Cancelar
+                            </button>
+                            <button id='btnActionForm' type='submit' class='btn btn-info btn-lg'>
+                                <i class='fas fa-save'></i> 
+                                <span id='btnText'>Abrir Caja</span>
+                            </button>
                         </div>
                     </form>
                 </div>

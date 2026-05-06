@@ -1,9 +1,18 @@
 //INVENTARIO STOCK BAJOS
+function getBaseURL() {
+    // Intentar obtener desde el meta tag o usar fallback
+    const metaUrl = document.querySelector('meta[name="base-url"]');
+    if (metaUrl) {
+        return metaUrl.getAttribute('content');
+    }
+    // Fallback para desarrollo local
+    return 'http://localhost/Pos_venta/';
+}
 document.addEventListener("DOMContentLoaded", function() {
-        let base_url = 'http://localhost/Pos_venta/';
+        let base_url = getBaseURL();
 
         $('#tableStockBajo').dataTable({
-            "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+            "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
             dom: 'lBfrtip',
             "columnDefs": [
                 { 'className': "textcenter", "targets": [5] }, //stock
@@ -69,28 +78,28 @@ document.addEventListener("DOMContentLoaded", function() {
     })
     //vista productos bajos
 function productosBajos() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "Inventario/stockBajos";
 }
 //entradas y salidas
 function EntradasSalidas() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "Inventario/entradaSalida";
 }
 
 function volverInventario() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "inventario";
 }
 //reporte de cierre
 document.addEventListener("DOMContentLoaded", function() {
-        let base_url = 'http://localhost/Pos_venta/';
+        let base_url = getBaseURL();
 
         $('#tableReporteCierre').dataTable({
-            "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+            "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
             dom: 'lBfrtip',
             "ajax": {
                 "url": " " + base_url + "Reportes/listarReporteCierre",
@@ -153,10 +162,10 @@ document.addEventListener("DOMContentLoaded", function() {
     })
     //INVENTARIO
 document.addEventListener("DOMContentLoaded", function() {
-        let base_url = 'http://localhost/Pos_venta/';
+        let base_url = getBaseURL();
 
         $('#tableInventario').dataTable({
-            "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+            "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
             dom: 'lBfrtip',
             "ajax": {
                 "url": " " + base_url + "Inventario/listarInventario",
@@ -218,19 +227,19 @@ document.addEventListener("DOMContentLoaded", function() {
     })
     //vista reporte
 function ventasEmpleados() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "Reportes/reporteEmpleado";
 }
 //volver a reportes
 function volverEmpleados() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "reportes";
 }
 //buscar entrada y salida de productos
 function buscarEntradas() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const url = base_url + "Inventario/buscarEntradaSalida";
     const frm = document.getElementById("frmBuscar2");
@@ -268,10 +277,10 @@ function buscarEntradas() {
 //movimiento entradas y salidas
 
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     $('#tableEntradaSalida').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "ajax": {
             "url": " " + base_url + "Inventario/listarEntradaSalida",
@@ -337,7 +346,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //buscar empleado
 function buscarEmpleados() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const url = base_url + "Reportes/buscarReporteEmpleado";
     const frm = document.getElementById("frmBuscar");
@@ -372,10 +381,10 @@ function buscarEmpleados() {
 }
 // reporte por empleado
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     $('#tableReporteVentaEmpleado').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "ajax": {
             "url": " " + base_url + "Reportes/listarEmpleados",
@@ -437,7 +446,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //buscar ventas por mes
 function buscarMes() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const url = base_url + "Reportes/rangoFecha";
     const frm = document.getElementById("frmBuscarVentas");
@@ -476,17 +485,17 @@ function Todos() {
 
 //reportes de ventas por mes
 function reporteVentas() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "Reportes/reporteVentasMes";
 }
 
 //reporte ventas por mes
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     $('#tableReporteVentasMesaMes').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "ajax": {
             "url": " " + base_url + "Reportes/listarVentasMes",
@@ -546,19 +555,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //vista reporte
 function comprasProveedor() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "Reportes/reporteProveedor";
 }
 //volver a reportes
 function volverProveedor() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "reportes";
 }
 //buscar compras proveedores
 function frmBuscarCompras() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const url = base_url + "Reportes/buscarComprasProveedor";
     const frm = document.getElementById("frmBuscarC");
@@ -593,10 +602,10 @@ function frmBuscarCompras() {
 
 }
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     $('#tableReporteCompras').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "ajax": {
             "url": " " + base_url + "Reportes/listarCompras",
@@ -660,16 +669,16 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 //ganacias
 function irGanancias() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "Reportes/ganacias";
 }
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     $('#tableGanancias').dataTable({
 
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "ajax": {
             "url": " " + base_url + "Reportes/verGanancias",

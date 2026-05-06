@@ -19,8 +19,7 @@
         <div class='card-header bg-primary text-white'>
             <h4>Nueva Compra</h4>
         </div>
-        <img class='card-img-top' src='holder.js/100x180/' alt=''>
-        <div class='card-body'>
+                <div class='card-body'>
             <form id='frmCompra' method='post'>
                 <div class='row'>
                     <div class='col-md-2'>

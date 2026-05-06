@@ -7,7 +7,7 @@ class Reportes extends CI_Controller {
         session_start();
 
         if ( empty( $_SESSION[ 'activo' ] ) ) {
-            echo '<script>window.location.href="http://localhost/Pos_venta/"</script>';				
+            echo '<script>window.location.href="'.base_url().'"</script>';				
         }
         parent::__construct();
         $this->load->model('ReportesModel');
@@ -26,7 +26,7 @@ class Reportes extends CI_Controller {
             $this->load->view('layouts/Reportes/reporte');
             $this->load->view('layouts/Templates/footer_admin');
         } else {
-            echo '<script>window.location.href="http://localhost/Pos_venta/Errors/permisos"</script>';				
+            echo '<script>window.location.href="'.base_url().'Errors/permisos"</script>';				
 
        }
 

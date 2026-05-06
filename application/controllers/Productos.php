@@ -6,7 +6,7 @@ class Productos extends CI_Controller{
     {
         session_start();  
         if(empty($_SESSION['activo'])){
-            echo '<script>window.location.href="http://localhost/Pos_venta/"</script>';	
+            echo '<script>window.location.href="'.base_url().'"</script>';	
 
        }     
         parent::__construct();
@@ -34,7 +34,7 @@ class Productos extends CI_Controller{
            $this->load->view('layouts/Productos/producto',$data);
            $this->load->view('layouts/Templates/footer_admin');
         } else {
-            echo '<script>window.location.href="http://localhost/Pos_venta/Errors/permisos"</script>';	
+            echo '<script>window.location.href="'.base_url().'Errors/permisos"</script>';	
         }  
 
     }
@@ -85,7 +85,8 @@ class Productos extends CI_Controller{
 
         for($i=0; $i < count($data); $i++){
           
-                $data[$i]->imagen = '<img class="img-thumbnail" src ="'.base_url()."Assets/img/".'default.png'.'"   width = "50px"; height: 100px>';
+                $data[$i]->imagen = '<img class="img-thumbnail" src ="'.base_url()."assets/img/".$data[$i]->foto.'"
+                width = "50px"; height: 100px>';
                 $data[$i]->estado = ' <span class="badge badge-danger">Inactivo</span>';
                 $data[$i]->acciones = '<div>                     
                 <button type="button" class="btn btn-success" onclick="reingresarProducto('.$data[$i]->id.');" title="Reingresar"><i class="fa fa-undo" aria-hidden="true"></i></button>      

@@ -3,11 +3,11 @@ class Login extends CI_Controller{
 
     public function __construct()
     {
+        parent::__construct();
         session_start(); 
         if(isset($_SESSION['activo'])){
-            echo '<script>window.location.href="http://localhost/Pos_venta/dashboard"</script>';				
+            echo '<script>window.location.href="'.base_url().'dashboard"</script>';				
        }      
-        parent::__construct();
         $this->load->model('UsuariosModel');
         $this->load->model('DashboardModel');
     }
@@ -56,7 +56,7 @@ class Login extends CI_Controller{
         
     
         session_destroy();
-        echo '<script>window.location.href="http://localhost/Pos_venta/"</script>';				
+        echo '<script>window.location.href="'.base_url().'"</script>';				
 
     }
 }

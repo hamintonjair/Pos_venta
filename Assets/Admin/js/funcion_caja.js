@@ -1,7 +1,17 @@
+function getBaseURL() {
+    // Intentar obtener desde el meta tag o usar fallback
+    const metaUrl = document.querySelector('meta[name="base-url"]');
+    if (metaUrl) {
+        return metaUrl.getAttribute('content');
+    }
+    // Fallback para desarrollo local
+    return 'http://localhost/Pos_venta/';
+}
+
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     $('#tableCajas').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
             { 'className': "textcenter", "targets": [3] }, //status  
@@ -80,7 +90,7 @@ function registrarCaja(e) {
         })
 
     } else {
-        let base_url = 'http://localhost/Pos_venta/';
+        let base_url = getBaseURL();
         const url = base_url + "Cajas/registrarCaja";
         const frm = document.getElementById("frmCaja");
         const http = new XMLHttpRequest();
@@ -137,7 +147,7 @@ function editarCaja(id) {
     document.querySelector('#frmCaja').reset();
 
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     $.ajax({
         url: base_url + 'Cajas/editar/' + id,
         type: "GET",
@@ -156,7 +166,7 @@ function editarCaja(id) {
 
 //eliminar
 function eliminarCaja(id) {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',
@@ -214,7 +224,7 @@ function eliminarCaja(id) {
 }
 //reingresar caja
 function reingresarCaja(id) {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',
@@ -271,7 +281,7 @@ function reingresarCaja(id) {
 }
 
 function openArqueo() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     window.location = base_url + "cajas/arqueo";
 }
 //abrir modal
@@ -299,7 +309,7 @@ function abrirArqueo(e) {
             timer: 2200
         })
     } else {
-        let base_url = 'http://localhost/Pos_venta/';
+        let base_url = getBaseURL();
         const frmAbrirCaja = document.getElementById("frmAbrirCaja");
         const url = base_url + "Cajas/abrirArqueo";
         const http = new XMLHttpRequest();
@@ -336,9 +346,9 @@ function abrirArqueo(e) {
 }
 //arqueo
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     $('#tableArqueoCajas').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
             { 'className': "textcenter", "targets": [8] }, //status  
@@ -409,7 +419,7 @@ document.addEventListener("DOMContentLoaded", function() {
 //cerrar caja
 function cerrarArqueo() {
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     $.ajax({
         url: base_url + 'Cajas/consultarVentas/',
         type: "GET",
@@ -442,7 +452,7 @@ function cerrarArqueo() {
 }
 //volver
 function volverCaja() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     window.location = base_url + "cajas";
 }
 

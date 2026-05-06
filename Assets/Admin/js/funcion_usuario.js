@@ -1,9 +1,19 @@
 //listar usuarios
+
+function getBaseURL() {
+    // Intentar obtener desde el meta tag o usar fallback
+    const metaUrl = document.querySelector('meta[name="base-url"]');
+    if (metaUrl) {
+        return metaUrl.getAttribute('content');
+    }
+    // Fallback para desarrollo local
+    return 'http://localhost/Pos_venta/';
+}
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     $('#tableUsuarios').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
             { 'className': "textcenter", "targets": [5] }, //status
@@ -71,10 +81,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //listar usuarios eliminados
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     $('#tableUsuariosEliminados').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
             { 'className': "textcenter", "targets": [5] }, //status
@@ -162,7 +172,7 @@ function registrarUsuario(e) {
         })
 
     } else {
-        let base_url = 'http://localhost/Pos_venta/';
+        let base_url = getBaseURL();
 
         const url = base_url + "Usuarios/registrarUser";
         const frm = document.getElementById("frmUsuarios");
@@ -220,7 +230,7 @@ function editarUsuario(id) {
     document.querySelector('#titleModal').innerHTML = "Actualizar Usuario";
     document.querySelector('#frmUsuarios').reset();
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     $.ajax({
         url: base_url + 'Usuarios/editar/' + id,
         type: "GET",
@@ -241,12 +251,12 @@ function editarUsuario(id) {
 }
 //eliminado
 function usuarioEliminado() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     window.location = base_url + "Usuarios/usuarioEliminado";
 }
 //vaciar usuario
 function usuarioVaciar() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -305,13 +315,13 @@ function usuarioVaciar() {
 }
 //volver
 function volverUsuarios() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     window.location = base_url + "usuarios";
 }
 //eliminar
 function eliminarUsuario(id) {
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     // Verificar la relación del usuario
     $.ajax({
@@ -350,7 +360,7 @@ function eliminarUsuario(id) {
 };
 
 function eliminarUser(id) {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     // Eliminar el usuario
     $.ajax({
@@ -392,7 +402,7 @@ function eliminarUser(id) {
 
 //reingresar usuario
 function reingresarUsuario(id) {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -475,7 +485,7 @@ function frmPass(e) {
                 timer: 2200
             })
         } else {
-            let base_url = 'http://localhost/Pos_venta/';
+            let base_url = getBaseURL();
 
             const url = base_url + "Usuarios/cambiarPass";
             const frm = document.getElementById("frmPass");
@@ -517,7 +527,7 @@ function frmPass(e) {
 //registrar permisos 
 function registrarPermisos(e) {
     e.preventDefault();
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const url = base_url + "Usuarios/RegistrarPermisos";
     const frm = document.getElementById("formulario")

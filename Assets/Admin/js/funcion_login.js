@@ -1,4 +1,12 @@
-//login
+function getBaseURL() {
+    // Intentar obtener desde el meta tag o usar fallback
+    const metaUrl = document.querySelector('meta[name="base-url"]');
+    if (metaUrl) {
+        return metaUrl.getAttribute('content');
+    }
+    // Fallback para desarrollo local
+    return 'http://localhost/Pos_venta/';
+}
 document.addEventListener("DOMContentLoaded", function() {
 
     let formulario = document.querySelector("#frmLogin");
@@ -6,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
         e.preventDefault();
         const formData = new FormData(this);
 
-        let base_url = 'http://localhost/Pos_venta/';
+        let base_url = getBaseURL();
         const usuarios = document.querySelector('#usuario').value;
         const clave = document.querySelector('#clave').value;
 

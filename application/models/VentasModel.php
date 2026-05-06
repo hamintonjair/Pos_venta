@@ -19,7 +19,10 @@ class VentasModel extends CI_Model {
         } else {
             $this->db->select('*');
             $this->db->from('productos');
-            $this->db->where('descripcion', $cod);
+            // Convertir + a espacios y usar LIKE para búsqueda parcial
+            $search_term = str_replace('+', ' ', $cod);
+            $this->db->like('descripcion', $search_term);
+            $this->db->where('estado', 1);
             $data = $this->db->get()->result();
         }
         if (!empty($data) ) {

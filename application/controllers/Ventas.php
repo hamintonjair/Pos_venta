@@ -9,7 +9,7 @@ class Ventas extends CI_Controller {
         session_start();
 
         if ( empty( $_SESSION['activo']) ) {
-            echo '<script>window.location.href="http://localhost/Pos_venta/"</script>';	
+            echo '<script>window.location.href="'.base_url().'"</script>';	
         }
 
         parent::__construct();
@@ -22,15 +22,25 @@ class Ventas extends CI_Controller {
 
         $id_user = $_SESSION['id_usuario'];
         $verificar = $this->DashboardModel->verificarPermisos( $id_user, 'nueva_venta' );
+        $caja_abierta = $this->VentasModel->verificarCaja( $id_user );
+        
         if ( !empty( $verificar ) || $id_user == 1 ) {
+            if ( empty( $caja_abierta ) ) {
+                // Mostrar modal de caja cerrada
+                $this->load->view('layouts/Templates/header_admin');
+                $this->load->view('layouts/Templates/nav_admin');
+                $this->load->view('layouts/Ventas/modal_caja_cerrada');
+                $this->load->view('layouts/Templates/footer_admin');
+            } else {
                  $data['productos'] = $this->VentasModel->getProducto();  
                  $this->load->view('layouts/Templates/header_admin');
                  $this->load->view('layouts/Templates/nav_admin');
                  $this->load->view('layouts/Templates/body');
                  $this->load->view('layouts/Ventas/venta', $data);
                  $this->load->view('layouts/Templates/footer_admin');  
+            }
         } else {
-            echo '<script>window.location.href="http://localhost/Pos_venta/Errors/permisos"</script>';	
+            echo '<script>window.location.href="'.base_url().'Errors/permisos"</script>';	
         }
        
     }
@@ -41,8 +51,7 @@ class Ventas extends CI_Controller {
         {
             $msg = ( array( 'modificado'=>false, 'post' => 'Producto no existe.' ) );
         }else{
-            $d = str_replace('', '%2B',urldecode($cod));
-            $codigo = str_replace('', '+',urldecode($d));
+            $codigo = urldecode($cod);
         
             // var_dump( $codigo );exit;
             if(is_numeric($cod) == true){
@@ -259,180 +268,214 @@ class Ventas extends CI_Controller {
 
         $pdf = new FPDF( 'P', 'mm', 'letter', true );
         $pdf->AddPage( 'PORTRAIT', 'letter' );
-        $pdf->setMargins( 15, 30, 20, 20 );
-        $pdf->setTitle( 'Reporte Venta' );
+        $pdf->setMargins( 15, 25, 15, 25 );
+        $pdf->setTitle( 'Factura de Venta' );
 
-        $pdf->Image( base_url().'assets/img/logo.png', 170, 50, 20, 20, 'png' );
-
-        $pdf->setFillColor( 77, 182, 172 );
-        $pdf->Rect( 0, 0, 220, 20, 'F' );
-
-        $pdf->Ln( 20 );
-
-        $pdf->SetFont( 'Arial', 'B', 14 );
-        $pdf->Cell( 0, 5, 'Factura de Venta ', 0, 1, 'C' );
-
+        // Header con gradiente
+        $pdf->setFillColor( 52, 152, 219 );
+        $pdf->Rect( 0, 0, 220, 35, 'F' );
+        
+        $pdf->Ln( 5 );
+        
+        // Título principal
+        $pdf->SetFont( 'Arial', 'B', 20 );
+        $pdf->SetTextColor( 255, 255, 255 );
+        $pdf->Cell( 0, 8, 'FACTURA DE VENTA', 0, 1, 'C' );
+        
+        $pdf->SetFont( 'Arial', '', 12 );
+        $pdf->SetTextColor( 255, 255, 255 );
+        $pdf->Cell( 0, 5, utf8_decode( $empresa[0]->ciudad ), 0, 1, 'C' );
+        
+        // Obtener datos
         foreach ( $productos['registro'] as $row ) {
-
             $fecha = $row->fecha;
             $nombre = $row->nombre;
             $estado = $row->estado; 
-             
         }
-        // $formattedFecha = date('Ymd_dmY', strtotime($fecha));
-
-        $pdf->Cell( 0, 5,   $empresa[0]->ciudad, 0, 1, 'C' );
-        $pdf->Ln( 10 );       
-
-        $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 35, 5, 'Fecha de venta: ', 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 12 );
-        $pdf->Cell( 20, 5, $fecha, 0, 1, 'L' );
         
-        $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 26, 5, 'Empresa: ', 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 12 );
-        $pdf->Cell( 20, 5, $empresa[0]->nombre, 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 26, 5, 'Nit: ', 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 12 );
-        $pdf->Cell( 20, 5, $empresa[0]->nit, 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 26, 5, utf8_decode( 'Regimen: ' ), 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 12 );
-        $pdf->Cell( 20, 5, utf8_decode($empresa[0]->regimen), 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 26, 5, 'Resolucion: ' , 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 12 );
-        $pdf->Cell( 20, 5,  $empresa[0]->resolucion, 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 26, 5, utf8_decode( 'Teléfono: ' ), 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 12 );
-        $pdf->Cell( 20, 5, $empresa[0]->telefono, 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 26, 5, utf8_decode( 'Dirección: ' ), 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 12 );
-        $pdf->Cell( 20, 5, utf8_decode( $empresa[0]->direccion), 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 26, 5, 'Cajero: ', 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 12 );
-        $pdf->Cell( 20, 5, utf8_decode( $usuario[0]->nombre), 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 26, 5, 'Cliente: ', 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 12 );
-        $pdf->Cell( 20, 5, utf8_decode( $nombre ), 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 26, 5, 'Factura #: ', 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 12 );
-        $pdf->Cell( 20, 5, $id_venta, 0, 1, 'L' );
-
-
-        $pdf->SetFont( 'Arial', 'B', 12 );
-
-        $pdf->Cell( 110, 5, 'Estado de la venta:', 0, 0, 'R' );
-        $pdf->SetFont( 'Arial', '', 12 );
-        if ( $estado == 0 ) {
-            $pdf->Cell( 27, 5, 'Anulado', 0, 1, 'R' );
-
-        } else {
-            $pdf->Cell( 27, 5, 'Completado', 0, 1, 'R' );
-
-        }
-
-        $pdf->Ln();
-
-        $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 24, 5, utf8_decode( $empresa[0]->mensaje), 0, 1, 'J' );
-
-        //encabezado de productos
+        $pdf->Ln( 7 );
+        $pdf->SetTextColor( 0, 0, 0 );
+        
+        // Sección de información de la empresa (arriba)
+        $pdf->SetFont( 'Arial', 'B', 14 );
+        $pdf->Cell( 0, 8, utf8_decode( 'Datos de la Empresa' ), 0, 1, 'L' );
+        $pdf->SetDrawColor( 52, 152, 219 );
+        $pdf->SetLineWidth( 0.5 );
+        $pdf->Line( 15, $pdf->GetY(), 195, $pdf->GetY() );
         $pdf->Ln( 5 );
+        
+        $pdf->SetFont( 'Arial', 'B', 11 );
+        $pdf->Cell( 30, 6, 'Empresa:', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 11 );
+        $pdf->Cell( 70, 6, utf8_decode( $empresa[0]->nombre), 0, 0, 'L' );
+        
+        $pdf->SetFont( 'Arial', 'B', 11 );
+        $pdf->Cell( 25, 6, 'NIT:', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 11 );
+        $pdf->Cell( 70, 6, $empresa[0]->nit, 0, 1, 'L' );
+        
+        $pdf->SetFont( 'Arial', 'B', 11 );
+        $pdf->Cell( 30, 6, 'Teléfono:', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 11 );
+        $pdf->Cell( 70, 6, $empresa[0]->telefono, 0, 0, 'L' );
+        
+        $pdf->SetFont( 'Arial', 'B', 11 );
+        $pdf->Cell( 25, 6, 'Dirección:', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 11 );
+        $pdf->Cell( 70, 6, utf8_decode( $empresa[0]->direccion), 0, 1, 'L' );
+        
+        $pdf->Ln( 8 );
+        
+        // Sección de información de la venta (abajo)
+        $pdf->SetFont( 'Arial', 'B', 14 );
+        $pdf->Cell( 0, 8, utf8_decode( 'Información de la Venta' ), 0, 1, 'L' );
+        $pdf->SetDrawColor( 52, 152, 219 );
+        $pdf->Line( 15, $pdf->GetY(), 195, $pdf->GetY() );
+        $pdf->Ln( 5 );
+        
+        // Información organizada en dos columnas
+        $pdf->SetFont( 'Arial', 'B', 11 );
+        $pdf->Cell( 40, 6, 'Fecha:', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 11 );
+        $pdf->Cell( 60, 6, date('d/m/Y H:i', strtotime($fecha)), 0, 0, 'L' );
+        
+        $pdf->SetFont( 'Arial', 'B', 11 );
+        $pdf->Cell( 30, 6, 'Factura #:', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 11 );
+        $pdf->Cell( 55, 6, $id_venta, 0, 1, 'L' );
+        
+        $pdf->SetFont( 'Arial', 'B', 11 );
+        $pdf->Cell( 40, 6, 'Cajero:', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 11 );
+        $pdf->Cell( 60, 6, utf8_decode( $usuario[0]->nombre), 0, 0, 'L' );
+        
+        $pdf->SetFont( 'Arial', 'B', 11 );
+        $pdf->Cell( 30, 6, 'Estado:', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 11 );
+        $estado_text = ($estado == 0) ? 'Anulado' : 'Completado';
+        $pdf->Cell( 55, 6, $estado_text, 0, 1, 'L' );
+        
+        $pdf->SetFont( 'Arial', 'B', 11 );
+        $pdf->Cell( 40, 6, 'Cliente:', 0, 0, 'L' );
+        $pdf->SetFont( 'Arial', '', 11 );
+        $pdf->Cell( 145, 6, utf8_decode( $nombre ), 0, 1, 'L' );
+        
+        $pdf->Ln( 8 );
+        
+    
 
-        $pdf->setTextColor( 40, 40, 40 );
-        $pdf->setFillColor( 255, 255, 255 );
+        // Encabezado de productos mejorado
+        $pdf->SetFont( 'Arial', 'B', 12 );
+        $pdf->Cell( 0, 8, utf8_decode( 'Detalle de Productos' ), 0, 1, 'L' );
+        $pdf->SetDrawColor( 52, 152, 219 );
+        $pdf->Line( 15, $pdf->GetY(), 195, $pdf->GetY() );
+        $pdf->Ln( 3 );
 
-        $pdf->SetDrawColor( 88, 88, 88 );
+        // Tabla de productos con diseño mejorado
+        $pdf->setFillColor( 240, 248, 255 );
+        $pdf->SetTextColor( 0, 0, 0 );
+        $pdf->SetDrawColor( 150, 150, 150 );
+        $pdf->SetFont( 'Arial', 'B', 11 );
 
-        $pdf->Cell( 15, 5, 'Cant', 0, 0, 'L', true );
-        $pdf->Cell( 90, 5, utf8_decode( 'Descripción ' ), 0, 0, 'L', true );
-        $pdf->Cell( 8, 5, 'Iva', 0, 0, 'L', true );
-        $pdf->Cell( 35, 5, 'P. Unitario', 0, 0, 'L', true );
-        $pdf->Cell( 38, 5, 'P. Total', 0, 1, 'L', true );
+        $pdf->Cell( 12, 7, 'Cant', 1, 0, 'C', true );
+        $pdf->Cell( 95, 7, utf8_decode( 'Descripción' ), 1, 0, 'L', true );
+        $pdf->Cell( 15, 7, 'IVA%', 1, 0, 'C', true );
+        $pdf->Cell( 35, 7, 'P. Unitario', 1, 0, 'R', true );
+        $pdf->Cell( 33, 7, 'P. Total', 1, 1, 'R', true );
 
-        $pdf->SetLineWidth( 1 );
+        $pdf->SetDrawColor( 200, 200, 200 );
+        $pdf->Ln( 2 );
 
-        $pdf->SetDrawColor( 61, 174, 273, 1 );
-
-        $pdf->setTextColor( 0, 0, 0 );
-        $pdf->Line( 15, 118, 200, 118 );
-
-        $pdf->Ln(1);
-
+        // Variables para cálculos
         $descuentos = 0.00;
         $Total = 0;
-        $sub_total  = 0;
+        $sub_total = 0;
         $totalPagar = 0;
         $cambio = 0;
         $pagado = 0;
-        //fondo
-        $pdf->setFillColor( 240, 240, 240 );
-        $pdf->SetTextColor( 40, 40, 40 );
-        $pdf->SetDrawColor( 255, 255, 255 );
-        $pdf->SetFont( 'Arial', '', 12 );
-        foreach ( $productos['registro'] as $row ) {
-
-            $Total =    $Total + ($row->precio * $row->cantidad);
-            $sub_total = $sub_total + $row->sub_total; 
-            $descuentos =  ($sub_total * $row->descuento) / 100;  
-            $pagado =  $row->pagado ;  
-            $cambio =  $row->cambio ;      
-            $pdf->Cell( 15, 5, $row->cantidad, 1, 0, 'L', 1 );
-            $pdf->Cell( 90, 5, utf8_decode( $row->descripcion), 1, 0, 'L', 1 );
-            $pdf->Cell( 8, 5,  $row->iva , 1, 0, 'L', 1 );
-            $pdf->Cell( 35, 5, '$'.number_format( $row->precio ), 1, 0, 'L', 1 );
-            $pdf->Cell( 38, 5, '$'.number_format( $row->sub_total), 1, 1, 'L', 1 );
-           
-        }
-
-        //descuento
-         $totalPagar =  (($sub_total -  $Total) +  $Total) -  $descuentos;  
-        //   $totalPagar = $totalC - $total;
-
-       
-        // $totalApagar = $sub_total - $descuento->total;
-        $pdf->Ln();
-
-        $pdf->setFillColor( 79, 78, 77 );
-        $pdf->SetTextColor( 255, 255, 255 );
-
-        $pdf->SetFont( 'Arial', '', 12 );
-
-        $pdf->Cell( 140, 5, 'Sub Total:', 0, 0, 'R', 1 );
-        $pdf->Cell( 45, 5, '$'.number_format(  $Total ), 0, 1, 'R', 1 );
-
-        $pdf->Cell( 140, 5, 'IVA%:', 0, 0, 'R', 1 );
-        $pdf->Cell( 45, 5, '$'.number_format($sub_total -  $Total), 0, 1, 'R', 1 );
-
-        $pdf->Cell( 140, 5, 'Descuento Total:', 0, 0, 'R', 1 );
-        $pdf->Cell( 45, 5, '$'.number_format( $descuentos), 0, 1, 'R', 1 );
-
-        $pdf->SetFont( 'Arial', 'B', 15 );
-        $pdf->Cell( 140, 5, 'Total a Pagar:', 0, 0, 'R', 1 );
-        $pdf->Cell( 45, 5, '$'.number_format( $totalPagar ), 0, 1, 'R', 1 );
         
-        $pdf->SetFont( 'Arial', 'B', 12 );
-        $pdf->Cell( 30, 5, 'Valor pagado:', 0, 0, 'L', 1 );
-        $pdf->Cell( 40, 5, '$'.number_format( $pagado ), 0, 1, 'L', 1 );
+        // Productos con diseño alternado
+        $pdf->SetFont( 'Arial', '', 10 );
+        $row_count = 0;
+        foreach ( $productos['registro'] as $row ) {
+            $Total += ($row->precio * $row->cantidad);
+            $sub_total += $row->sub_total; 
+            $descuentos = ($sub_total * $row->descuento) / 100;  
+            $pagado = $row->pagado;  
+            $cambio = $row->cambio;
+            
+            // Fondo alternado para filas
+            if ($row_count % 2 == 0) {
+                $pdf->setFillColor( 255, 255, 255 );
+            } else {
+                $pdf->setFillColor( 248, 248, 248 );
+            }
+            
+            $pdf->Cell( 12, 6, $row->cantidad, 1, 0, 'C', true );
+            $pdf->Cell( 95, 6, utf8_decode( $row->descripcion), 1, 0, 'L', true );
+            $pdf->Cell( 15, 6, $row->iva.'%', 1, 0, 'C', true );
+            $pdf->Cell( 35, 6, '$'.number_format( $row->precio, 2 ), 1, 0, 'R', true );
+            $pdf->Cell( 33, 6, '$'.number_format( $row->sub_total, 2), 1, 1, 'R', true );
+            $row_count++;
+        }
+        
+        $totalPagar = (($sub_total - $Total) + $Total) - $descuentos;
+        $pdf->Ln( 5 );
 
-        $pdf->Cell( 30, 5, 'Cambio:', 0, 0, 'L', 1 );
-        $pdf->Cell( 40, 5, '$'.number_format( $cambio ), 0, 1, 'L', 1 );
+        // Sección de totales con diseño destacado
+        $pdf->SetFont( 'Arial', 'B', 14 );
+        $pdf->Cell( 0, 8, 'Resumen de la Venta', 0, 1, 'L' );
+        $pdf->SetDrawColor( 52, 152, 219 );
+        $pdf->Line( 15, $pdf->GetY(), 195, $pdf->GetY() );
+        $pdf->Ln( 5 );
+
+        // Totales con diseño profesional
+        $pdf->SetFont( 'Arial', '', 11 );
+        $pdf->setFillColor( 245, 245, 245 );
+        
+        $pdf->Cell( 140, 7, 'Sub Total:', 1, 0, 'R', true );
+        $pdf->Cell( 40, 7, '$'.number_format( $Total, 2 ), 1, 1, 'R', true );
+
+        $pdf->Cell( 140, 7, 'IVA:', 1, 0, 'R', true );
+        $pdf->Cell( 40, 7, '$'.number_format($sub_total - $Total, 2), 1, 1, 'R', true );
+
+        $pdf->Cell( 140, 7, 'Descuento Total:', 1, 0, 'R', true );
+        $pdf->Cell( 40, 7, '$'.number_format( $descuentos, 2), 1, 1, 'R', true );
+
+        // Total destacado
+        $pdf->SetFont( 'Arial', 'B', 16 );
+        $pdf->setFillColor( 52, 152, 219 );
+        $pdf->SetTextColor( 255, 255, 255 );
+        $pdf->Cell( 140, 10, 'TOTAL A PAGAR:', 1, 0, 'R', true );
+        $pdf->Cell( 40, 10, '$'.number_format( $totalPagar, 2 ), 1, 1, 'R', true );
+        
+        // Pagado y cambio
+        $pdf->Ln( 5 );
+        $pdf->SetFont( 'Arial', 'B', 12 );
+        $pdf->SetTextColor( 0, 0, 0 );
+        $pdf->setFillColor( 240, 255, 240 );
+        
+        $pdf->Cell( 90, 7, 'Valor Pagado:', 1, 0, 'L', true );
+        $pdf->Cell( 90, 7, '$'.number_format( $pagado, 2 ), 1, 1, 'R', true );
+
+        $pdf->setFillColor( 255, 240, 240 );
+        $pdf->Cell( 90, 7, 'Cambio:', 1, 0, 'L', true );
+        $pdf->Cell( 90, 7, '$'.number_format( $cambio, 2 ), 1, 1, 'R', true );
+
+        // Mensaje de agradecimiento
+        $pdf->Ln( 15 );
+        $pdf->SetFont( 'Arial', 'I', 12 );
+        $pdf->SetTextColor( 52, 152, 219 );
+        $pdf->Cell( 0, 8, '¡Gracias por su compra!', 0, 1, 'C' );
+        $pdf->SetFont( 'Arial', 'I', 10 );
+        $pdf->SetTextColor( 100, 100, 100 );
+            // Mensaje de bienvenida
+        $pdf->SetFont( 'Arial', 'I', 11 );
+        $pdf->SetTextColor( 52, 152, 219 );
+        $pdf->Cell( 0, 6, utf8_decode( $empresa[0]->mensaje), 0, 1, 'C' );
+        $pdf->SetTextColor( 0, 0, 0 );
+        $pdf->Ln( 5 );
+        $pdf->Cell( 0, 5, 'Este es un documento válido sin valor fiscal', 0, 1, 'C' );
 
         $pdf->Output();
     }
@@ -448,183 +491,144 @@ class Ventas extends CI_Controller {
         $descuento = $this->VentasModel->getDescuento($id_venta);
         // Traer datos de la compra
         $productos = $this->VentasModel->getVenta($id_venta);
-    
-        require_once(APPPATH . 'libraries/fpdf/fpdf.php');
-    
-        // Crea una instancia de FPDF con el tamaño personalizado 3
-        $pdf = new FPDF('P', 'mm', array(80, 210), true);
-    
-        // Configurar los márgenes
-        $pdf->SetMargins(5, 5, 5);
-    
-        $pdf->AddPage('PORTRAIT', array(80, 210));
-        $pdf->setFillColor(77, 182, 172);
-        $pdf->Rect(0, 0, 80, 20, 'F');
-        $pdf->Ln(5);
-        $pdf->setTitle( 'Reporte de Venta' );
 
-        $pdf->Image( base_url().'assets/img/logo.png', 33, 23, 10, 10, 'png' );
-    
-        $pdf->SetFont('Arial', 'B', 9);
-        $pdf->Cell(0, 5, 'Factura de Venta', 0, 1, 'C');
+        require_once(APPPATH . 'libraries/fpdf/fpdf.php');
+
+        // Inicialización con dimensiones POS
+        $pdf = new FPDF('P', 'mm', array(80, 210));
+        $pdf->SetMargins(4, 2, 4); 
+        // SOLUCIÓN AL ERROR: Uso del método público en lugar de la propiedad protegida
+        $pdf->SetAutoPageBreak(true, 10); 
+        $pdf->AddPage();
+
+        // 1. Header Compacto (Mejora de espacio Empresa-Información)
+        $pdf->setFillColor(52, 152, 219);
+        $pdf->Rect(0, 0, 80, 20, 'F');
+        $pdf->SetY(5);
+        $pdf->SetFont('Arial', 'B', 11);
+        $pdf->SetTextColor(255, 255, 255);
+        $pdf->Cell(0, 5, utf8_decode('FACTURA DE VENTA'), 0, 1, 'C');
         
+        // Obtener datos
         foreach ($productos['registro'] as $row){ 
-    
             $fecha = $row->fecha;
             $nombre = $row->nombre;
             $estado = $row->estado;
-       
         }
-        // $formattedFecha = date('Ymd_dmY', strtotime($fecha));
         
-        $pdf->Cell(0, 5, $empresa[0]->ciudad, 0, 1, 'C');
-        $pdf->Ln(15);
-    
+        // 2. Sección Información (Alineación optimizada)
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->Ln(12); // Ajuste por el rectángulo azul
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->Cell(0, 4, utf8_decode($empresa[0]->nombre), 0, 1, 'C');
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Cell(0, 3, utf8_decode('NIT: ') . $empresa[0]->nit . ' | Tel: ' . $empresa[0]->telefono, 0, 1, 'C');
+        $pdf->Cell(0, 3, utf8_decode($empresa[0]->direccion), 0, 1, 'C');
+        $pdf->Cell(0, 3, utf8_decode($empresa[0]->ciudad), 0, 1, 'C');
+        
+        // 3. Información Venta (Reducción de Ln para evitar dispersión)
+        $pdf->Ln(2);
+        $pdf->SetDrawColor(52, 152, 219);
+        $pdf->Line(4, $pdf->GetY(), 76, $pdf->GetY());
+        $pdf->Ln(1);
+        $pdf->SetFont('Arial', 'B', 7);
+        
+        // Datos de venta (Reducción de Ln para evitar dispersión)
+        $pdf->Cell(12, 4, 'Fecha:', 0, 0); $pdf->SetFont('Arial', '', 7); $pdf->Cell(0, 4, date('d/m/Y H:i', strtotime($fecha)), 0, 1);
+        $pdf->SetFont('Arial', 'B', 7);
+        $pdf->Cell(12, 4, 'F#:', 0, 0); $pdf->SetFont('Arial', '', 7); $pdf->Cell(0, 4, $id_venta, 0, 1);
+        $pdf->SetFont('Arial', 'B', 7);
+        $pdf->Cell(12, 4, 'Cajero:', 0, 0); $pdf->SetFont('Arial', '', 7); $pdf->Cell(0, 4, utf8_decode($usuario[0]->nombre), 0, 1);
+        $pdf->SetFont('Arial', 'B', 7);
+        $pdf->Cell(12, 4, 'Cliente:', 0, 0); $pdf->SetFont('Arial', '', 7); $pdf->Cell(0, 4, utf8_decode($productos['registro'][0]->nombre), 0, 1);
+        $pdf->SetFont('Arial', 'B', 7);
+        $estado_text = ($estado == 0) ? 'Anulado' : 'Completado';
+        $pdf->Cell(12, 4, 'Estado:', 0, 0); $pdf->SetFont('Arial', '', 7); $pdf->Cell(0, 4, $estado_text, 0, 1);
+
+        // 4. Tabla de Productos (Evitar apiñamiento)
+        // Distribución: Cant(7), Desc(33), IVA(8), P.Unit(12), Total(12) = 72mm total
+        $pdf->Ln(2);
+        $pdf->SetFillColor(240, 248, 255);
+        $pdf->SetFont('Arial', 'B', 7);
+        $pdf->Cell(7, 5, 'Cant', 1, 0, 'C', true);
+        $pdf->Cell(33, 5, utf8_decode('Descripción'), 1, 0, 'L', true);
+        $pdf->Cell(8, 5, 'IVA', 1, 0, 'C', true);
+        $pdf->Cell(12, 5, 'Unit', 1, 0, 'R', true);
+        $pdf->Cell(12, 5, 'Total', 1, 1, 'R', true);
+
+        $pdf->SetFont('Arial', '', 6.5);
+        foreach ($productos['registro'] as $row) {
+            $x = $pdf->GetX();
+            $y = $pdf->GetY();
+            
+            // MultiCell para que el nombre del producto se ajuste si es largo
+            $pdf->Cell(7, 5, $row->cantidad, 1, 0, 'C');
+            $pdf->MultiCell(33, 5, utf8_decode($row->descripcion), 1, 'L');
+            
+            // Reposicionar para columnas numéricas
+            $pdf->SetXY($x + 40, $y); 
+            $pdf->Cell(8, 5, $row->iva.'%', 1, 0, 'C');
+            $pdf->Cell(12, 5, number_format($row->precio, 0), 1, 0, 'R');
+            $pdf->Cell(12, 5, number_format($row->sub_total, 0), 1, 1, 'R');
+        }
+
+        // 5. Resumen de la venta
+        $pdf->Ln(3);
         $pdf->SetFont('Arial', 'B', 8);
-        $pdf->Cell(26, 5, 'Fecha de venta:', 0, 0, 'L');
-        $pdf->SetFont('Arial', '', 8);
-        $pdf->Cell(20, 5, $fecha, 0, 1, 'L');
-    
-        // Resto del código...
-        $pdf->SetFont( 'Arial', 'B', 8 );
-        $pdf->Cell( 26, 5, 'Empresa: ', 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 8 );
-        $pdf->Cell( 20, 5, $empresa[0]->nombre, 0, 1, 'L' );
+        $pdf->Cell(0, 5, utf8_decode('Resumen'), 0, 1, 'L');
+        $pdf->SetDrawColor(52, 152, 219);
+        $pdf->Line(4, $pdf->GetY(), 76, $pdf->GetY());
+        $pdf->Ln(2);
 
-        $pdf->SetFont( 'Arial', 'B', 8 );
-        $pdf->Cell( 26, 5, 'Nit: ', 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 8 );
-        $pdf->Cell( 20, 5, $empresa[0]->nit, 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 8 );
-        $pdf->Cell( 26, 5, utf8_decode( 'Regimen: ' ), 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 8 );
-        $pdf->Cell( 20, 5, utf8_decode($empresa[0]->regimen), 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 8 );
-        $pdf->Cell( 26, 5, 'Resolucion: ' , 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 8 );
-        $pdf->Cell( 20, 5,  $empresa[0]->resolucion, 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 8 );
-        $pdf->Cell( 26, 5, utf8_decode( 'Teléfono: ' ), 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 8 );
-        $pdf->Cell( 20, 5, $empresa[0]->telefono, 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 8 );
-        $pdf->Cell( 26, 5, utf8_decode( 'Dirección: '  ), 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 8 );
-        $pdf->Cell( 20, 5, utf8_decode( $empresa[0]->direccion), 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 8 );
-        $pdf->Cell( 26, 5, 'Cajero: ', 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 8 );
-        $pdf->Cell( 20, 5, utf8_decode( $usuario[0]->nombre), 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 8 );
-        $pdf->Cell( 26, 5, 'Cliente: ', 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 8 );
-        $pdf->Cell( 20, 5, utf8_decode( $nombre ), 0, 1, 'L' );
-
-        $pdf->SetFont( 'Arial', 'B', 8 );
-        $pdf->Cell( 26, 5, 'Factura #: ', 0, 0, 'L' );
-        $pdf->SetFont( 'Arial', '', 8 );
-        $pdf->Cell( 20, 5, $id_venta, 0, 1, 'L' );
-
-
-        $pdf->SetFont( 'Arial', 'B', 8 );
-
-        $pdf->Cell( 26, 5, 'Estado de la venta:', 0, 0, 'l' );
-        $pdf->SetFont( 'Arial', '', 8 );
-        if ( $estado == 0 ) {
-            $pdf->Cell( 15, 5, 'Anulado', 0, 1, 'R' );
-
-        } else {
-            $pdf->Cell( 20, 5, 'Completado', 0, 1, 'R' );
-
+        // Calcular totales correctamente
+        $totalPagar = 0;
+        $subtotal = 0;
+        foreach ($productos['registro'] as $row) {
+            $totalPagar += $row->sub_total;
+            $subtotal += ($row->precio * $row->cantidad);
         }
-        $pdf->SetFont( 'Arial', '', 8 );
-        $pdf->MultiCell( 0, 5, utf8_decode( $empresa[0]->mensaje ), 0, 1, 'J' );
 
-        $pdf->Ln(5);
-
-        $pdf->setTextColor( 40, 40, 40 );
-        $pdf->setFillColor( 255, 255, 255 );
-        $pdf->SetDrawColor( 88, 88, 88 );
-
-
-         // Encabezados de las columnas
-         $pdf->SetFont('Arial', 'B', 8);
-         $pdf->Cell(8, 5, 'Cant', 1, 0, 'L', true);
-         $pdf->Cell(20, 5, utf8_decode('Descripción'), 1, 0, 'L', true);
-         $pdf->Cell(8, 5, 'Iva', 1, 0, 'L', true);
-         $pdf->Cell(18, 5, 'P. Unitario', 1, 0, 'L', true);
-         $pdf->Cell(16, 5, 'P. Total', 1, 1, 'L', true);
-         
-         $pdf->SetLineWidth(1);
-         $pdf->SetDrawColor(61, 174, 273, 1);
-         $pdf->SetTextColor(0, 0, 0);
-         $pdf->Ln(1);
-         
-         $descuentos = 0.00;
-         $Total = 0;
-         $sub_total = 0;
-         $totalPagar = 0;
-         $cambio = 0;
-         $pagado = 0;
-        //  $pdf->SetFillColor(240, 240, 240);
-         $pdf->SetTextColor(40, 40, 40);
-         $pdf->SetDrawColor(255, 255, 255);
-         $pdf->SetFont('Arial', '', 8);
-         
-   
-        foreach ( $productos['registro'] as $row ) {
-            $Total =    $Total + ($row->precio * $row->cantidad);
-            $sub_total = $sub_total + $row->sub_total; 
-            $descuentos =  ($sub_total * $row->descuento) / 100;  
-            $pagado =  $row->pagado ;  
-            $cambio =  $row->cambio ;      
-            $pdf->Cell( 8, 5, $row->cantidad, 1, 0, 'L', 1 );
-            $pdf->Cell( 20, 5, utf8_decode( $row->descripcion ), 1, 0, 'L', 1 );
-            $pdf->Cell( 8, 5,  $row->iva , 1, 0, 'L', 1 );
-            $pdf->Cell( 18, 5, '$'.number_format( $row->precio ), 1, 0, 'L', 1 );
-            $pdf->Cell( 18, 5, '$'.number_format( $row->sub_total), 1, 1, 'L', 1 );
-           
-        }
-                //descuento
-         $totalPagar =  (($sub_total -  $Total) +  $Total) -  $descuentos;  
-
-        $pdf->Ln();
-
-        $pdf->setFillColor( 99, 108, 97 );
-        $pdf->SetTextColor( 255, 255, 255 );
-
-        $pdf->SetFont( 'Arial', '', 8 );
-
-        $pdf->Cell( 35, 5, 'Sub Total:', 0, 0, 'R', 1 );
-        $pdf->Cell( 30, 5, '$'.number_format(  $Total ), 0, 1, 'R', 1 );
-
-        $pdf->Cell( 35, 5, 'IVA%:', 0, 0, 'R', 1 );
-        $pdf->Cell( 30, 5, '$'.number_format($sub_total -  $Total), 0, 1, 'R', 1 );
-
-        $pdf->Cell( 35, 5, 'Descuento Total:', 0, 0, 'R', 1 );
-        $pdf->Cell( 30, 5, '$'.number_format( $descuentos), 0, 1, 'R', 1 );
-
-        $pdf->SetFont( 'Arial', 'B', 10 );
-        $pdf->Cell( 35, 5, 'Total a Pagar:', 0, 0, 'R', 1 );
-        $pdf->Cell( 30, 5, '$'.number_format( $totalPagar ), 0, 1, 'R', 1 );
+        // Mostrar resumen con diseño profesional
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->setFillColor(245, 245, 245);
         
-        $pdf->SetFont( 'Arial', 'B', 8 );
-        $pdf->Cell( 35, 5, 'Pagado:', 0, 0, 'R', 1 );
-        $pdf->Cell( 30, 5, '$'.number_format( $pagado ), 0, 1, 'R', 1 );
+        $pdf->Cell(45, 4, utf8_decode('Sub Total:'), 1, 0, 'R', true);
+        $pdf->Cell(25, 4, '$ '.number_format($subtotal, 2), 1, 1, 'R', true);
 
-        $pdf->Cell( 35, 5, 'Cambio:', 0, 0, 'R', 1 );
-        $pdf->Cell( 30, 5, '$'.number_format( $cambio ), 0, 1, 'R', 1 );
-    
-        $pdf->Cell( 35, 5, 'Cantidad de productos:', 0, 0, 'R', 1 );
-        $pdf->Cell( 30, 5,  $productos['count'], 0, 1, 'R', 1 );
-    
-        $pdf->Output();
+        $pdf->Cell(45, 4, 'IVA:', 1, 0, 'R', true);
+        $pdf->Cell(25, 4, '$ '.number_format($totalPagar - $subtotal, 2), 1, 1, 'R', true);
+
+        // Total destacado
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->setFillColor(52, 152, 219);
+        $pdf->SetTextColor(255, 255, 255);
+        $pdf->Cell(45, 6, utf8_decode('TOTAL:'), 1, 0, 'R', true);
+        $pdf->Cell(25, 6, '$ '.number_format($totalPagar, 2), 1, 1, 'R', true);
+        
+        // Pagado y cambio
+        $pdf->Ln(3);
+        $pdf->SetFont('Arial', 'B', 7);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->setFillColor(240, 255, 240);
+        
+        $pdf->Cell(35, 4, utf8_decode('Pagado:'), 1, 0, 'L', true);
+        $pdf->Cell(35, 4, '$ '.number_format($productos['registro'][0]->pagado, 2), 1, 1, 'R', true);
+
+        $pdf->setFillColor(255, 240, 240);
+        $pdf->Cell(35, 4, utf8_decode('Cambio:'), 1, 0, 'L', true);
+        $pdf->Cell(35, 4, '$ '.number_format($productos['registro'][0]->cambio, 2), 1, 1, 'R', true);
+
+        // 6. Mensaje final
+        $pdf->Ln(8);
+        $pdf->SetFont('Arial', 'I', 8);
+        $pdf->SetTextColor(52, 152, 219);
+        $pdf->Cell(0, 5, utf8_decode('¡Gracias por su compra!'), 0, 1, 'C');
+        $pdf->SetFont('Arial', 'I', 6);
+        $pdf->SetTextColor(100, 100, 100);
+        $pdf->Cell(0, 4, utf8_decode($empresa[0]->mensaje), 0, 1, 'C');
+        $pdf->Cell(0, 4, utf8_decode('Válido sin valor fiscal'), 0, 1, 'C');
+
+        $pdf->Output('I', 'Ticket_'.$id_venta.'.pdf');
     }
 
     //historial compras
@@ -636,7 +640,6 @@ class Ventas extends CI_Controller {
         $this->load->view('layouts/Ventas/historialC');
         $this->load->view('layouts/Templates/footer_admin');
     }
-
     //listar historial compra
 
     public function listar_historial() {

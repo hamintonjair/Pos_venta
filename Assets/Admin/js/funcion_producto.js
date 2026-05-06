@@ -1,8 +1,18 @@
+
+function getBaseURL() {
+    // Intentar obtener desde el meta tag o usar fallback
+    const metaUrl = document.querySelector('meta[name="base-url"]');
+    if (metaUrl) {
+        return metaUrl.getAttribute('content');
+    }
+    // Fallback para desarrollo local
+    return 'http://localhost/Pos_venta/';
+}
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     $('#tableProductos').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
             { 'className': "textcenter", "targets": [7] }, //accion
@@ -78,10 +88,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //productos eliminados
 document.addEventListener("DOMContentLoaded", function() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     $('#tableProductosEliminados').dataTable({
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
+        "language": { "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json" },
         dom: 'lBfrtip',
         "columnDefs": [
             { 'className': "textcenter", "targets": [7] }, //accion
@@ -159,13 +169,13 @@ document.addEventListener("DOMContentLoaded", function() {
 })
 
 function productosEliminados() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "Productos/productosEliminados";
 }
 
 function volver() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     window.location = base_url + "productos";
 }
@@ -197,7 +207,7 @@ function registrarProducto(e) {
             // alert("Todos los campos son obligatorios", "info");
 
     } else {
-        let base_url = 'http://localhost/Pos_venta/';
+        let base_url = getBaseURL();
 
         const url = base_url + "Productos/registrarProductos";
         const frm = document.getElementById("frmProductos");
@@ -259,7 +269,7 @@ function editarProducto(id) {
     document.querySelector('#titleModal').innerHTML = "Actualizar Producto";
     document.querySelector('#frmProductos').reset();
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     $.ajax({
         url: base_url + 'Productos/editar/' + id,
         type: "GET",
@@ -382,7 +392,7 @@ function printBarcode(area) {
 
 function eliminarProducto(id) {
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     // Verificar la relación del usuario
     $.ajax({
@@ -421,7 +431,7 @@ function eliminarProducto(id) {
 
 function eliminarPro(id) {
 
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     // Eliminar el usuario
     $.ajax({
@@ -462,7 +472,7 @@ function eliminarPro(id) {
 }
 
 function productosVaciar() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -521,7 +531,7 @@ function productosVaciar() {
 }
 //reingresar producto
 function reingresarProducto(id) {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -608,7 +618,7 @@ function alert(msm, icon) {
 }
 //stock bajos
 function reportStock() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const url = base_url + "Dashboard/reportStock";
     const http = new XMLHttpRequest();
@@ -625,9 +635,9 @@ function reportStock() {
                 cantidad.push(resp[i]['cantidad']);
 
                 const ctxe = document.getElementById('stockMinimo');
-                // if (window.myChart) {
-                //     window.myChart.destroy(); // Destruir la instancia existente si existe
-                // }
+                if (window.productosbajos) {
+                    window.productosbajos.destroy(); // Destruir la instancia existente si existe
+                }
                 window.productosbajos = new Chart(ctxe, {
                     type: 'pie',
                     data: {
@@ -653,7 +663,7 @@ function reportStock() {
 }
 //productos mas vendidos
 function productosVendidos() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     const url = base_url + "Dashboard/productosVendidos";
     const http = new XMLHttpRequest();
     http.open("GET", url, true);
@@ -695,7 +705,7 @@ function productosVendidos() {
 }
 //grafica
 function ganancias() {
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
 
     const yearInput = document.getElementById('id');
     const year = yearInput.value;
@@ -763,6 +773,11 @@ function ganancias() {
                 },
             };
 
+            // Destruir instancia existente si existe
+            if (window.myChart) {
+                window.myChart.destroy();
+            }
+            
             // Crear la gráfica
             window.myChart = new Chart(context, chartConfig);
         }

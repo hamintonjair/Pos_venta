@@ -1,6 +1,16 @@
+
+function getBaseURL() {
+    // Intentar obtener desde el meta tag o usar fallback
+    const metaUrl = document.querySelector('meta[name="base-url"]');
+    if (metaUrl) {
+        return metaUrl.getAttribute('content');
+    }
+    // Fallback para desarrollo local
+    return 'http://localhost/Pos_venta/';
+}
 function actualizarEmpresa(e) {
     e.preventDefault();
-    let base_url = 'http://localhost/Pos_venta/';
+    let base_url = getBaseURL();
     // const id = document.getElementById("id");
     // const valorCodificado = nomb.replace(/ /g, '+');
     // cod_producto = valorCodificado;
